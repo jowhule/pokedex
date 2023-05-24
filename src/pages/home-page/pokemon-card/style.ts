@@ -11,7 +11,7 @@ export const pokemonCardContainer: SxProps<Theme> = {
   borderRadius: "15px",
   height: "60px",
   paddingTop: "35px",
-  paddingBottom: "15px",
+  paddingBottom: "20px",
   boxShadow: `0 5px ${secondaryColour}`,
   "&:hover": {
     border: `2px solid ${secondaryColour}`,
@@ -35,8 +35,9 @@ export const pokemonIdContainer: SxProps<Theme> = {
 
 export const pokemonSpriteStyle: SxProps<Theme> = {
   position: "absolute",
-  top: "-48px",
+  top: "-50px",
   transition: "ease 0.1s",
+  objectFit: "cover",
 };
 
 export const pokemonSpriteHover: SxProps<Theme> = {

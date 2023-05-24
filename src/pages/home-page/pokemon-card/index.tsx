@@ -5,13 +5,18 @@ import {
   pokemonDataDefault,
 } from "../../../services/apiRequestsTypes";
 import { sendGenericAPIRequest } from "../../../services/apiRequests";
-import { BodyText, Hoverable } from "../../../utils/styledComponents";
+import {
+  BodyText,
+  Hoverable,
+  SecondaryText,
+} from "../../../utils/styledComponents";
 import {
   pokemonCardContainer,
   pokemonIdContainer,
   pokemonSpriteHover,
   pokemonSpriteStyle,
 } from "./style";
+import { TypeTag } from "../type-tag";
 
 type PokemonCardProps = {
   pokemonUrl: string;
@@ -46,14 +51,16 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({ pokemonUrl }) => {
   }, [pokemonData]);
 
   return (
-    <Grid item sm={6} md={4} lg={3} xl={2} height="165px">
+    <Grid item sm={6} md={4} lg={3} xl={2} height="180px">
       <Hoverable
         sx={pokemonCardContainer}
         onMouseEnter={handleMouseOver}
         onMouseLeave={handleMouseLeave}
       >
         <Box sx={pokemonIdContainer}>
-          <BodyText fontSize="12px"># {pokemonData.id}</BodyText>
+          <SecondaryText fontSize="12px" fontWeight="bold">
+            # {pokemonData.id}
+          </SecondaryText>
         </Box>
 
         <Box
@@ -62,12 +69,12 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({ pokemonUrl }) => {
           alt={`${pokemonName}'s sprite`}
           sx={isMouseOver ? pokemonSpriteHover : pokemonSpriteStyle}
         />
-        <BodyText fontWeight="bold">{pokemonName}</BodyText>
-        <Box display="flex">
+        <BodyText fontWeight="bold" fontSize="18px">
+          {pokemonName}
+        </BodyText>
+        <Box display="flex" gap="10px" marginTop="5px">
           {Array.from(pokemonData.types).map((type, index) => (
-            <Box key={index}>
-              <BodyText>{type.type.name}</BodyText>
-            </Box>
+            <TypeTag type={type.type.name} key={index} />
           ))}
         </Box>
       </Hoverable>
