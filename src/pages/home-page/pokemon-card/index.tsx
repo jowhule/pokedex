@@ -6,7 +6,12 @@ import {
 } from "../../../services/apiRequestsTypes";
 import { sendGenericAPIRequest } from "../../../services/apiRequests";
 import { BodyText, Hoverable } from "../../../utils/styledComponents";
-import { pokemonCardContainer, pokemonIdContainer } from "./style";
+import {
+  pokemonCardContainer,
+  pokemonIdContainer,
+  pokemonSpriteHover,
+  pokemonSpriteStyle,
+} from "./style";
 
 type PokemonCardProps = {
   pokemonUrl: string;
@@ -16,6 +21,15 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({ pokemonUrl }) => {
   const [pokemonData, setPokemonData] =
     useState<PokemonDataResponseType>(pokemonDataDefault);
   const [pokemonName, setPokemonName] = useState<string>("");
+  const [isMouseOver, setIsMouseOver] = useState<boolean>(false);
+
+  const handleMouseOver = () => {
+    setIsMouseOver(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsMouseOver(false);
+  };
 
   // get initial pokemon data
   useEffect(() => {
@@ -23,7 +37,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({ pokemonUrl }) => {
       if (data) setPokemonData(data);
     });
   }, [pokemonUrl]);
-
+  // get pokemon name
   useEffect(() => {
     if (pokemonData.name)
       setPokemonName(
@@ -33,7 +47,11 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({ pokemonUrl }) => {
 
   return (
     <Grid item sm={6} md={4} lg={3} xl={2} height="165px">
-      <Hoverable sx={pokemonCardContainer}>
+      <Hoverable
+        sx={pokemonCardContainer}
+        onMouseEnter={handleMouseOver}
+        onMouseLeave={handleMouseLeave}
+      >
         <Box sx={pokemonIdContainer}>
           <BodyText fontSize="12px"># {pokemonData.id}</BodyText>
         </Box>
@@ -42,8 +60,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({ pokemonUrl }) => {
           component="img"
           src={pokemonData.sprites.front_default}
           alt={`${pokemonName}'s sprite`}
-          position="absolute"
-          top="-48px"
+          sx={isMouseOver ? pokemonSpriteHover : pokemonSpriteStyle}
         />
         <BodyText fontWeight="bold">{pokemonName}</BodyText>
         <Box display="flex">
