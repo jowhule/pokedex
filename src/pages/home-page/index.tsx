@@ -56,7 +56,7 @@ export const HomePage: React.FC = () => {
           justifyContent="center"
         >
           <Box>
-            <Box bgcolor="white"></Box>
+            <Box bgcolor="white" height="65px" borderRadius="15px" m="20px 0"></Box>
             <Grid container columns={12} spacing="15px">
               {Array.from(visiblePokemonList).map((pokemon, index) => (
                 <Grid lg={4} item key={index}>

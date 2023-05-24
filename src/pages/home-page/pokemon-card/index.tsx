@@ -1,4 +1,4 @@
-import { Card, CardActionArea } from "@mui/material";
+import { Card, CardActionArea, CardContent } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react";
 import {
   PokemonDataResponseType,
@@ -8,12 +8,6 @@ import { sendGenericAPIRequest } from "../../../services/apiRequests";
 
 type PokemonCardProps = {
   pokemonUrl: string;
-};
-
-type PokemonCardDataType = {
-  name: string;
-  id: number;
-  front_sprite: string;
 };
 
 export const PokemonCard: React.FC<PokemonCardProps> = ({ pokemonUrl }) => {
@@ -37,7 +31,9 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({ pokemonUrl }) => {
 
   return (
     <Card>
-      <CardActionArea>a</CardActionArea>
+      <CardActionArea>
+        <CardContent></CardContent>
+      </CardActionArea>
     </Card>
   );
 };
