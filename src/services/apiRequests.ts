@@ -1,7 +1,9 @@
 import axios, { AxiosError } from "axios";
 
 // using pokemon api, only get request
-export const sendGenericAPIRequest = async <T>(url: string): Promise<any> => {
+export const sendGenericAPIRequest = async <T>(
+  url: string
+): Promise<T | void> => {
   try {
     const headers: Record<string, string> = {
       "Content-Type": "application/json",
@@ -12,6 +14,7 @@ export const sendGenericAPIRequest = async <T>(url: string): Promise<any> => {
   } catch (err) {
     if (err instanceof AxiosError) {
       console.log(err);
+      return;
     }
   }
 };

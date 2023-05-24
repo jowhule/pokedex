@@ -97,3 +97,5 @@ export type PokemonApiResponseType = {
   types: PokemonTypeType[];
   weight: number;
 };
+
+export type PokemonNameResponseType = NameUrlType;
