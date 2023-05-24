@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { CircularProgress, Grid } from "@mui/material";
+import { Box, CircularProgress, Grid, TextField } from "@mui/material";
 import { PokemonNameResponseType } from "../../services/apiRequestsTypes";
 import { PokemonCard } from "./pokemon-card";
 import { triggerStorePokemonPromise } from "../../App";
@@ -48,13 +48,24 @@ export const HomePage: React.FC = () => {
   return (
     <>
       {isNameListLoaded ? (
-        <Grid container columns={12}>
-          {Array.from(visiblePokemonList).map((pokemon, index) => (
-            <Grid lg={4} item key={index}>
-              <PokemonCard pokemonUrl={pokemon.url}></PokemonCard>
+        <Box
+          display="flex"
+          width="100%"
+          boxSizing="border-box"
+          p="0 130px"
+          justifyContent="center"
+        >
+          <Box>
+            <Box bgcolor="white"></Box>
+            <Grid container columns={12} spacing="15px">
+              {Array.from(visiblePokemonList).map((pokemon, index) => (
+                <Grid lg={4} item key={index}>
+                  <PokemonCard pokemonUrl={pokemon.url}></PokemonCard>
+                </Grid>
+              ))}
             </Grid>
-          ))}
-        </Grid>
+          </Box>
+        </Box>
       ) : (
         <CircularProgress />
       )}
