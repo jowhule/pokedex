@@ -1,6 +1,6 @@
 type NameUrlType = {
-  name: "string";
-  url: "string";
+  name: string;
+  url: string;
 };
 
 type PokemonAbilityType = {
@@ -9,10 +9,7 @@ type PokemonAbilityType = {
   slot: number;
 };
 
-type PokemonFormType = {
-  name: "string";
-  url: "string";
-};
+type PokemonFormType = NameUrlType;
 
 type PokemonGameIndexType = {
   game_index: number;
@@ -77,7 +74,7 @@ type PokemonTypeType = {
   type: NameUrlType;
 };
 
-export type PokemonApiResponseType = {
+export type PokemonDataResponseType = {
   abilities: PokemonAbilityType[];
   base_experience: number;
   forms: PokemonFormType[];
@@ -88,7 +85,7 @@ export type PokemonApiResponseType = {
   is_default: boolean;
   location_area_encounters: string;
   moves: PokemonMoveType[];
-  name: "string";
+  name: string;
   order: number;
   past_types: [];
   species: NameUrlType;
@@ -98,4 +95,61 @@ export type PokemonApiResponseType = {
   weight: number;
 };
 
+export const pokemonDataDefault: PokemonDataResponseType = {
+  abilities: [],
+  base_experience: 0,
+  forms: [],
+  game_indices: [],
+  height: 0,
+  held_items: [],
+  id: 0,
+  is_default: false,
+  location_area_encounters: "",
+  moves: [],
+  name: "",
+  order: 0,
+  past_types: [],
+  species: {
+    name: "",
+    url: "",
+  },
+  sprites: {
+    back_default: "",
+    back_female: null,
+    back_shiny: "",
+    back_shiny_female: null,
+    front_default: "",
+    front_female: null,
+    front_shiny: "",
+    front_shiny_female: "",
+    other: {
+      dream_world: {
+        front_default: "",
+        front_female: "",
+      },
+      home: {
+        front_default: "",
+        front_female: "",
+        front_shiny: "",
+        front_shiny_female: "",
+      },
+      "official-artwork": {
+        front_default: "",
+        front_shiny: "",
+      },
+    },
+    versions: {},
+  },
+  stats: [],
+  types: [],
+  weight: 0,
+};
+
 export type PokemonNameResponseType = NameUrlType;
+
+export type PokemonApiResponseType = {
+  count: number;
+  next: string | null;
+  prev: string | null;
+  results: PokemonNameResponseType[];
+};
