@@ -1,8 +1,9 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Box, CircularProgress, Grid, TextField } from "@mui/material";
+import { Box, CircularProgress, Grid } from "@mui/material";
 import { PokemonNameResponseType } from "../../services/apiRequestsTypes";
 import { PokemonCard } from "./pokemon-card";
 import { triggerStorePokemonPromise } from "../../App";
+import { homePageContainerStyle } from "./style";
 
 export const HomePage: React.FC = () => {
   const [isNameListLoaded, setIsNameListLoaded] = useState<boolean>(false);
@@ -48,20 +49,17 @@ export const HomePage: React.FC = () => {
   return (
     <>
       {isNameListLoaded ? (
-        <Box
-          display="flex"
-          width="100%"
-          boxSizing="border-box"
-          p="0 130px"
-          justifyContent="center"
-        >
+        <Box sx={homePageContainerStyle}>
           <Box>
-            <Box bgcolor="white" height="65px" borderRadius="15px" m="20px 0"></Box>
-            <Grid container columns={12} spacing="15px">
+            <Box
+              bgcolor="white"
+              height="65px"
+              borderRadius="15px"
+              m="20px 0"
+            ></Box>
+            <Grid container columns={12} spacing="15px" marginTop="50px">
               {Array.from(visiblePokemonList).map((pokemon, index) => (
-                <Grid lg={4} item key={index}>
-                  <PokemonCard pokemonUrl={pokemon.url}></PokemonCard>
-                </Grid>
+                <PokemonCard pokemonUrl={pokemon.url} key={index}></PokemonCard>
               ))}
             </Grid>
           </Box>
