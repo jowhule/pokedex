@@ -1,68 +1,98 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Box, CircularProgress, Grid } from "@mui/material";
-import { PokemonNameResponseType } from "../../services/apiRequestsTypes";
+import {
+  PokemonApiResponseType,
+  PokemonNameResponseType,
+} from "../../services/apiRequestsTypes";
 import { PokemonCard } from "./pokemon-card";
-import { triggerStorePokemonPromise } from "../../App";
 import { homePageContainerStyle, searchBarStyle } from "./style";
 import { CustomCard } from "../../components/CustomCard";
+import { sendGenericAPIRequest } from "../../services/apiRequests";
+import InfiniteScroll from "react-infinite-scroll-component";
+
+export const POKEMON_MAX_NUM = 1010;
+export const POKEMON_PER_LOAD = 30;
 
 export const HomePage: React.FC = () => {
-  const [isNameListLoaded, setIsNameListLoaded] = useState<boolean>(false);
+  const [allPokemonNames, setAllPokemonNames] = useState<
+    PokemonNameResponseType[]
+  >([]);
+
+  const [currPage, setCurrPage] = useState<number>(1);
+  const [prevPage, setPrevPage] = useState<number>(0);
   const [visiblePokemonList, setVisiblePokemonList] = useState<
     PokemonNameResponseType[]
   >([]);
-  const [currentPokemonLimit, setCurrentPokemonLimit] = useState<number>(30);
 
   /**
-   * set current visible list of pokemon
-   * @param pokemonList list of all pokemon names available from pokeapi
+   * callback function to be called whenever current page number changes so that
+   * more pokemon can be paginated into the page to emulate infinite scroll
    */
-  const getVisiblePokemonList = useCallback(
-    (pokemonList: PokemonNameResponseType[]) => {
-      const tempPokemonList: PokemonNameResponseType[] = [];
-      for (let i = 0; i < currentPokemonLimit; i++) {
-        tempPokemonList.push(pokemonList[i]);
-      }
-      setVisiblePokemonList(tempPokemonList);
-    },
-    [currentPokemonLimit]
-  );
-
-  /**
-   * set pokemon list once
-   */
-  useEffect(() => {
-    const pokemonList = JSON.parse(localStorage.getItem("pokemons") ?? "");
-    if (pokemonList) {
-      getVisiblePokemonList(pokemonList);
-    } else {
-      triggerStorePokemonPromise().then((data) => {
-        getVisiblePokemonList(data);
+  const getNextPokemonPage = useCallback(() => {
+    const fetchData = async () => {
+      sendGenericAPIRequest<PokemonApiResponseType>(
+        `https://pokeapi.co/api/v2/pokemon/?limit=${POKEMON_PER_LOAD}&offset=${
+          prevPage * POKEMON_PER_LOAD
+        }`
+      ).then((data) => {
+        if (data) {
+          setPrevPage(currPage);
+          setVisiblePokemonList([...visiblePokemonList, ...data.results]);
+        }
       });
+    };
+    if (visiblePokemonList.length < POKEMON_MAX_NUM && prevPage !== currPage) {
+      fetchData();
     }
-  }, [getVisiblePokemonList]);
+  }, [currPage, prevPage, visiblePokemonList]);
 
-  // turn off loading screen to display pokemon cards
+  const handleNextPage = () => {
+    setCurrPage(currPage + 1);
+  };
+
+  // get names of pokemon to be displayed page by page
   useEffect(() => {
-    if (visiblePokemonList) setIsNameListLoaded(true);
-  }, [visiblePokemonList]);
+    getNextPokemonPage();
+  }, [getNextPokemonPage]);
+
+  // get all pokemon names (for search bar)
+  useEffect(() => {
+    sendGenericAPIRequest<PokemonApiResponseType>(
+      `https://pokeapi.co/api/v2/pokemon/?limit=${POKEMON_MAX_NUM}&offset=0`
+    ).then((data) => {
+      if (data) setAllPokemonNames(data.results);
+    });
+  }, []);
 
   return (
-    <>
-      {isNameListLoaded ? (
-        <Box sx={homePageContainerStyle}>
-          <Box>
-            <CustomCard sx={searchBarStyle}></CustomCard>
-            <Grid container columns={12} spacing="15px" marginTop="50px">
-              {Array.from(visiblePokemonList).map((pokemon, index) => (
-                <PokemonCard pokemonUrl={pokemon.url} key={index}></PokemonCard>
-              ))}
-            </Grid>
-          </Box>
+    <InfiniteScroll
+      dataLength={visiblePokemonList.length}
+      next={handleNextPage}
+      hasMore={visiblePokemonList.length < POKEMON_MAX_NUM}
+      loader={
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            marginBottom: "50px",
+          }}
+        >
+          <CircularProgress />
         </Box>
-      ) : (
-        <CircularProgress />
-      )}
-    </>
+      }
+      style={{ overflowY: "hidden" }}
+    >
+      <Box sx={homePageContainerStyle}>
+        <Box>
+          <CustomCard sx={searchBarStyle}></CustomCard>
+          <Grid container columns={12} spacing="15px" marginTop="50px">
+            {Array.from(visiblePokemonList).map((pokemon, index) => (
+              <PokemonCard pokemonUrl={pokemon.url} key={index}></PokemonCard>
+            ))}
+          </Grid>
+        </Box>
+        <Box></Box>
+      </Box>
+    </InfiniteScroll>
   );
 };
