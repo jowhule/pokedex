@@ -23,7 +23,6 @@ export const HomePage: React.FC = () => {
   const [visiblePokemonList, setVisiblePokemonList] = useState<
     PokemonNameResponseType[]
   >([]);
-  const [lastList, setLastList] = useState<boolean>(false);
 
   /**
    * callback function to be called whenever current page number changes so that
@@ -37,19 +36,15 @@ export const HomePage: React.FC = () => {
         }`
       ).then((data) => {
         if (data) {
-          if (data.results.length < POKEMON_PER_LOAD) {
-            setLastList(true);
-            return;
-          }
           setPrevPage(currPage);
           setVisiblePokemonList([...visiblePokemonList, ...data.results]);
         }
       });
     };
-    if (!lastList && prevPage !== currPage) {
+    if (visiblePokemonList.length < POKEMON_MAX_NUM && prevPage !== currPage) {
       fetchData();
     }
-  }, [currPage, lastList, prevPage, visiblePokemonList]);
+  }, [currPage, prevPage, visiblePokemonList]);
 
   const handleNextPage = () => {
     setCurrPage(currPage + 1);
@@ -73,9 +68,15 @@ export const HomePage: React.FC = () => {
     <InfiniteScroll
       dataLength={visiblePokemonList.length}
       next={handleNextPage}
-      hasMore={true}
+      hasMore={visiblePokemonList.length < POKEMON_MAX_NUM}
       loader={
-        <Box sx={{ dispaly: "flex", justifyContent: "center" }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            marginBottom: "50px",
+          }}
+        >
           <CircularProgress />
         </Box>
       }
