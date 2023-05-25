@@ -1,21 +1,15 @@
 import { SxProps, Theme } from "@mui/material";
 import { secondaryColour } from "../../../utils/colours";
 
-export const pokemonCardContainer: SxProps<Theme> = {
+export const pokemonCardContainer = {
   display: "flex",
   flexDirection: "column",
   justifyContent: "center",
   position: "relative",
   alignItems: "center",
-  bgcolor: "white",
-  borderRadius: "15px",
   height: "60px",
   paddingTop: "35px",
   paddingBottom: "20px",
-  boxShadow: `0 5px ${secondaryColour}`,
-  "&:hover": {
-    border: `2px solid ${secondaryColour}`,
-  },
 };
 
 export const pokemonIdContainer: SxProps<Theme> = {
@@ -29,7 +23,7 @@ export const pokemonIdContainer: SxProps<Theme> = {
   width: "50px",
   boxSizing: "border-box",
   paddingTop: "5px",
-  borderRadius: "0 5px 0 15px",
+  borderRadius: "0 5px 0 10px",
   bgcolor: `${secondaryColour}`,
 };
 

@@ -3,7 +3,8 @@ import { Box, CircularProgress, Grid } from "@mui/material";
 import { PokemonNameResponseType } from "../../services/apiRequestsTypes";
 import { PokemonCard } from "./pokemon-card";
 import { triggerStorePokemonPromise } from "../../App";
-import { homePageContainerStyle } from "./style";
+import { homePageContainerStyle, searchBarStyle } from "./style";
+import { CustomCard } from "../../components/CustomCard";
 
 export const HomePage: React.FC = () => {
   const [isNameListLoaded, setIsNameListLoaded] = useState<boolean>(false);
@@ -51,12 +52,7 @@ export const HomePage: React.FC = () => {
       {isNameListLoaded ? (
         <Box sx={homePageContainerStyle}>
           <Box>
-            <Box
-              bgcolor="white"
-              height="65px"
-              borderRadius="15px"
-              m="20px 0"
-            ></Box>
+            <CustomCard sx={searchBarStyle}></CustomCard>
             <Grid container columns={12} spacing="15px" marginTop="50px">
               {Array.from(visiblePokemonList).map((pokemon, index) => (
                 <PokemonCard pokemonUrl={pokemon.url} key={index}></PokemonCard>

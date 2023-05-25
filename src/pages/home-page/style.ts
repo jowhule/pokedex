@@ -7,3 +7,9 @@ export const homePageContainerStyle: SxProps<Theme> = {
   p: "0 130px",
   justifyContent: "center",
 };
+
+export const searchBarStyle = {
+  height: "65px",
+  margin: "20px 0",
+  boxSizing: "border-box",
+};

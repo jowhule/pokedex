@@ -17,6 +17,7 @@ import {
   pokemonSpriteStyle,
 } from "./style";
 import { TypeTag } from "../type-tag";
+import { CustomCard } from "../../../components/CustomCard";
 
 type PokemonCardProps = {
   pokemonUrl: string;
@@ -53,10 +54,10 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({ pokemonUrl }) => {
   return (
     <Grid item sm={6} md={4} lg={3} xl={2} height="180px">
       <Hoverable
-        sx={pokemonCardContainer}
         onMouseEnter={handleMouseOver}
         onMouseLeave={handleMouseLeave}
-      >
+      ></Hoverable>
+      <CustomCard sx={pokemonCardContainer}>
         <Box sx={pokemonIdContainer}>
           <SecondaryText fontSize="12px" fontWeight="bold">
             # {pokemonData.id}
@@ -77,7 +78,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({ pokemonUrl }) => {
             <TypeTag type={type.type.name} key={index} />
           ))}
         </Box>
-      </Hoverable>
+      </CustomCard>
     </Grid>
   );
 };
