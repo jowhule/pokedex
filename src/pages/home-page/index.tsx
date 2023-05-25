@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Box, CircularProgress, Grid } from "@mui/material";
+import { Box, CircularProgress, Grid, Input } from "@mui/material";
 import {
   PokemonApiResponseType,
   PokemonNameResponseType,
@@ -18,34 +18,18 @@ export const HomePage: React.FC = () => {
   const [allPokemonNames, setAllPokemonNames] = useState<
     PokemonNameResponseType[]
   >([]);
+  const [displayLimit, setDisplayLimit] = useState<number>(POKEMON_PER_LOAD);
 
-  const [currDisplayLimit, setCurrDisplayLimit] =
-    useState<number>(POKEMON_PER_LOAD);
-  const [prevDisplayLimit, setPrevDisplayLimit] = useState<number>(0);
+  const [searchInput, setSearchInput] = useState<string>("");
 
-  /**
-   * callback function to be called whenever current page number changes so that
-   * more pokemon can be paginated into the page to emulate infinite scroll
-   */
-  const getNextPokemonPage = useCallback(() => {
-    setPrevDisplayLimit(currDisplayLimit);
-
-    if (
-      currDisplayLimit < POKEMON_MAX_NUM &&
-      prevDisplayLimit !== currDisplayLimit
-    ) {
-      console.log("hi");
-    }
-  }, [currDisplayLimit, prevDisplayLimit]);
-
-  const handleNextPage = () => {
-    setCurrDisplayLimit(currDisplayLimit + POKEMON_PER_LOAD);
+  const handleNext = () => {
+    setDisplayLimit(displayLimit + POKEMON_PER_LOAD);
   };
 
-  // get names of pokemon to be displayed page by page
+  // name of all pokemon received
   useEffect(() => {
-    getNextPokemonPage();
-  }, [getNextPokemonPage]);
+    if (Object.keys(allPokemonNames).length !== 0) setHasLoaded(true);
+  }, [allPokemonNames]);
 
   // get all pokemon names (for search bar)
   useEffect(() => {
@@ -56,11 +40,24 @@ export const HomePage: React.FC = () => {
     });
   }, []);
 
+  // update search field input
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchInput(e.target.value);
+  };
+
+  useEffect(() => {
+    if (searchInput) {
+    } else {
+      setDisplayLimit(POKEMON_PER_LOAD);
+    }
+  }, [searchInput]);
+
   return (
     <InfiniteScroll
-      dataLength={currDisplayLimit}
-      next={handleNextPage}
-      hasMore={currDisplayLimit < POKEMON_MAX_NUM}
+      dataLength={displayLimit}
+      next={handleNext}
+      hasMore={displayLimit < POKEMON_MAX_NUM}
+      scrollThreshold={0.9}
       loader={
         <Box
           sx={{
@@ -75,17 +72,33 @@ export const HomePage: React.FC = () => {
       style={{ overflowY: "hidden" }}
     >
       <Box sx={homePageContainerStyle}>
-        <Box>
-          <CustomCard sx={searchBarStyle}></CustomCard>
-          <Grid container columns={12} spacing="15px" marginTop="50px">
-            {Array.from(allPokemonNames).map((pokemon, index) => (
-              <PokemonCard
-                pokemonUrl={pokemon.url}
-                displayLimit={currDisplayLimit}
-                key={index}
-              ></PokemonCard>
-            ))}
-          </Grid>
+        <Box width="100%">
+          <CustomCard sx={searchBarStyle}>
+            <Input
+              fullWidth
+              placeholder="Search"
+              disableUnderline
+              value={searchInput}
+              onChange={handleSearchChange}
+              sx={{ height: "100%", padding: "0 20px" }}
+            ></Input>
+          </CustomCard>
+          {hasLoaded ? (
+            <Grid container columns={12} spacing="15px" marginTop="50px">
+              {Array.from(allPokemonNames).map((pokemon, index) => (
+                <PokemonCard
+                  pokemonUrl={pokemon.url}
+                  inDisplayLimit={index < displayLimit}
+                  matchesSearchInput={
+                    searchInput ? pokemon.name.includes(searchInput) : true
+                  }
+                  key={index}
+                ></PokemonCard>
+              ))}
+            </Grid>
+          ) : (
+            <CircularProgress />
+          )}
         </Box>
         <Box></Box>
       </Box>

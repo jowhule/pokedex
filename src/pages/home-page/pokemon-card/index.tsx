@@ -21,11 +21,15 @@ import { CustomCard } from "../../../components/CustomCard";
 
 type PokemonCardProps = {
   pokemonUrl: string;
-  displayLimit: number;
-  searchInput: string;
+  inDisplayLimit: boolean;
+  matchesSearchInput: boolean;
 };
 
-export const PokemonCard: React.FC<PokemonCardProps> = ({ pokemonUrl }) => {
+export const PokemonCard: React.FC<PokemonCardProps> = ({
+  pokemonUrl,
+  inDisplayLimit,
+  matchesSearchInput,
+}) => {
   const [pokemonData, setPokemonData] =
     useState<PokemonDataResponseType>(pokemonDataDefault);
   const [pokemonName, setPokemonName] = useState<string>("");
@@ -40,14 +44,18 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({ pokemonUrl }) => {
     setIsMouseOver(false);
   };
 
-  // get initial pokemon data
+  // get initial pokemon data if the card is supposed to be displayed
   useEffect(() => {
-    sendGenericAPIRequest<PokemonDataResponseType>(pokemonUrl).then((data) => {
-      if (data) setPokemonData(data);
-    });
-  }, [pokemonUrl]);
+    if (inDisplayLimit && matchesSearchInput) {
+      sendGenericAPIRequest<PokemonDataResponseType>(pokemonUrl).then(
+        (data) => {
+          if (data) setPokemonData(data);
+        }
+      );
+    }
+  }, [pokemonUrl, inDisplayLimit, matchesSearchInput]);
 
-  // get pokemon name
+  // get pokemon name and capitalise first letter
   useEffect(() => {
     if (pokemonData.name) {
       setPokemonName(
@@ -58,37 +66,44 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({ pokemonUrl }) => {
   }, [pokemonData]);
 
   return (
-    <Grid item sm={6} md={4} lg={3} xl={2} height="180px">
-      <Hoverable onMouseEnter={handleMouseOver} onMouseLeave={handleMouseLeave}>
-        <CustomCard sx={pokemonCardContainer}>
-          <Box sx={pokemonIdContainer}>
-            <SecondaryText fontSize="12px" fontWeight="bold">
-              # {pokemonData.id}
-            </SecondaryText>
-          </Box>
-
-          {hasLoaded ? (
-            <>
-              <Box
-                component="img"
-                src={pokemonData.sprites.front_default}
-                alt={`${pokemonName}'s sprite`}
-                sx={isMouseOver ? pokemonSpriteHover : pokemonSpriteStyle}
-              />
-              <BodyText fontWeight="bold" fontSize="18px">
-                {pokemonName}
-              </BodyText>
-              <Box display="flex" gap="10px" marginTop="5px">
-                {Array.from(pokemonData.types).map((type, index) => (
-                  <TypeTag type={type.type.name} key={index} />
-                ))}
+    <>
+      {matchesSearchInput && inDisplayLimit && (
+        <Grid item sm={6} md={4} lg={3} xl={3} height="180px">
+          <Hoverable
+            onMouseEnter={handleMouseOver}
+            onMouseLeave={handleMouseLeave}
+          >
+            <CustomCard sx={pokemonCardContainer}>
+              <Box sx={pokemonIdContainer}>
+                <SecondaryText fontSize="12px" fontWeight="bold">
+                  # {pokemonData.id}
+                </SecondaryText>
               </Box>
-            </>
-          ) : (
-            <CircularProgress />
-          )}
-        </CustomCard>
-      </Hoverable>
-    </Grid>
+
+              {hasLoaded ? (
+                <>
+                  <Box
+                    component="img"
+                    src={pokemonData.sprites.front_default}
+                    alt={`${pokemonName}'s sprite`}
+                    sx={isMouseOver ? pokemonSpriteHover : pokemonSpriteStyle}
+                  />
+                  <BodyText fontWeight="bold" fontSize="18px">
+                    {pokemonName}
+                  </BodyText>
+                  <Box display="flex" gap="10px" marginTop="5px">
+                    {Array.from(pokemonData.types).map((type, index) => (
+                      <TypeTag type={type.type.name} key={index} />
+                    ))}
+                  </Box>
+                </>
+              ) : (
+                <CircularProgress />
+              )}
+            </CustomCard>
+          </Hoverable>
+        </Grid>
+      )}
+    </>
   );
 };
