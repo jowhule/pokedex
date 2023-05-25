@@ -14,40 +14,32 @@ export const POKEMON_MAX_NUM = 1010;
 export const POKEMON_PER_LOAD = 30;
 
 export const HomePage: React.FC = () => {
+  const [hasLoaded, setHasLoaded] = useState<boolean>(false);
   const [allPokemonNames, setAllPokemonNames] = useState<
     PokemonNameResponseType[]
   >([]);
 
-  const [currPage, setCurrPage] = useState<number>(1);
-  const [prevPage, setPrevPage] = useState<number>(0);
-  const [visiblePokemonList, setVisiblePokemonList] = useState<
-    PokemonNameResponseType[]
-  >([]);
+  const [currDisplayLimit, setCurrDisplayLimit] =
+    useState<number>(POKEMON_PER_LOAD);
+  const [prevDisplayLimit, setPrevDisplayLimit] = useState<number>(0);
 
   /**
    * callback function to be called whenever current page number changes so that
    * more pokemon can be paginated into the page to emulate infinite scroll
    */
   const getNextPokemonPage = useCallback(() => {
-    const fetchData = async () => {
-      sendGenericAPIRequest<PokemonApiResponseType>(
-        `https://pokeapi.co/api/v2/pokemon/?limit=${POKEMON_PER_LOAD}&offset=${
-          prevPage * POKEMON_PER_LOAD
-        }`
-      ).then((data) => {
-        if (data) {
-          setPrevPage(currPage);
-          setVisiblePokemonList([...visiblePokemonList, ...data.results]);
-        }
-      });
-    };
-    if (visiblePokemonList.length < POKEMON_MAX_NUM && prevPage !== currPage) {
-      fetchData();
+    setPrevDisplayLimit(currDisplayLimit);
+
+    if (
+      currDisplayLimit < POKEMON_MAX_NUM &&
+      prevDisplayLimit !== currDisplayLimit
+    ) {
+      console.log("hi");
     }
-  }, [currPage, prevPage, visiblePokemonList]);
+  }, [currDisplayLimit, prevDisplayLimit]);
 
   const handleNextPage = () => {
-    setCurrPage(currPage + 1);
+    setCurrDisplayLimit(currDisplayLimit + POKEMON_PER_LOAD);
   };
 
   // get names of pokemon to be displayed page by page
@@ -66,9 +58,9 @@ export const HomePage: React.FC = () => {
 
   return (
     <InfiniteScroll
-      dataLength={visiblePokemonList.length}
+      dataLength={currDisplayLimit}
       next={handleNextPage}
-      hasMore={visiblePokemonList.length < POKEMON_MAX_NUM}
+      hasMore={currDisplayLimit < POKEMON_MAX_NUM}
       loader={
         <Box
           sx={{
@@ -86,8 +78,12 @@ export const HomePage: React.FC = () => {
         <Box>
           <CustomCard sx={searchBarStyle}></CustomCard>
           <Grid container columns={12} spacing="15px" marginTop="50px">
-            {Array.from(visiblePokemonList).map((pokemon, index) => (
-              <PokemonCard pokemonUrl={pokemon.url} key={index}></PokemonCard>
+            {Array.from(allPokemonNames).map((pokemon, index) => (
+              <PokemonCard
+                pokemonUrl={pokemon.url}
+                displayLimit={currDisplayLimit}
+                key={index}
+              ></PokemonCard>
             ))}
           </Grid>
         </Box>

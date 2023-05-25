@@ -21,6 +21,8 @@ import { CustomCard } from "../../../components/CustomCard";
 
 type PokemonCardProps = {
   pokemonUrl: string;
+  displayLimit: number;
+  searchInput: string;
 };
 
 export const PokemonCard: React.FC<PokemonCardProps> = ({ pokemonUrl }) => {
