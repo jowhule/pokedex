@@ -1,68 +1,87 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { Box, CircularProgress, Grid } from "@mui/material";
-import { PokemonNameResponseType } from "../../services/apiRequestsTypes";
+import React, { useEffect, useState } from "react";
+import { Box, Grid } from "@mui/material";
+import {
+  PokemonApiResponseType,
+  PokemonNameResponseType,
+} from "../../services/apiRequestsTypes";
 import { PokemonCard } from "./pokemon-card";
-import { triggerStorePokemonPromise } from "../../App";
 import { homePageContainerStyle, searchBarStyle } from "./style";
 import { CustomCard } from "../../components/CustomCard";
+import { sendGenericAPIRequest } from "../../services/apiRequests";
 
-export const HomePage: React.FC = () => {
-  const [isNameListLoaded, setIsNameListLoaded] = useState<boolean>(false);
+export const POKEMON_MAX_NUM = 1010;
+export const POKEMON_PER_LOAD = 30;
+
+type HomePageProps = {
+  ref?: any;
+};
+
+export const HomePage: React.FC<HomePageProps> = ({}) => {
+  const [allPokemonNames, setAllPokemonNames] = useState<
+    PokemonNameResponseType[]
+  >([]);
+
+  const [currPage, setCurrPage] = useState<number>(1);
+  const [prevPage, setPrevPage] = useState<number>(0);
   const [visiblePokemonList, setVisiblePokemonList] = useState<
     PokemonNameResponseType[]
   >([]);
-  const [currentPokemonLimit, setCurrentPokemonLimit] = useState<number>(30);
+  const [lastList, setLastList] = useState<boolean>(false);
 
-  /**
-   * set current visible list of pokemon
-   * @param pokemonList list of all pokemon names available from pokeapi
-   */
-  const getVisiblePokemonList = useCallback(
-    (pokemonList: PokemonNameResponseType[]) => {
-      const tempPokemonList: PokemonNameResponseType[] = [];
-      for (let i = 0; i < currentPokemonLimit; i++) {
-        tempPokemonList.push(pokemonList[i]);
-      }
-      setVisiblePokemonList(tempPokemonList);
-    },
-    [currentPokemonLimit]
-  );
-
-  /**
-   * set pokemon list once
-   */
+  // get names of pokemon to be displayed page by page
   useEffect(() => {
-    const pokemonList = JSON.parse(localStorage.getItem("pokemons") ?? "");
-    if (pokemonList) {
-      getVisiblePokemonList(pokemonList);
-    } else {
-      triggerStorePokemonPromise().then((data) => {
-        getVisiblePokemonList(data);
+    const fetchData = async () => {
+      sendGenericAPIRequest<PokemonApiResponseType>(
+        `https://pokeapi.co/api/v2/pokemon/?limit=${POKEMON_PER_LOAD}&offset=${
+          prevPage * POKEMON_PER_LOAD
+        }`
+      ).then((data) => {
+        if (data) {
+          if (data.results.length < POKEMON_PER_LOAD) {
+            setLastList(true);
+            return;
+          }
+          setPrevPage(currPage);
+          setVisiblePokemonList([...visiblePokemonList, ...data.results]);
+        }
       });
-    }
-  }, [getVisiblePokemonList]);
+    };
 
-  // turn off loading screen to display pokemon cards
+    if (!lastList && prevPage !== currPage) {
+      fetchData();
+    }
+  }, [currPage, lastList, prevPage, visiblePokemonList]);
+
+  // get all pokemon names
   useEffect(() => {
-    if (visiblePokemonList) setIsNameListLoaded(true);
-  }, [visiblePokemonList]);
+    sendGenericAPIRequest<PokemonApiResponseType>(
+      `https://pokeapi.co/api/v2/pokemon/?limit=${POKEMON_MAX_NUM}&offset=0`
+    ).then((data) => {
+      if (data) setAllPokemonNames(data.results);
+    });
+  }, []);
+
+  const handleScroll = () => {
+    console.log("hi");
+
+    // if (scrollTop + clientHeight === scrollHeight) {
+    //   setCurrPage(currPage + 1);
+    // }
+  };
 
   return (
     <>
-      {isNameListLoaded ? (
-        <Box sx={homePageContainerStyle}>
-          <Box>
-            <CustomCard sx={searchBarStyle}></CustomCard>
-            <Grid container columns={12} spacing="15px" marginTop="50px">
-              {Array.from(visiblePokemonList).map((pokemon, index) => (
-                <PokemonCard pokemonUrl={pokemon.url} key={index}></PokemonCard>
-              ))}
-            </Grid>
-          </Box>
+      <Box sx={homePageContainerStyle} onScroll={handleScroll}>
+        <Box>
+          <CustomCard sx={searchBarStyle}></CustomCard>
+          <Grid container columns={12} spacing="15px" marginTop="50px">
+            {Array.from(visiblePokemonList).map((pokemon, index) => (
+              <PokemonCard pokemonUrl={pokemon.url} key={index}></PokemonCard>
+            ))}
+          </Grid>
         </Box>
-      ) : (
-        <CircularProgress />
-      )}
+        <Box></Box>
+      </Box>
     </>
   );
 };
