@@ -30,7 +30,7 @@ export const pokemonIdContainer: SxProps<Theme> = {
 export const pokemonSpriteStyle: SxProps<Theme> = {
   position: "absolute",
   top: "-50px",
-  transition: "ease 0.1s",
+  transition: "ease 0.2s",
   objectFit: "cover",
 };
 

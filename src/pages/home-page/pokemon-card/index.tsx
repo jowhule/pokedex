@@ -55,10 +55,6 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({ pokemonUrl }) => {
     }
   }, [pokemonData]);
 
-  useEffect(() => {
-    console.log("hi");
-  }, [isMouseOver]);
-
   return (
     <Grid item sm={6} md={4} lg={3} xl={2} height="180px">
       <Hoverable onMouseEnter={handleMouseOver} onMouseLeave={handleMouseLeave}>
