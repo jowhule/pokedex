@@ -139,7 +139,7 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
             spacing="25px"
             marginTop="50px"
             overflow="visible"
-            paddingRight="5px"
+            paddingRight="8px"
           >
             {Array.from(pokedexList).map((pokemon, index) => (
               <PokemonCard

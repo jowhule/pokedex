@@ -9,10 +9,14 @@ export const pokemonCardContainer = {
   height: "125px",
   paddingTop: "35px",
   paddingBottom: "20px",
+  boxSizing: "border-box",
   transition: "transform 0.2s ease, boxShadow 0.2s ease",
-  "&:hover": {
-    boxShadow: `6px 6px  ${secondaryColour}`,
+  "&:active": {
+    boxShadow: `7px 7px ${secondaryColour}`,
     transform: "translate(2px, 2px)",
+  },
+  "&:hover": {
+    border: `2px solid ${secondaryColour}`,
   },
 };
 
