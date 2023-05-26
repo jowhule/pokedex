@@ -7,6 +7,7 @@ import {
 import { homePageContainerStyle } from "./style";
 import { sendGenericAPIRequest } from "../../services/apiRequests";
 import { PokedexDisplay } from "../../components/pokedex-display";
+import { MoreInfoSlide } from "../../components/more-info-slide";
 
 export const POKEMON_MAX_NUM = 1010;
 
@@ -39,7 +40,10 @@ export const HomePage: React.FC = () => {
           listLoaded={hasLoaded}
         />
       </Box>
-      <Box></Box>
+      <Box>
+        <Box sx={{ width: "350px" }}></Box>
+        <MoreInfoSlide activePokemonUrl="" />
+      </Box>
     </Box>
   );
 };

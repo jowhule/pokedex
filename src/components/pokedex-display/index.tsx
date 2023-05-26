@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { CustomCard } from "../custom-card";
+import { CustomCard } from "../custom-card/CustomCard";
 import { Box, CircularProgress, Grid, Input } from "@mui/material";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { PokemonCard } from "./pokemon-card";
@@ -131,9 +131,16 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
               <CircularProgress />
             </Box>
           }
-          style={{ overflow: "hidden" }}
+          style={{ overflowY: "hidden" }}
         >
-          <Grid container columns={12} spacing="25px" marginTop="50px">
+          <Grid
+            container
+            columns={12}
+            spacing="25px"
+            marginTop="50px"
+            overflow="visible"
+            paddingRight="5px"
+          >
             {Array.from(pokedexList).map((pokemon, index) => (
               <PokemonCard
                 pokemonUrl={pokemon.url}
