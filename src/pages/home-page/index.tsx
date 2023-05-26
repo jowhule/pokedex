@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, CircularProgress, Grid, Input } from "@mui/material";
 import {
   PokemonApiResponseType,
@@ -21,9 +21,11 @@ export const HomePage: React.FC = () => {
   const [displayLimit, setDisplayLimit] = useState<number>(POKEMON_PER_LOAD);
 
   const [searchInput, setSearchInput] = useState<string>("");
+  const [displayList, setDisplayList] = useState<Record<string, string>>({});
 
+  // call to trigger adding more pokemon to display
   const handleNext = () => {
-    setDisplayLimit(displayLimit + POKEMON_PER_LOAD);
+    setDisplayLimit(displayLimit + 1);
   };
 
   // name of all pokemon received
@@ -45,12 +47,38 @@ export const HomePage: React.FC = () => {
     setSearchInput(e.target.value);
   };
 
+  // when search input changes start a new display list of pokemon
   useEffect(() => {
-    if (searchInput) {
-    } else {
-      setDisplayLimit(POKEMON_PER_LOAD);
+    // if not 30 load -> go thru all names until 30 is loaded
+    // need to update curr display limit to where the 30th was found
+    const lenCurrDisplayList = Object.keys(displayList).length;
+
+    if (allPokemonNames.length !== 0 && lenCurrDisplayList < displayLimit) {
+      const nextSearchPage: Record<string, string> = {};
+      let currPokemon = lenCurrDisplayList;
+      let numAdded = 0;
+      while (
+        numAdded < POKEMON_PER_LOAD &&
+        lenCurrDisplayList + numAdded < allPokemonNames.length
+      ) {
+        const { name, url } = allPokemonNames[currPokemon];
+
+        if (name.includes(searchInput)) {
+          nextSearchPage[name] = url;
+          numAdded += 1;
+        }
+        currPokemon += 1;
+      }
+      setDisplayList({ ...displayList, ...nextSearchPage });
     }
-  }, [searchInput]);
+  }, [allPokemonNames, searchInput, displayList, displayLimit]);
+
+  useEffect(() => {
+    const lenDisplayList = Object.keys(displayList).length;
+    console.log(lenDisplayList);
+
+    if (lenDisplayList > 0) setDisplayLimit(lenDisplayList);
+  }, [displayList]);
 
   return (
     <InfiniteScroll
@@ -88,10 +116,8 @@ export const HomePage: React.FC = () => {
               {Array.from(allPokemonNames).map((pokemon, index) => (
                 <PokemonCard
                   pokemonUrl={pokemon.url}
-                  inDisplayLimit={index < displayLimit}
-                  matchesSearchInput={
-                    searchInput ? pokemon.name.includes(searchInput) : true
-                  }
+                  inDisplayLimit={displayList[pokemon.name] ? true : false}
+                  matchesSearchInput={true}
                   key={index}
                 ></PokemonCard>
               ))}
