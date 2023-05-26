@@ -9,6 +9,9 @@ export const pokemonCardContainer = {
   height: "65px",
   paddingTop: "35px",
   paddingBottom: "20px",
+  "&:hover": {
+    border: `2px solid ${secondaryColour}`,
+  },
 };
 
 export const pokemonIdContainer: SxProps<Theme> = {
