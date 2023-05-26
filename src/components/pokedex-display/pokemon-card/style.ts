@@ -6,7 +6,7 @@ export const pokemonCardContainer = {
   flexDirection: "column",
   position: "relative",
   alignItems: "center",
-  height: "65px",
+  height: "75px",
   paddingTop: "35px",
   paddingBottom: "20px",
   "&:hover": {

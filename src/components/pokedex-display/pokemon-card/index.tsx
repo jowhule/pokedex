@@ -17,7 +17,7 @@ import {
   pokemonSpriteStyle,
 } from "./style";
 import { TypeTag } from "../../type-tag";
-import { CustomCard } from "../../CustomCard";
+import { CustomCard } from "../../custom-card";
 
 type PokemonCardProps = {
   pokemonUrl: string;
@@ -66,7 +66,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
   return (
     <>
       {inDisplayList && (
-        <Grid item sm={6} md={4} lg={3} xl={3} height="180px">
+        <Grid item sm={6} md={4} lg={3} xl={3} height="190px">
           <Hoverable
             onMouseEnter={handleMouseOver}
             onMouseLeave={handleMouseLeave}

@@ -6,3 +6,9 @@ export const searchBarStyle = {
   boxSizing: "border-box",
   border: `2px solid ${secondaryColour}`,
 };
+
+export const loadMoreContainer = {
+  display: "flex",
+  justifyContent: "center",
+  marginBottom: "50px",
+};

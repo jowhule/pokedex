@@ -1,6 +1,6 @@
 import { Box, SxProps } from "@mui/material";
 import React from "react";
-import { secondaryColour } from "../utils/colours";
+import { secondaryColour } from "../../utils/colours";
 import { Theme } from "@emotion/react";
 
 type CustomCardProp = {
