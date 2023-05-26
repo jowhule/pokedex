@@ -16,8 +16,8 @@ import {
   pokemonSpriteHover,
   pokemonSpriteStyle,
 } from "./style";
-import { TypeTag } from "../type-tag";
-import { CustomCard } from "../../../components/CustomCard";
+import { TypeTag } from "../../type-tag";
+import { CustomCard } from "../../CustomCard";
 
 type PokemonCardProps = {
   pokemonUrl: string;

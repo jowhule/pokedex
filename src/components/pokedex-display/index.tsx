@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { CustomCard } from "../CustomCard";
 import { Box, CircularProgress, Grid, Input } from "@mui/material";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { PokemonCard } from "../../pages/home-page/pokemon-card";
+import { PokemonCard } from "./pokemon-card";
 import { PokemonNameResponseType } from "../../services/apiRequestsTypes";
 import { searchBarStyle } from "./style";
 
