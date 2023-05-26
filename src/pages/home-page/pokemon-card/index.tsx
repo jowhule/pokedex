@@ -21,14 +21,12 @@ import { CustomCard } from "../../../components/CustomCard";
 
 type PokemonCardProps = {
   pokemonUrl: string;
-  inDisplayLimit: boolean;
-  matchesSearchInput: boolean;
+  inDisplayList: boolean;
 };
 
 export const PokemonCard: React.FC<PokemonCardProps> = ({
   pokemonUrl,
-  inDisplayLimit,
-  matchesSearchInput,
+  inDisplayList,
 }) => {
   const [pokemonData, setPokemonData] =
     useState<PokemonDataResponseType>(pokemonDataDefault);
@@ -46,14 +44,14 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
 
   // get initial pokemon data if the card is supposed to be displayed
   useEffect(() => {
-    if (inDisplayLimit && matchesSearchInput) {
+    if (inDisplayList && !pokemonName) {
       sendGenericAPIRequest<PokemonDataResponseType>(pokemonUrl).then(
         (data) => {
           if (data) setPokemonData(data);
         }
       );
     }
-  }, [pokemonUrl, inDisplayLimit, matchesSearchInput]);
+  }, [pokemonUrl, inDisplayList, pokemonName]);
 
   // get pokemon name and capitalise first letter
   useEffect(() => {
@@ -67,7 +65,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
 
   return (
     <>
-      {matchesSearchInput && inDisplayLimit && (
+      {inDisplayList && (
         <Grid item sm={6} md={4} lg={3} xl={3} height="180px">
           <Hoverable
             onMouseEnter={handleMouseOver}
