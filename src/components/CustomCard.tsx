@@ -16,9 +16,6 @@ export const CustomCard: React.FC<CustomCardProp> = ({ children, sx }) => {
         bgcolor: "white",
         borderRadius: "15px",
         boxShadow: `0 5px ${secondaryColour}`,
-        "&:hover": {
-          border: `2px solid ${secondaryColour}`,
-        },
       }}
     >
       {children}

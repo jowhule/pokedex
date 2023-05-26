@@ -1,61 +1,27 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { Box, CircularProgress, Grid } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Box } from "@mui/material";
 import {
   PokemonApiResponseType,
   PokemonNameResponseType,
 } from "../../services/apiRequestsTypes";
-import { PokemonCard } from "./pokemon-card";
-import { homePageContainerStyle, searchBarStyle } from "./style";
-import { CustomCard } from "../../components/CustomCard";
+import { homePageContainerStyle } from "./style";
 import { sendGenericAPIRequest } from "../../services/apiRequests";
-import InfiniteScroll from "react-infinite-scroll-component";
+import { PokedexDisplay } from "../../components/pokedex-display";
 
 export const POKEMON_MAX_NUM = 1010;
-export const POKEMON_PER_LOAD = 30;
 
 export const HomePage: React.FC = () => {
+  const [hasLoaded, setHasLoaded] = useState<boolean>(false);
   const [allPokemonNames, setAllPokemonNames] = useState<
     PokemonNameResponseType[]
   >([]);
 
-  const [currPage, setCurrPage] = useState<number>(1);
-  const [prevPage, setPrevPage] = useState<number>(0);
-  const [visiblePokemonList, setVisiblePokemonList] = useState<
-    PokemonNameResponseType[]
-  >([]);
-
-  /**
-   * callback function to be called whenever current page number changes so that
-   * more pokemon can be paginated into the page to emulate infinite scroll
-   */
-  const getNextPokemonPage = useCallback(() => {
-    const fetchData = async () => {
-      sendGenericAPIRequest<PokemonApiResponseType>(
-        `https://pokeapi.co/api/v2/pokemon/?limit=${POKEMON_PER_LOAD}&offset=${
-          prevPage * POKEMON_PER_LOAD
-        }`
-      ).then((data) => {
-        if (data) {
-          setPrevPage(currPage);
-          setVisiblePokemonList([...visiblePokemonList, ...data.results]);
-        }
-      });
-    };
-    if (visiblePokemonList.length < POKEMON_MAX_NUM && prevPage !== currPage) {
-      fetchData();
-    }
-  }, [currPage, prevPage, visiblePokemonList]);
-
-  const handleNextPage = () => {
-    setCurrPage(currPage + 1);
-  };
-
-  // get names of pokemon to be displayed page by page
+  // pokemon list finished fetching from api
   useEffect(() => {
-    getNextPokemonPage();
-  }, [getNextPokemonPage]);
+    if (Object.keys(allPokemonNames).length !== 0) setHasLoaded(true);
+  }, [allPokemonNames]);
 
-  // get all pokemon names (for search bar)
+  // get all pokemon names
   useEffect(() => {
     sendGenericAPIRequest<PokemonApiResponseType>(
       `https://pokeapi.co/api/v2/pokemon/?limit=${POKEMON_MAX_NUM}&offset=0`
@@ -65,34 +31,15 @@ export const HomePage: React.FC = () => {
   }, []);
 
   return (
-    <InfiniteScroll
-      dataLength={visiblePokemonList.length}
-      next={handleNextPage}
-      hasMore={visiblePokemonList.length < POKEMON_MAX_NUM}
-      loader={
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            marginBottom: "50px",
-          }}
-        >
-          <CircularProgress />
-        </Box>
-      }
-      style={{ overflowY: "hidden" }}
-    >
-      <Box sx={homePageContainerStyle}>
-        <Box>
-          <CustomCard sx={searchBarStyle}></CustomCard>
-          <Grid container columns={12} spacing="15px" marginTop="50px">
-            {Array.from(visiblePokemonList).map((pokemon, index) => (
-              <PokemonCard pokemonUrl={pokemon.url} key={index}></PokemonCard>
-            ))}
-          </Grid>
-        </Box>
-        <Box></Box>
+    <Box sx={homePageContainerStyle}>
+      <Box width="100%">
+        <PokedexDisplay
+          pokedexList={allPokemonNames}
+          displaySearch
+          listLoaded={hasLoaded}
+        />
       </Box>
-    </InfiniteScroll>
+      <Box></Box>
+    </Box>
   );
 };
