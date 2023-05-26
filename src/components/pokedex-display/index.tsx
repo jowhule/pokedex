@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { CustomCard } from "../CustomCard";
 import { Box, CircularProgress, Grid, Input } from "@mui/material";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -36,21 +36,29 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
   };
 
   // add to display list
-  useEffect(() => {
+  const getCurrentList = useCallback((): Record<string, string> => {
     let currList: Record<string, string> = displayList;
     if (prevSearchInput !== currSearchInput) {
       currList = {};
       setPrevSearchInput(currSearchInput);
     }
+
+    return currList;
+  }, [currSearchInput, displayList, prevSearchInput]);
+
+  useEffect(() => {
+    const currList: Record<string, string> = getCurrentList();
     const lenCurrDisplayList = Object.keys(currList).length;
 
-    if (pokedexList.length !== 0 && lenCurrDisplayList < displayLimit) {
+    if (
+      pokedexList.length !== 0 &&
+      Object.keys(currList).length < displayLimit
+    ) {
       const nextSearchPage: Record<string, string> = {};
       let currPokemon = lenCurrDisplayList;
       let numAdded = 0;
+      // load 30 pokemon into display list
       while (numAdded < POKEMON_PER_LOAD && currPokemon < pokedexList.length) {
-        if (!pokedexList[currPokemon]) break;
-
         const { name, url } = pokedexList[currPokemon];
         if (name.includes(currSearchInput) && !currList[name]) {
           nextSearchPage[name] = url;
@@ -58,20 +66,11 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
         }
         currPokemon += 1;
       }
-
-      if (numAdded < POKEMON_PER_LOAD) {
-        setHasMoreToLoad(false);
-      }
-
       setDisplayList({ ...currList, ...nextSearchPage });
+      // tell infinite scroll that there is no more pokemon to load
+      if (numAdded < POKEMON_PER_LOAD) setHasMoreToLoad(false);
     }
-  }, [
-    pokedexList,
-    currSearchInput,
-    displayList,
-    displayLimit,
-    prevSearchInput,
-  ]);
+  }, [pokedexList, currSearchInput, displayList, displayLimit, getCurrentList]);
 
   useEffect(() => {
     setDisplayLimit(POKEMON_PER_LOAD);
@@ -80,10 +79,12 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
 
   useEffect(() => {
     const lenDisplayList = Object.keys(displayList).length;
-
-    if (lenDisplayList > 0) setDisplayLimit(lenDisplayList);
+    setDisplayLimit(lenDisplayList);
   }, [displayList]);
 
+  useEffect(() => {
+    if (listLoaded) setDisplayLimit(POKEMON_PER_LOAD);
+  }, [listLoaded]);
   return (
     <>
       {displaySearch && (
