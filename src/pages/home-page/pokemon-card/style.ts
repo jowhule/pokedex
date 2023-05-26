@@ -4,10 +4,9 @@ import { secondaryColour } from "../../../utils/colours";
 export const pokemonCardContainer = {
   display: "flex",
   flexDirection: "column",
-  justifyContent: "center",
   position: "relative",
   alignItems: "center",
-  height: "60px",
+  height: "65px",
   paddingTop: "35px",
   paddingBottom: "20px",
 };

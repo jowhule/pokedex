@@ -82,6 +82,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
                 <>
                   <Box
                     component="img"
+                    draggable="false"
                     src={pokemonData.sprites.front_default}
                     alt={`${pokemonName}'s sprite`}
                     sx={isMouseOver ? pokemonSpriteHover : pokemonSpriteStyle}
