@@ -1,6 +1,8 @@
 ## TODO
 - add pages per generation
-- pages per pokemon
+- add page to save pokemon in (team)
+- a route to each pokemon to display all stats
+- type filter
 
 ## Available Scripts
 
