@@ -16,6 +16,7 @@ export const HomePage: React.FC = () => {
   const [allPokemonNames, setAllPokemonNames] = useState<
     PokemonNameResponseType[]
   >([]);
+  const [activePokemonUrl, setActivePokemonUrl] = useState<string>("");
 
   // pokemon list finished fetching from api
   useEffect(() => {
@@ -38,11 +39,12 @@ export const HomePage: React.FC = () => {
           pokedexList={allPokemonNames}
           displaySearch
           listLoaded={hasLoaded}
+          setActivePokemonUrl={setActivePokemonUrl}
         />
       </Box>
       <Box>
         <Box sx={{ width: "350px" }}></Box>
-        <MoreInfoSlide activePokemonUrl="" />
+        <MoreInfoSlide activePokemonUrl={activePokemonUrl} />
       </Box>
     </Box>
   );

@@ -12,11 +12,14 @@ type PokedexDisplayProps = {
   pokedexList: PokemonNameResponseType[];
   displaySearch?: boolean;
   listLoaded: boolean;
+  setActivePokemonUrl: React.Dispatch<React.SetStateAction<string>>;
 };
+
 export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
   pokedexList,
   displaySearch,
   listLoaded,
+  setActivePokemonUrl,
 }) => {
   const [displayLimit, setDisplayLimit] = useState<number>(POKEMON_PER_LOAD);
 
@@ -145,8 +148,9 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
               <PokemonCard
                 pokemonUrl={pokemon.url}
                 inDisplayList={displayList[pokemon.name] ? true : false}
+                setActivePokemonUrl={setActivePokemonUrl}
                 key={index}
-              ></PokemonCard>
+              />
             ))}
           </Grid>
         </InfiniteScroll>
