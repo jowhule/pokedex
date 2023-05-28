@@ -28,10 +28,9 @@ export const pokemonIdContainer: SxProps<Theme> = {
   position: "absolute",
   bottom: "0",
   left: "0",
-  height: "20px",
-  width: "50px",
+  height: "25px",
+  width: "55px",
   boxSizing: "border-box",
-  paddingTop: "5px",
   borderRadius: "0 5px 0 10px",
   bgcolor: `${secondaryColour}`,
 };
@@ -41,6 +40,7 @@ export const pokemonSpriteStyle: SxProps<Theme> = {
   top: "-50px",
   transition: "ease 0.2s",
   objectFit: "cover",
+  imageRendering: "pixelated",
 };
 
 export const pokemonSpriteHover: SxProps<Theme> = {
