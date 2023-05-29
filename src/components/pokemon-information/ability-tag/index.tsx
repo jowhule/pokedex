@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { PokemonAbilityType } from "../../services/apiRequestsTypes";
+import { PokemonAbilityType } from "../../../services/apiRequestsTypes";
 import { Box } from "@mui/material";
-import { BodyText, SecondaryText } from "../../utils/styledComponents";
+import { BodyText, SecondaryText } from "../../../utils/styledComponents";
 
 type AbilityTagProps = {
   abilityInfo: PokemonAbilityType;

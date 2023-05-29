@@ -1,7 +1,7 @@
 import React from "react";
-import { SecondaryText } from "../../utils/styledComponents";
+import { SecondaryText } from "../../../utils/styledComponents";
 import { Box } from "@mui/material";
-import { typeBorderColours, typeColours } from "../../utils/colours";
+import { typeBorderColours, typeColours } from "../../../utils/colours";
 
 type TypeTagProps = {
   type: string;

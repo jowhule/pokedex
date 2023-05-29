@@ -16,7 +16,7 @@ import {
   pokemonSpriteHover,
   pokemonSpriteStyle,
 } from "./style";
-import { TypeTag } from "../../type-tag";
+import { TypeTag } from "../../pokemon-information/type-tag";
 import { CustomCard } from "../../custom-card/CustomCard";
 
 type PokemonCardProps = {
