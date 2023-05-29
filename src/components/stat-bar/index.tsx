@@ -1,7 +1,8 @@
 import { Box } from "@mui/material";
 import React from "react";
-import { fontBgColour, statColours } from "../../utils/colours";
+import { statColours } from "../../utils/colours";
 import { BodyText } from "../../utils/styledComponents";
+import { statBarContainer, statContainer } from "./style";
 
 type StatBarProps = {
   stat: string;
@@ -21,26 +22,11 @@ const MAX_STAT_VALUE = 256;
 
 export const StatBar: React.FC<StatBarProps> = ({ stat, value }) => {
   return (
-    <Box
-      sx={{
-        display: "flex",
-        width: "100%",
-        alignItems: "center",
-        justifyContent: "space-between",
-      }}
-    >
+    <Box sx={statContainer}>
       <BodyText fontSize="14px" fontWeight="bold">
         {statAbbrv[stat]}
       </BodyText>
-      <Box
-        sx={{
-          position: "relative",
-          width: "250px",
-          backgroundColor: `${fontBgColour}`,
-          borderRadius: "10px",
-          height: "8px",
-        }}
-      >
+      <Box sx={statBarContainer}>
         <Box
           sx={{
             position: "absolute",
