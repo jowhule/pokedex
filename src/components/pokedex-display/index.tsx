@@ -144,7 +144,7 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
             overflow="visible"
             paddingRight="8px"
           >
-            {Array.from(pokedexList).map((pokemon, index) => (
+            {pokedexList.map((pokemon, index) => (
               <PokemonCard
                 pokemonUrl={pokemon.url}
                 inDisplayList={displayList[pokemon.name] ? true : false}

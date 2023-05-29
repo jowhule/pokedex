@@ -56,3 +56,10 @@ export const abilitiesContainer = {
   width: "100%",
   padding: "15px 0",
 };
+
+export const statsContainer = {
+  display: "flex",
+  flexDirection: "column",
+  gap: "5px",
+  width: "90%",
+};

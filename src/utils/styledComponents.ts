@@ -5,8 +5,8 @@ export const BodyText = styled(Typography)({
 });
 
 export const StatTitleText = styled(BodyText)({
-  marginTop: "15px",
-  marginBottom: "10px",
+  marginTop: "20px",
+  marginBottom: "5px",
   fontWeight: "bold",
 });
 

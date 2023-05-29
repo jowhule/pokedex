@@ -19,9 +19,11 @@ import {
   noActivePokemonCardStyle,
   noActivePokemonSpriteStyle,
   pokemonInfoSlideContainer,
+  statsContainer,
 } from "./style";
 import defaultImage from "../../assets/default_pokemon_info.png";
 import { AbilityTag } from "../ability-tag";
+import { StatBar } from "../stat-bar";
 
 type MoreInfoSlideType = {
   activePokemonUrl: string;
@@ -110,19 +112,28 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
               </BodyText>
 
               <Box display="flex" gap="10px" m="10px">
-                {Array.from(pokemonData.types).map((type, index) => (
+                {pokemonData.types.map((type, index) => (
                   <TypeTag type={type.type.name} key={index} />
                 ))}
               </Box>
 
               <StatTitleText fontSize="16px">Abilities</StatTitleText>
               <Box sx={abilitiesContainer}>
-                {Array.from(pokemonData.abilities).map((ability, index) => (
+                {pokemonData.abilities.map((ability, index) => (
                   <AbilityTag abilityInfo={ability} key={index} />
                 ))}
               </Box>
 
               <StatTitleText fontSize="16px">Base Stats</StatTitleText>
+              <Box sx={statsContainer}>
+                {pokemonData.stats.map((statInfo, index) => (
+                  <StatBar
+                    stat={statInfo.stat.name}
+                    value={statInfo.base_stat}
+                    key={index}
+                  />
+                ))}
+              </Box>
             </>
           ) : (
             <SecondaryText>Please select a Pokemon.</SecondaryText>

@@ -101,7 +101,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
                     {pokemonName}
                   </BodyText>
                   <Box display="flex" gap="10px" marginTop="5px">
-                    {Array.from(pokemonData.types).map((type, index) => (
+                    {pokemonData.types.map((type, index) => (
                       <TypeTag type={type.type.name} key={index} />
                     ))}
                   </Box>

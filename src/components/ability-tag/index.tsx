@@ -20,7 +20,6 @@ export const AbilityTag: React.FC<AbilityTagProps> = ({ abilityInfo }) => {
   return (
     <Box
       sx={{
-        padding: "0 10px",
         width: "120px",
         height: "35px",
         display: "flex",
