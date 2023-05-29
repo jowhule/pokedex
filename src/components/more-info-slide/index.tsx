@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { CustomCard } from "../custom-card/CustomCard";
-import {
-  PokemonDataResponseType,
-  pokemonDataDefault,
-} from "../../services/apiRequestsTypes";
+import { PokemonDataResponseType } from "../../services/apiRequestsTypes";
 import { sendGenericAPIRequest } from "../../services/apiRequests";
 import { Box } from "@mui/material";
 import {
@@ -24,6 +21,8 @@ import {
 import defaultImage from "../../assets/default_pokemon_info.png";
 import { AbilityTag } from "../pokemon-information/ability-tag";
 import { StatBar } from "../pokemon-information/stat-bar";
+import { EvolutionChain } from "../pokemon-information/evolution-chain";
+import { pokemonDataDefault } from "../../utils/defaults";
 
 type MoreInfoSlideType = {
   activePokemonUrl: string;
@@ -136,6 +135,7 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
               </Box>
 
               <StatTitleText fontSize="16px">Evolution</StatTitleText>
+              <EvolutionChain pokemon={pokemonData.name} />
             </>
           ) : (
             <SecondaryText>Please select a Pokemon.</SecondaryText>

@@ -1,9 +1,6 @@
 import { Box, CircularProgress, Grid } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import {
-  PokemonDataResponseType,
-  pokemonDataDefault,
-} from "../../../services/apiRequestsTypes";
+import { PokemonDataResponseType } from "../../../services/apiRequestsTypes";
 import { sendGenericAPIRequest } from "../../../services/apiRequests";
 import {
   BodyText,
@@ -18,6 +15,7 @@ import {
 } from "./style";
 import { TypeTag } from "../../pokemon-information/type-tag";
 import { CustomCard } from "../../custom-card/CustomCard";
+import { pokemonDataDefault } from "../../../utils/defaults";
 
 type PokemonCardProps = {
   pokemonUrl: string;
