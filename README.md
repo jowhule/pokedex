@@ -8,7 +8,7 @@ Inspired by [David](https://github.com/davidhckh)
 [PokeAPI](https://pokeapi.co/)
 
 ## TODO
-- add pages per generation
+- add navigational pages per generation pokedex in navbar
 - add page to save pokemon in (team)
 - a route to each pokemon to display all stats
 - type filter
