@@ -4,7 +4,14 @@ import { Box, CircularProgress, Grid, Input } from "@mui/material";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { PokemonCard } from "./pokemon-card";
 import { PokemonPokedexEntryType } from "../../services/apiRequestsTypes";
-import { loadMoreContainer, searchBarStyle } from "./style";
+import {
+  clearButtonContainer,
+  clearButtonStyle,
+  loadMoreContainer,
+  searchBarStyle,
+} from "./style";
+import CloseIcon from "@mui/icons-material/Close";
+import { Hoverable } from "../../utils/styledComponents";
 
 const POKEMON_PER_LOAD = 30;
 
@@ -42,6 +49,10 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input: string = e.target.value;
     setCurrSearchInput(input.toLowerCase());
+  };
+
+  const handleClearSearch = () => {
+    setCurrSearchInput("");
   };
 
   /**
@@ -119,10 +130,19 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
           <Input
             fullWidth
             placeholder="Search"
+            value={currSearchInput}
             disableUnderline
             onChange={handleSearchChange}
             sx={{ height: "100%", padding: "0 20px" }}
-          ></Input>
+          />
+
+          <>
+            {currSearchInput && (
+              <Hoverable onClick={handleClearSearch} sx={clearButtonContainer}>
+                <CloseIcon sx={clearButtonStyle} />
+              </Hoverable>
+            )}
+          </>
         </CustomCard>
       )}
       {listLoaded ? (
