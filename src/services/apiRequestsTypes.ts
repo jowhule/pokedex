@@ -1,4 +1,4 @@
-type NameUrlType = {
+export type NameUrlType = {
   name: string;
   url: string;
 };
@@ -80,22 +80,22 @@ export type PokemonPokedexEntryType = {
 };
 
 export type PokemonEvoDetailsType = {
-  gender: null;
-  held_item: null;
-  item: null;
-  known_move: null;
-  known_move_type: null;
-  location: null;
-  min_affection: null;
-  min_beauty: null;
-  min_happiness: number;
-  min_level: null;
+  gender: NameUrlType | null;
+  held_item: NameUrlType | null;
+  item: NameUrlType | null;
+  known_move: NameUrlType | null;
+  known_move_type: NameUrlType | null;
+  location: NameUrlType | null;
+  min_affection: number | null;
+  min_beauty: number | null;
+  min_happiness: number | null;
+  min_level: number | null;
   needs_overworld_rain: false;
-  party_species: null;
-  party_type: null;
-  relative_physical_stats: null;
+  party_species: NameUrlType | null;
+  party_type: NameUrlType | null;
+  relative_physical_stats: NameUrlType | null;
   time_of_day: string;
-  trade_species: null;
+  trade_species: NameUrlType | null;
   trigger: NameUrlType;
   turn_upside_down: boolean;
 };
