@@ -5,7 +5,7 @@ export const BodyText = styled(Typography)({
 });
 
 export const SecondaryText = styled(Typography)({
-  color: "#2f4c72",
+  color: "#213d62",
 });
 
 export const Hoverable = styled(Box)({

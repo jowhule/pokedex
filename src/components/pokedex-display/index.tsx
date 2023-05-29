@@ -40,7 +40,8 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
    * @param e input event
    */
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCurrSearchInput(e.target.value);
+    const input: string = e.target.value;
+    setCurrSearchInput(input.toLowerCase());
   };
 
   /**
@@ -117,7 +118,6 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
             fullWidth
             placeholder="Search"
             disableUnderline
-            value={currSearchInput}
             onChange={handleSearchChange}
             sx={{ height: "100%", padding: "0 20px" }}
           ></Input>
