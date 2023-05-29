@@ -1,4 +1,5 @@
 export const secondaryColour = "#E8EBF1";
+export const fontBgColour = "#F0F3F8";
 
 export const typeColours: Record<string, string> = {
   normal: "#d9d9c6",

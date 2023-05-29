@@ -3,7 +3,7 @@ type NameUrlType = {
   url: string;
 };
 
-type PokemonAbilityType = {
+export type PokemonAbilityType = {
   ability: NameUrlType;
   is_hidden: boolean;
   slot: number;

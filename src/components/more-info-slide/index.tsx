@@ -6,9 +6,14 @@ import {
 } from "../../services/apiRequestsTypes";
 import { sendGenericAPIRequest } from "../../services/apiRequests";
 import { Box } from "@mui/material";
-import { BodyText, SecondaryText } from "../../utils/styledComponents";
+import {
+  BodyText,
+  SecondaryText,
+  StatTitleText,
+} from "../../utils/styledComponents";
 import { TypeTag } from "../type-tag";
 import {
+  abilitiesContainer,
   activePokemonSpriteStyle,
   infoSlideContainer,
   noActivePokemonCardStyle,
@@ -16,6 +21,7 @@ import {
   pokemonInfoSlideContainer,
 } from "./style";
 import defaultImage from "../../assets/default_pokemon_info.png";
+import { AbilityTag } from "../ability-tag";
 
 type MoreInfoSlideType = {
   activePokemonUrl: string;
@@ -102,21 +108,21 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
               <BodyText fontWeight="bold" fontSize="24px">
                 {pokemonName}
               </BodyText>
+
               <Box display="flex" gap="10px" m="10px">
                 {Array.from(pokemonData.types).map((type, index) => (
                   <TypeTag type={type.type.name} key={index} />
                 ))}
               </Box>
-              <BodyText
-                fontWeight="bold"
-                fontSize="16px"
-                sx={{ marginTop: "15px" }}
-              >
-                Abilities
-              </BodyText>
-              {Array.from(pokemonData.abilities).map((ability, index) => (
-                <Box key={index}>{ability.ability.name}</Box>
-              ))}
+
+              <StatTitleText fontSize="16px">Abilities</StatTitleText>
+              <Box sx={abilitiesContainer}>
+                {Array.from(pokemonData.abilities).map((ability, index) => (
+                  <AbilityTag abilityInfo={ability} key={index} />
+                ))}
+              </Box>
+
+              <StatTitleText fontSize="16px">Base Stats</StatTitleText>
             </>
           ) : (
             <SecondaryText>Please select a Pokemon.</SecondaryText>

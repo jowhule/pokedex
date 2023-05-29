@@ -1,3 +1,5 @@
+import { fontBgColour } from "../../utils/colours";
+
 export const pokemonInfoSlideContainer = {
   width: "350px",
   height: "80vh",
@@ -41,4 +43,16 @@ export const infoSlideContainer = {
   textAlign: "center",
   position: "relative",
   height: "100%",
+};
+
+export const abilitiesContainer = {
+  display: "flex",
+  flexFlow: "row wrap",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: "10px",
+  bgcolor: `${fontBgColour}`,
+  borderRadius: "15px",
+  width: "100%",
+  padding: "15px 0",
 };
