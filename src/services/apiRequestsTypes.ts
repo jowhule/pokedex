@@ -74,25 +74,9 @@ type PokemonTypeType = {
   type: NameUrlType;
 };
 
-export type PokemonDataResponseType = {
-  abilities: PokemonAbilityType[];
-  base_experience: number;
-  forms: PokemonFormType[];
-  game_indices: PokemonGameIndexType[];
-  height: number;
-  held_items: PokemonHeldItemType[];
-  id: number;
-  is_default: boolean;
-  location_area_encounters: string;
-  moves: PokemonMoveType[];
-  name: string;
-  order: number;
-  past_types: [];
-  species: NameUrlType;
-  sprites: PokemonSpriteType;
-  stats: PokemonStatType[];
-  types: PokemonTypeType[];
-  weight: number;
+export type PokemonPokedexEntryType = {
+  entry_number: number;
+  pokemon_species: NameUrlType;
 };
 
 export const pokemonDataDefault: PokemonDataResponseType = {
@@ -145,6 +129,8 @@ export const pokemonDataDefault: PokemonDataResponseType = {
   weight: 0,
 };
 
+/* -- responses -- */
+
 export type PokemonNameResponseType = NameUrlType;
 
 export type PokemonApiResponseType = {
@@ -152,4 +138,36 @@ export type PokemonApiResponseType = {
   next: string | null;
   prev: string | null;
   results: PokemonNameResponseType[];
+};
+
+export type PokemonDexResponseType = {
+  descriptions: { description: string; language: NameUrlType }[];
+  id: number;
+  is_main_series: boolean;
+  name: string;
+  names: { language: NameUrlType; name: string }[];
+  pokemon_entries: PokemonPokedexEntryType[];
+  region: null | NameUrlType;
+  version_groups: NameUrlType[];
+};
+
+export type PokemonDataResponseType = {
+  abilities: PokemonAbilityType[];
+  base_experience: number;
+  forms: PokemonFormType[];
+  game_indices: PokemonGameIndexType[];
+  height: number;
+  held_items: PokemonHeldItemType[];
+  id: number;
+  is_default: boolean;
+  location_area_encounters: string;
+  moves: PokemonMoveType[];
+  name: string;
+  order: number;
+  past_types: [];
+  species: NameUrlType;
+  sprites: PokemonSpriteType;
+  stats: PokemonStatType[];
+  types: PokemonTypeType[];
+  weight: number;
 };
