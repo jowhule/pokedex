@@ -1,7 +1,8 @@
 import { Box, Typography, styled } from "@mui/material";
+import { primaryTextColour } from "./colours";
 
 export const BodyText = styled(Typography)({
-  color: "#0c214a",
+  color: primaryTextColour,
 });
 
 export const StatTitleText = styled(BodyText)({

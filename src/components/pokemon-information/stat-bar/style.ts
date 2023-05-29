@@ -1,4 +1,4 @@
-import { fontBgColour } from "../../utils/colours";
+import { fontBgColour } from "../../../utils/colours";
 
 export const statContainer = {
   display: "flex",

@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import React from "react";
-import { statColours } from "../../utils/colours";
-import { BodyText } from "../../utils/styledComponents";
+import { statColours } from "../../../utils/colours";
+import { BodyText } from "../../../utils/styledComponents";
 import { statBarContainer, statContainer } from "./style";
 
 type StatBarProps = {

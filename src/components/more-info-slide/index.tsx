@@ -11,7 +11,7 @@ import {
   SecondaryText,
   StatTitleText,
 } from "../../utils/styledComponents";
-import { TypeTag } from "../type-tag";
+import { TypeTag } from "../pokemon-information/type-tag";
 import {
   abilitiesContainer,
   activePokemonSpriteStyle,
@@ -22,8 +22,8 @@ import {
   statsContainer,
 } from "./style";
 import defaultImage from "../../assets/default_pokemon_info.png";
-import { AbilityTag } from "../ability-tag";
-import { StatBar } from "../stat-bar";
+import { AbilityTag } from "../pokemon-information/ability-tag";
+import { StatBar } from "../pokemon-information/stat-bar";
 
 type MoreInfoSlideType = {
   activePokemonUrl: string;
