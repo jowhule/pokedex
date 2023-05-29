@@ -124,7 +124,7 @@ export type PokemonDataResponseType = {
 
 export type PokemonSpeciesResponseType = {
   base_happiness: number;
-  capture_rate: 45;
+  capture_rate: number;
   color: NameUrlType;
   egg_groups: NameUrlType[];
   evolution_chain: { url: string };
@@ -209,4 +209,34 @@ export const pokemonDataDefault: PokemonDataResponseType = {
   stats: [],
   types: [],
   weight: 0,
+};
+
+export const pokemonSpeciesDefault: PokemonSpeciesResponseType = {
+  base_happiness: 0,
+  capture_rate: 0,
+  color: { name: "", url: "" },
+  egg_groups: [],
+  evolution_chain: { url: "" },
+  evolves_from_species: null,
+  flavor_text_entries: [],
+  form_descriptions: [],
+  forms_switchable: false,
+  gender_rate: 0,
+  genera: [],
+  generation: { name: "", url: "" },
+  growth_rate: { name: "", url: "" },
+  habitat: null,
+  has_gender_differences: false,
+  hatch_counter: 0,
+  id: 0,
+  is_baby: false,
+  is_legendary: false,
+  is_mythical: false,
+  name: "",
+  names: [],
+  order: 0,
+  pal_park_encounters: [],
+  pokedex_numbers: [],
+  shape: { name: "", url: "" },
+  varieties: [],
 };

@@ -10,7 +10,7 @@ import {
   loadMoreContainer,
   searchBarStyle,
 } from "./style";
-import CloseIcon from "@mui/icons-material/Close";
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import { Hoverable } from "../../utils/styledComponents";
 
 const POKEMON_PER_LOAD = 30;
@@ -139,7 +139,7 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
           <>
             {currSearchInput && (
               <Hoverable onClick={handleClearSearch} sx={clearButtonContainer}>
-                <CloseIcon sx={clearButtonStyle} />
+                <CloseRoundedIcon sx={clearButtonStyle} />
               </Hoverable>
             )}
           </>

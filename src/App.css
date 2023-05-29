@@ -1,5 +1,4 @@
 body {
   background-color: #f1f4f8;
-  font-family: "Montserrat";
-  color: #ffe841;
+  scroll-behavior: "smooth";
 }
