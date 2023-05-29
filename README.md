@@ -1,5 +1,5 @@
 ## Pokedex
-A passion project still in the making because I love pokemon and I think their wikipedia page is too cluttered with unnecessary information.
+A passion and learning project still in the making because I love pokemon and I think their wikipedia page is too cluttered with unnecessary information.
 
 [Live site](https://personalpokedex-one.vercel.app/)
 
