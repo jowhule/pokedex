@@ -15,7 +15,8 @@ export const CustomCard: React.FC<CustomCardProp> = ({ children, sx }) => {
         ...sx,
         bgcolor: "white",
         borderRadius: "15px",
-        boxShadow: `0 5px ${secondaryColour}`,
+        boxSizing: "border-box",
+        boxShadow: `8px 8px  ${secondaryColour}`,
       }}
     >
       {children}

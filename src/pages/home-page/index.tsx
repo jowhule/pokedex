@@ -1,32 +1,32 @@
 import React, { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import {
-  PokemonApiResponseType,
-  PokemonNameResponseType,
+  PokemonDexResponseType,
+  PokemonPokedexEntryType,
 } from "../../services/apiRequestsTypes";
 import { homePageContainerStyle } from "./style";
 import { sendGenericAPIRequest } from "../../services/apiRequests";
 import { PokedexDisplay } from "../../components/pokedex-display";
-
-export const POKEMON_MAX_NUM = 1010;
+import { MoreInfoSlide } from "../../components/more-info-slide";
 
 export const HomePage: React.FC = () => {
   const [hasLoaded, setHasLoaded] = useState<boolean>(false);
-  const [allPokemonNames, setAllPokemonNames] = useState<
-    PokemonNameResponseType[]
-  >([]);
+  const [nationalDex, setNationalDex] = useState<PokemonPokedexEntryType[]>([]);
+  const [activePokemonUrl, setActivePokemonUrl] = useState<string>("");
 
   // pokemon list finished fetching from api
   useEffect(() => {
-    if (Object.keys(allPokemonNames).length !== 0) setHasLoaded(true);
-  }, [allPokemonNames]);
+    if (nationalDex.length !== 0) setHasLoaded(true);
+  }, [nationalDex]);
 
   // get all pokemon names
   useEffect(() => {
-    sendGenericAPIRequest<PokemonApiResponseType>(
-      `https://pokeapi.co/api/v2/pokemon/?limit=${POKEMON_MAX_NUM}&offset=0`
+    sendGenericAPIRequest<PokemonDexResponseType>(
+      `https://pokeapi.co/api/v2/pokedex/1`
     ).then((data) => {
-      if (data) setAllPokemonNames(data.results);
+      if (data) {
+        setNationalDex(data.pokemon_entries);
+      }
     });
   }, []);
 
@@ -34,12 +34,16 @@ export const HomePage: React.FC = () => {
     <Box sx={homePageContainerStyle}>
       <Box width="100%">
         <PokedexDisplay
-          pokedexList={allPokemonNames}
+          pokedexList={nationalDex}
           displaySearch
           listLoaded={hasLoaded}
+          setActivePokemonUrl={setActivePokemonUrl}
         />
       </Box>
-      <Box></Box>
+      <Box>
+        <Box sx={{ width: "350px" }}></Box>
+        <MoreInfoSlide activePokemonUrl={activePokemonUrl} />
+      </Box>
     </Box>
   );
 };

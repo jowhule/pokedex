@@ -17,16 +17,18 @@ import {
   pokemonSpriteStyle,
 } from "./style";
 import { TypeTag } from "../../type-tag";
-import { CustomCard } from "../../custom-card";
+import { CustomCard } from "../../custom-card/CustomCard";
 
 type PokemonCardProps = {
   pokemonUrl: string;
   inDisplayList: boolean;
+  setActivePokemonUrl: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export const PokemonCard: React.FC<PokemonCardProps> = ({
   pokemonUrl,
   inDisplayList,
+  setActivePokemonUrl,
 }) => {
   const [pokemonData, setPokemonData] =
     useState<PokemonDataResponseType>(pokemonDataDefault);
@@ -40,6 +42,13 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
 
   const handleMouseLeave = () => {
     setIsMouseOver(false);
+  };
+
+  /**
+   * when card clicked set as active pokemon for the info slide
+   */
+  const handleCardClick = () => {
+    setActivePokemonUrl(pokemonUrl);
   };
 
   // get initial pokemon data if the card is supposed to be displayed
@@ -66,10 +75,11 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
   return (
     <>
       {inDisplayList && (
-        <Grid item sm={6} md={4} lg={3} xl={3} height="190px">
+        <Grid item sm={6} md={6} lg={4} xl={3} height="210px">
           <Hoverable
             onMouseEnter={handleMouseOver}
             onMouseLeave={handleMouseLeave}
+            onClick={handleCardClick}
           >
             <CustomCard sx={pokemonCardContainer}>
               <Box sx={pokemonIdContainer}>
@@ -91,7 +101,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
                     {pokemonName}
                   </BodyText>
                   <Box display="flex" gap="10px" marginTop="5px">
-                    {Array.from(pokemonData.types).map((type, index) => (
+                    {pokemonData.types.map((type, index) => (
                       <TypeTag type={type.type.name} key={index} />
                     ))}
                   </Box>

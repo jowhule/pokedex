@@ -6,9 +6,16 @@ export const pokemonCardContainer = {
   flexDirection: "column",
   position: "relative",
   alignItems: "center",
-  height: "75px",
+  justifyContent: "center",
+  height: "140px",
   paddingTop: "35px",
   paddingBottom: "20px",
+  boxSizing: "border-box",
+  transition: "transform 0.2s ease, boxShadow 0.2s ease",
+  "&:active": {
+    boxShadow: `7px 7px ${secondaryColour}`,
+    transform: "translate(2px, 2px)",
+  },
   "&:hover": {
     border: `2px solid ${secondaryColour}`,
   },
@@ -21,10 +28,9 @@ export const pokemonIdContainer: SxProps<Theme> = {
   position: "absolute",
   bottom: "0",
   left: "0",
-  height: "20px",
-  width: "50px",
+  height: "25px",
+  width: "55px",
   boxSizing: "border-box",
-  paddingTop: "5px",
   borderRadius: "0 5px 0 10px",
   bgcolor: `${secondaryColour}`,
 };
@@ -34,6 +40,7 @@ export const pokemonSpriteStyle: SxProps<Theme> = {
   top: "-50px",
   transition: "ease 0.2s",
   objectFit: "cover",
+  imageRendering: "pixelated",
 };
 
 export const pokemonSpriteHover: SxProps<Theme> = {

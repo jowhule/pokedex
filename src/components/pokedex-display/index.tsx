@@ -1,22 +1,25 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { CustomCard } from "../custom-card";
+import { CustomCard } from "../custom-card/CustomCard";
 import { Box, CircularProgress, Grid, Input } from "@mui/material";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { PokemonCard } from "./pokemon-card";
-import { PokemonNameResponseType } from "../../services/apiRequestsTypes";
+import { PokemonPokedexEntryType } from "../../services/apiRequestsTypes";
 import { loadMoreContainer, searchBarStyle } from "./style";
 
 const POKEMON_PER_LOAD = 30;
 
 type PokedexDisplayProps = {
-  pokedexList: PokemonNameResponseType[];
+  pokedexList: PokemonPokedexEntryType[];
   displaySearch?: boolean;
   listLoaded: boolean;
+  setActivePokemonUrl: React.Dispatch<React.SetStateAction<string>>;
 };
+
 export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
   pokedexList,
   displaySearch,
   listLoaded,
+  setActivePokemonUrl,
 }) => {
   const [displayLimit, setDisplayLimit] = useState<number>(POKEMON_PER_LOAD);
 
@@ -37,7 +40,8 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
    * @param e input event
    */
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCurrSearchInput(e.target.value);
+    const input: string = e.target.value;
+    setCurrSearchInput(input.toLowerCase());
   };
 
   /**
@@ -61,15 +65,17 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
     const lenCurrDisplayList = Object.keys(currList).length;
 
     if (
+      pokedexList &&
       pokedexList.length !== 0 &&
       Object.keys(currList).length < displayLimit
     ) {
       const nextSearchPage: Record<string, string> = {};
       let currPokemon = lenCurrDisplayList;
       let numAdded = 0;
+
       // load 30 pokemon into display list
       while (numAdded < POKEMON_PER_LOAD && currPokemon < pokedexList.length) {
-        const { name, url } = pokedexList[currPokemon];
+        const { name, url } = pokedexList[currPokemon].pokemon_species;
         if (name.includes(currSearchInput) && !currList[name]) {
           nextSearchPage[name] = url;
           numAdded += 1;
@@ -114,7 +120,6 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
             fullWidth
             placeholder="Search"
             disableUnderline
-            value={currSearchInput}
             onChange={handleSearchChange}
             sx={{ height: "100%", padding: "0 20px" }}
           ></Input>
@@ -131,15 +136,28 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
               <CircularProgress />
             </Box>
           }
-          style={{ overflow: "hidden" }}
+          style={{ overflowY: "hidden" }}
         >
-          <Grid container columns={12} spacing="25px" marginTop="50px">
-            {Array.from(pokedexList).map((pokemon, index) => (
+          <Grid
+            container
+            columns={12}
+            spacing="25px"
+            marginTop="50px"
+            overflow="visible"
+            paddingRight="8px"
+          >
+            {pokedexList.map((pokemonInfo, index) => (
               <PokemonCard
-                pokemonUrl={pokemon.url}
-                inDisplayList={displayList[pokemon.name] ? true : false}
+                pokemonUrl={pokemonInfo.pokemon_species.url.replace(
+                  "-species",
+                  ""
+                )}
+                inDisplayList={
+                  displayList[pokemonInfo.pokemon_species.name] ? true : false
+                }
+                setActivePokemonUrl={setActivePokemonUrl}
                 key={index}
-              ></PokemonCard>
+              />
             ))}
           </Grid>
         </InfiniteScroll>

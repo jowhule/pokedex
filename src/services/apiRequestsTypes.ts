@@ -3,7 +3,7 @@ type NameUrlType = {
   url: string;
 };
 
-type PokemonAbilityType = {
+export type PokemonAbilityType = {
   ability: NameUrlType;
   is_hidden: boolean;
   slot: number;
@@ -74,6 +74,33 @@ type PokemonTypeType = {
   type: NameUrlType;
 };
 
+export type PokemonPokedexEntryType = {
+  entry_number: number;
+  pokemon_species: NameUrlType;
+};
+
+/* -------------------------------- response -------------------------------- */
+
+export type PokemonNameResponseType = NameUrlType;
+
+export type PokemonApiResponseType = {
+  count: number;
+  next: string | null;
+  prev: string | null;
+  results: PokemonNameResponseType[];
+};
+
+export type PokemonDexResponseType = {
+  descriptions: { description: string; language: NameUrlType }[];
+  id: number;
+  is_main_series: boolean;
+  name: string;
+  names: { language: NameUrlType; name: string }[];
+  pokemon_entries: PokemonPokedexEntryType[];
+  region: null | NameUrlType;
+  version_groups: NameUrlType[];
+};
+
 export type PokemonDataResponseType = {
   abilities: PokemonAbilityType[];
   base_experience: number;
@@ -95,6 +122,45 @@ export type PokemonDataResponseType = {
   weight: number;
 };
 
+export type PokemonSpeciesResponseType = {
+  base_happiness: number;
+  capture_rate: 45;
+  color: NameUrlType;
+  egg_groups: NameUrlType[];
+  evolution_chain: { url: string };
+  evolves_from_species: null | NameUrlType;
+  flavor_text_entries: {
+    flavor_text: string;
+    language: NameUrlType;
+    version: NameUrlType;
+  }[];
+  form_descriptions: { description: string; language: NameUrlType }[];
+  forms_switchable: boolean;
+  gender_rate: number;
+  genera: { genus: string; language: NameUrlType }[];
+  generation: NameUrlType;
+  growth_rate: NameUrlType;
+  habitat: null | NameUrlType;
+  has_gender_differences: boolean;
+  hatch_counter: number;
+  id: number;
+  is_baby: boolean;
+  is_legendary: boolean;
+  is_mythical: boolean;
+  name: string;
+  names: { language: NameUrlType; name: string }[];
+  order: number;
+  pal_park_encounters: {
+    area: NameUrlType;
+    base_score: number;
+    rate: number;
+  }[];
+  pokedex_numbers: { entry_number: number; pokedex: NameUrlType }[];
+  shape: NameUrlType;
+  varieties: { is_default: boolean; pokemon: NameUrlType }[];
+};
+
+/* -------------------------------- defaults -------------------------------- */
 export const pokemonDataDefault: PokemonDataResponseType = {
   abilities: [],
   base_experience: 0,
@@ -143,13 +209,4 @@ export const pokemonDataDefault: PokemonDataResponseType = {
   stats: [],
   types: [],
   weight: 0,
-};
-
-export type PokemonNameResponseType = NameUrlType;
-
-export type PokemonApiResponseType = {
-  count: number;
-  next: string | null;
-  prev: string | null;
-  results: PokemonNameResponseType[];
 };
