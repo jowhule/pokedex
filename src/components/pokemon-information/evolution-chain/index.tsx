@@ -25,7 +25,7 @@ type StageInfo = {
   stage: number;
   name: string;
   methods: Record<string, any>;
-  sprite: string;
+  trigger: NameUrlType;
 };
 
 // need to traverse chain structure like a tree to print out pokemons
@@ -68,7 +68,7 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({ pokemon }) => {
         stage: level,
         name: pokemonName,
         methods: evolveMethods,
-        sprite: "",
+        trigger: details.trigger,
       };
 
       if (!evoStages[level]) evoStages.push([]);
@@ -82,12 +82,17 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({ pokemon }) => {
   );
 
   const getSprites = useCallback(async (stages: EvoStages) => {
-    stages.forEach((stage) => {
-      stage.forEach(async (pokemon) => {
+    const evoSprites: EvoSprites = [];
+    for (const stage of stages) {
+      const stageSprites: string[] = [];
+      for (const pokemon of stage) {
         const url = await getSpritePromise(pokemon.name);
-        pokemon.sprite = url;
-      });
-    });
+        stageSprites.push(url);
+      }
+      evoSprites.push(stageSprites);
+    }
+
+    setEvolutionSprites([...evoSprites]);
   }, []);
 
   const getSpritePromise = (name: string): Promise<string> => {
@@ -108,14 +113,12 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({ pokemon }) => {
         if (data) {
           sendGenericAPIRequest<PokemonEvolutionResponseType>(
             `${data?.evolution_chain.url}`
-          )
-            .then((data) => {
-              const evoStagesTemp: EvoStages = [];
-              if (data) evoTreeTraverse(data.chain, 0, evoStagesTemp);
-              getSprites(evoStagesTemp);
-              return evoStagesTemp;
-            })
-            .then((stages) => setEvolutionStages(stages));
+          ).then((data) => {
+            const evoStagesTemp: EvoStages = [];
+            if (data) evoTreeTraverse(data.chain, 0, evoStagesTemp);
+            getSprites(evoStagesTemp);
+            setEvolutionStages(evoStagesTemp);
+          });
         }
       });
   }, [evoTreeTraverse, getSprites, pokemon]);
@@ -193,7 +196,7 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({ pokemon }) => {
               )}
               <Box
                 component="img"
-                src={evo.sprite}
+                src={evolutionSprites[index_i][index_j] ?? ""}
                 alt={`${evo.name}'s sprite`}
                 sx={{ wdith: "74px", height: "74px" }}
               />
