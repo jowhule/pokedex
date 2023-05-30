@@ -66,9 +66,7 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({ pokemon }) => {
         sprite: "",
       };
 
-      if (!evoStages[level]) {
-        evoStages.push([]);
-      }
+      if (!evoStages[level]) evoStages.push([]);
       evoStages[level].push(currStage);
       // traverse tree
       root.evolves_to.forEach((evolveTo) => {
@@ -84,9 +82,7 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({ pokemon }) => {
         sendGenericAPIRequest<PokemonDataResponseType>(
           `https://pokeapi.co/api/v2/pokemon/${pokemon.name}`
         ).then((data) => {
-          if (data) {
-            pokemon.sprite = data.sprites.front_default;
-          }
+          if (data) pokemon.sprite = data.sprites.front_default;
         });
       });
     });
