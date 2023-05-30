@@ -10,12 +10,18 @@ import {
 import { pokemonEvoDetailsDefault } from "../../../utils/defaults";
 import { Box } from "@mui/material";
 import { PokemonDataResponseType } from "../../../services/apiRequestsTypes";
-import { BodyText, StatTitleText } from "../../../utils/styledComponents";
+import {
+  BodyText,
+  Hoverable,
+  StatTitleText,
+} from "../../../utils/styledComponents";
 import {
   pokemonEvoMethodContainer,
   pokemonEvoStageContainer,
   pokemonEvolutionContainer,
 } from "./style";
+import LoopRoundedIcon from "@mui/icons-material/LoopRounded";
+import { primaryTextColour } from "../../../utils/colours";
 
 type EvolutionChainProps = {
   pokemonId: number;
@@ -114,6 +120,14 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
             Lv.{value}
           </BodyText>
         );
+      case "held_item":
+        return (
+          <Box
+            component="img"
+            src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${valueTyped.name}.png`}
+            alt={valueTyped.name}
+          />
+        );
       case "item":
         return (
           <Box
@@ -173,6 +187,12 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
             src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/tm-${valueTyped.name}.png`}
             alt={`${valueTyped.name} TM`}
           />
+        );
+      case "trade_species":
+        return (
+          <BodyText fontWeight="bold" fontSize="12px">
+            {valueTyped.name}
+          </BodyText>
         );
     }
 
@@ -240,9 +260,16 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
                             {methodImage(method, evo.methods[method])}
                           </Box>
                         ))}
+                        {evo.trigger.name === "trade" && (
+                          <LoopRoundedIcon
+                            style={{ color: `${primaryTextColour}` }}
+                          />
+                        )}
                       </Box>
                     )}
-                    <>{getSprite(index_i, index_j, evo.name)}</>
+                    <Hoverable>
+                      {getSprite(index_i, index_j, evo.name)}
+                    </Hoverable>
                   </Box>
                 ))}
               </Box>
