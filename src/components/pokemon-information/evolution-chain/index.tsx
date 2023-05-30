@@ -10,8 +10,12 @@ import {
 import { pokemonEvoDetailsDefault } from "../../../utils/defaults";
 import { Box } from "@mui/material";
 import { PokemonDataResponseType } from "../../../services/apiRequestsTypes";
-import { fontBgColour } from "../../../utils/colours";
 import { BodyText } from "../../../utils/styledComponents";
+import {
+  pokemonEvoMethodContainer,
+  pokemonEvoStageContainer,
+  pokemonEvolutionContainer,
+} from "./style";
 
 type EvolutionChainProps = {
   pokemonId: number;
@@ -25,11 +29,6 @@ type StageInfo = {
   methods: Record<string, any>;
   trigger: NameUrlType;
 };
-
-// need to traverse chain structure like a tree to print out pokemons
-// maybe have a data structure that contains all levels of the tree, each level contains a React Component
-// have a way to manage trigger + methods to know which image to print
-//    will need to call pokemon/{name} cos i can't get the fking sprite with name only
 
 export const EvolutionChain: React.FC<EvolutionChainProps> = ({
   pokemonId,
@@ -161,50 +160,14 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
       });
   }, [evoTreeTraverse, getSprites, pokemonId]);
 
-  useEffect(() => {
-    if (evolutionStages) console.log(evolutionStages);
-  }, [evolutionStages]);
-
   return (
-    <Box
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
+    <Box display="flex">
       {evolutionStages.map((stage, index_i) => (
-        <Box
-          key={index_i}
-          sx={{
-            display: "flex",
-            flexFlow: "column wrap",
-            alignItems: "center",
-            justifyContent: "center",
-            maxHeight: "222px",
-          }}
-        >
+        <Box key={index_i} sx={pokemonEvoStageContainer}>
           {stage.map((evo, index_j) => (
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-              key={index_j}
-            >
+            <Box sx={pokemonEvolutionContainer} key={index_j}>
               {evo.stage > 0 && (
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    bgcolor: fontBgColour,
-                    padding: "5px 10px",
-                    borderRadius: "20px",
-                  }}
-                >
+                <Box sx={pokemonEvoMethodContainer}>
                   {Object.keys(evo.methods).map((method, index_m) => (
                     <Box key={index_m}>
                       {methodImage(method, evo.methods[method])}
