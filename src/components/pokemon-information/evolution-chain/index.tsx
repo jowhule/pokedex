@@ -14,7 +14,7 @@ import { fontBgColour } from "../../../utils/colours";
 import { BodyText } from "../../../utils/styledComponents";
 
 type EvolutionChainProps = {
-  pokemon: string;
+  pokemonId: number;
 };
 
 type EvoStages = StageInfo[][];
@@ -22,7 +22,6 @@ type EvoStages = StageInfo[][];
 type StageInfo = {
   stage: number;
   name: string;
-  sprite: string;
   methods: Record<string, any>;
   trigger: NameUrlType;
 };
@@ -32,7 +31,9 @@ type StageInfo = {
 // have a way to manage trigger + methods to know which image to print
 //    will need to call pokemon/{name} cos i can't get the fking sprite with name only
 
-export const EvolutionChain: React.FC<EvolutionChainProps> = ({ pokemon }) => {
+export const EvolutionChain: React.FC<EvolutionChainProps> = ({
+  pokemonId,
+}) => {
   const [evolutionStages, setEvolutionStages] = useState<EvoStages>([]);
   const [evolutionSprites, setEvolutionSprites] = useState<string[][]>([]);
 
@@ -65,7 +66,6 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({ pokemon }) => {
 
       const currStage: StageInfo = {
         stage: level,
-        sprite: "",
         name: pokemonName,
         methods: evolveMethods,
         trigger: details.trigger,
@@ -85,9 +85,8 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({ pokemon }) => {
     const evoSprites: string[][] = [];
     for (const stage of stages) {
       const evoSprite: string[] = [];
-      for (const pokemon of stage) {
-        const url = await getSpritePromise(pokemon.name);
-        pokemon.sprite = url;
+      for (const currEvo of stage) {
+        const url = await getSpritePromise(currEvo.name);
         evoSprite.push(url);
       }
       evoSprites.push(evoSprite);
@@ -98,7 +97,8 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({ pokemon }) => {
   const getSpritePromise = (name: string): Promise<string> => {
     return new Promise((resolve) => {
       sendGenericAPIRequest<PokemonDataResponseType>(
-        `https://pokeapi.co/api/v2/pokemon/${name}`
+        `https://pokeapi.co/api/v2/pokemon/${name}`,
+        () => setEvolutionStages([])
       ).then((data) => {
         if (data) resolve(data.sprites.front_default);
       });
@@ -130,7 +130,7 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({ pokemon }) => {
       return (
         <Box
           component="img"
-          src={evolutionSprites[i][j] ?? ""}
+          src={evolutionSprites[i][j]}
           alt={`${name}'s sprite`}
           sx={{ wdith: "74px", height: "74px" }}
         />
@@ -139,22 +139,27 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({ pokemon }) => {
   };
 
   useEffect(() => {
-    if (pokemon)
+    if (pokemonId)
       sendGenericAPIRequest<PokemonSpeciesResponseType>(
-        `https://pokeapi.co/api/v2/pokemon-species/${pokemon}`
+        `https://pokeapi.co/api/v2/pokemon-species/${pokemonId}`,
+        () => setEvolutionStages([])
       ).then((data) => {
         if (data) {
           sendGenericAPIRequest<PokemonEvolutionResponseType>(
             `${data?.evolution_chain.url}`
           ).then((data) => {
             const evoStagesTemp: EvoStages = [];
-            if (data) evoTreeTraverse(data.chain, 0, evoStagesTemp);
-            getSprites(evoStagesTemp);
-            setEvolutionStages(evoStagesTemp);
+            if (data) {
+              evoTreeTraverse(data.chain, 0, evoStagesTemp);
+              getSprites(evoStagesTemp);
+              setEvolutionStages(evoStagesTemp);
+            } else {
+              setEvolutionStages([]);
+            }
           });
         }
       });
-  }, [evoTreeTraverse, getSprites, pokemon]);
+  }, [evoTreeTraverse, getSprites, pokemonId]);
 
   useEffect(() => {
     if (evolutionStages) console.log(evolutionStages);
@@ -173,9 +178,10 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({ pokemon }) => {
           key={index_i}
           sx={{
             display: "flex",
-            flexDirection: "column",
+            flexFlow: "column wrap",
             alignItems: "center",
             justifyContent: "center",
+            maxHeight: "222px",
           }}
         >
           {stage.map((evo, index_j) => (
@@ -191,13 +197,12 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({ pokemon }) => {
                 <Box
                   sx={{
                     display: "flex",
-                    flexFlow: "column warp",
+                    flexDirection: "column",
                     alignItems: "center",
                     justifyContent: "center",
                     bgcolor: fontBgColour,
                     padding: "5px 10px",
                     borderRadius: "20px",
-                    maxHeight: "222px",
                   }}
                 >
                   {Object.keys(evo.methods).map((method, index_m) => (
