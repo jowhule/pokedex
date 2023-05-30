@@ -19,11 +19,10 @@ type EvolutionChainProps = {
 
 type EvoStages = StageInfo[][];
 
-type EvoSprites = string[][];
-
 type StageInfo = {
   stage: number;
   name: string;
+  sprite: string;
   methods: Record<string, any>;
   trigger: NameUrlType;
 };
@@ -35,7 +34,6 @@ type StageInfo = {
 
 export const EvolutionChain: React.FC<EvolutionChainProps> = ({ pokemon }) => {
   const [evolutionStages, setEvolutionStages] = useState<EvoStages>([]);
-  const [evolutionSprites, setEvolutionSprites] = useState<EvoSprites>([]);
 
   // revursively traverse the evolution tree and add it to per level
   const evoTreeTraverse = useCallback(
@@ -66,6 +64,7 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({ pokemon }) => {
 
       const currStage: StageInfo = {
         stage: level,
+        sprite: "",
         name: pokemonName,
         methods: evolveMethods,
         trigger: details.trigger,
@@ -82,17 +81,12 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({ pokemon }) => {
   );
 
   const getSprites = useCallback(async (stages: EvoStages) => {
-    const evoSprites: EvoSprites = [];
     for (const stage of stages) {
-      const stageSprites: string[] = [];
       for (const pokemon of stage) {
         const url = await getSpritePromise(pokemon.name);
-        stageSprites.push(url);
+        pokemon.sprite = url;
       }
-      evoSprites.push(stageSprites);
     }
-
-    setEvolutionSprites([...evoSprites]);
   }, []);
 
   const getSpritePromise = (name: string): Promise<string> => {
@@ -196,7 +190,7 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({ pokemon }) => {
               )}
               <Box
                 component="img"
-                src={evolutionSprites[index_i][index_j] ?? ""}
+                src={evo.sprite}
                 alt={`${evo.name}'s sprite`}
                 sx={{ wdith: "74px", height: "74px" }}
               />
