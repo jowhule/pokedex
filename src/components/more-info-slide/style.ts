@@ -5,7 +5,7 @@ export const pokemonInfoSlideContainer = {
   height: "80vh",
   position: "fixed",
   bottom: "-10px",
-  transition: "transform 0.5s ease",
+  transition: "transform 0.3s ease-out",
 };
 
 export const noActivePokemonCardStyle = {

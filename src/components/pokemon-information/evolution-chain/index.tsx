@@ -10,6 +10,8 @@ import {
 import { pokemonEvoDetailsDefault } from "../../../utils/defaults";
 import { Box } from "@mui/material";
 import { PokemonDataResponseType } from "../../../services/apiRequestsTypes";
+import { fontBgColour } from "../../../utils/colours";
+import { BodyText } from "../../../utils/styledComponents";
 
 type EvolutionChainProps = {
   pokemon: string;
@@ -17,9 +19,11 @@ type EvolutionChainProps = {
 
 type EvoStages = StageInfo[][];
 
+type EvoSprites = string[][];
+
 type StageInfo = {
+  stage: number;
   name: string;
-  trigger: NameUrlType;
   methods: Record<string, any>;
   sprite: string;
 };
@@ -31,6 +35,7 @@ type StageInfo = {
 
 export const EvolutionChain: React.FC<EvolutionChainProps> = ({ pokemon }) => {
   const [evolutionStages, setEvolutionStages] = useState<EvoStages>([]);
+  const [evolutionSprites, setEvolutionSprites] = useState<EvoSprites>([]);
 
   // revursively traverse the evolution tree and add it to per level
   const evoTreeTraverse = useCallback(
@@ -60,8 +65,8 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({ pokemon }) => {
       const pokemonName = root.species.name;
 
       const currStage: StageInfo = {
+        stage: level,
         name: pokemonName,
-        trigger: details.trigger,
         methods: evolveMethods,
         sprite: "",
       };
@@ -76,14 +81,21 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({ pokemon }) => {
     []
   );
 
-  const getSprites = (stages: EvoStages) => {
+  const getSprites = useCallback(async (stages: EvoStages) => {
     stages.forEach((stage) => {
-      stage.forEach((pokemon) => {
-        sendGenericAPIRequest<PokemonDataResponseType>(
-          `https://pokeapi.co/api/v2/pokemon/${pokemon.name}`
-        ).then((data) => {
-          if (data) pokemon.sprite = data.sprites.front_default;
-        });
+      stage.forEach(async (pokemon) => {
+        const url = await getSpritePromise(pokemon.name);
+        pokemon.sprite = url;
+      });
+    });
+  }, []);
+
+  const getSpritePromise = (name: string): Promise<string> => {
+    return new Promise((resolve) => {
+      sendGenericAPIRequest<PokemonDataResponseType>(
+        `https://pokeapi.co/api/v2/pokemon/${name}`
+      ).then((data) => {
+        if (data) resolve(data.sprites.front_default);
       });
     });
   };
@@ -96,29 +108,49 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({ pokemon }) => {
         if (data) {
           sendGenericAPIRequest<PokemonEvolutionResponseType>(
             `${data?.evolution_chain.url}`
-          ).then((data) => {
-            const evoStagesTemp: EvoStages = [];
-            if (data) evoTreeTraverse(data.chain, 0, evoStagesTemp);
-            getSprites(evoStagesTemp);
-            setEvolutionStages(evoStagesTemp);
-          });
+          )
+            .then((data) => {
+              const evoStagesTemp: EvoStages = [];
+              if (data) evoTreeTraverse(data.chain, 0, evoStagesTemp);
+              getSprites(evoStagesTemp);
+              return evoStagesTemp;
+            })
+            .then((stages) => setEvolutionStages(stages));
         }
       });
-  }, [evoTreeTraverse, pokemon]);
+  }, [evoTreeTraverse, getSprites, pokemon]);
 
   useEffect(() => {
-    if (evolutionStages?.length !== 0) {
-      console.log(evolutionStages);
-    }
+    if (evolutionStages) console.log(evolutionStages);
   }, [evolutionStages]);
+
+  const methodImage = (method: string, value: any) => {
+    if (method === "min_level") {
+      return (
+        <BodyText fontWeight="bold" fontSize="12px">
+          Lv.{value}
+        </BodyText>
+      );
+    } else if (typeof value === "object") {
+      const valueTyped = value as NameUrlType;
+      return (
+        <Box
+          component="img"
+          src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${valueTyped.name}.png`}
+          alt={valueTyped.name}
+        />
+      );
+    }
+    return <>{`${method}: ${value}`}</>;
+  };
 
   return (
     <Box
       sx={{
         display: "flex",
-        gap: "10px",
         alignItems: "center",
         justifyContent: "center",
+        overflowY: "auto",
       }}
     >
       {evolutionStages.map((stage, index_i) => (
@@ -132,8 +164,39 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({ pokemon }) => {
           }}
         >
           {stage.map((evo, index_j) => (
-            <Box key={index_j}>
-              <Box component="img" src={evo.sprite} />
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+              key={index_j}
+            >
+              {evo.stage > 0 && (
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    bgcolor: fontBgColour,
+                    padding: "5px 10px",
+                    borderRadius: "20px",
+                  }}
+                >
+                  {Object.keys(evo.methods).map((method, index_m) => (
+                    <Box key={index_m}>
+                      {methodImage(method, evo.methods[method])}
+                    </Box>
+                  ))}
+                </Box>
+              )}
+              <Box
+                component="img"
+                src={evo.sprite}
+                alt={`${evo.name}'s sprite`}
+                sx={{ wdith: "74px", height: "74px" }}
+              />
             </Box>
           ))}
         </Box>
@@ -141,3 +204,9 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({ pokemon }) => {
     </Box>
   );
 };
+
+// {
+//   Object.keys(evo.methods).map((method) => (
+//     <Box>{method as string}</Box>
+//   ));
+// }
