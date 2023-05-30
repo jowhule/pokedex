@@ -4,7 +4,7 @@ export const pokemonEvoStageContainer = {
   display: "flex",
   flexFlow: "column wrap",
   justifyContent: "center",
-  maxHeight: "222px",
+  maxHeight: "333px",
 };
 
 export const pokemonEvolutionContainer = {

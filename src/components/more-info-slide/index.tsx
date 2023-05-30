@@ -134,7 +134,6 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
                 ))}
               </Box>
 
-              <StatTitleText fontSize="16px">Evolution</StatTitleText>
               <EvolutionChain pokemonId={pokemonData.id} />
             </>
           ) : (
