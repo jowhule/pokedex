@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { sendGenericAPIRequest } from "../../../services/apiRequests";
 import {
   NameUrlType,
@@ -8,88 +8,140 @@ import {
   PokemonSpeciesResponseType,
 } from "../../../services/apiRequestsTypes";
 import { pokemonEvoDetailsDefault } from "../../../utils/defaults";
+import { Box } from "@mui/material";
+import { PokemonDataResponseType } from "../../../services/apiRequestsTypes";
 
 type EvolutionChainProps = {
   pokemon: string;
 };
 
-type EvoLineType = {
+type EvoStages = StageInfo[][];
+
+type StageInfo = {
   name: string;
-  evolvesToUrl: string;
-  methods: Record<string, any>;
   trigger: NameUrlType;
+  methods: Record<string, any>;
+  sprite: string;
 };
 
-export const EvolutionChain: React.FC<EvolutionChainProps> = ({ pokemon }) => {
-  const [evolutionChain, setEvolutionChain] = useState<EvoLineType[]>([]);
+// need to traverse chain structure like a tree to print out pokemons
+// maybe have a data structure that contains all levels of the tree, each level contains a React Component
+// have a way to manage trigger + methods to know which image to print
+//    will need to call pokemon/{name} cos i can't get the fking sprite with name only
 
-  // const traverseEvoTree = (
-  //   root: PokemonEvoChainType,
-  //   returnVar: EvoLineType[]
-  // ) => {};
-  // const getPokemonEvos = () => {};
+export const EvolutionChain: React.FC<EvolutionChainProps> = ({ pokemon }) => {
+  const [evolutionStages, setEvolutionStages] = useState<EvoStages>([]);
+
+  // revursively traverse the evolution tree and add it to per level
+  const evoTreeTraverse = useCallback(
+    (root: PokemonEvoChainType, level: number, evoStages: EvoStages) => {
+      if (!root.species) return;
+
+      const details: PokemonEvoDetailsType =
+        root.evolution_details.length !== 0
+          ? root.evolution_details[0]
+          : pokemonEvoDetailsDefault;
+
+      const evolveMethods: Record<string, any> = {};
+      Object.keys(details).forEach((key) => {
+        const keyTyped = key as keyof PokemonEvoDetailsType;
+        const keyString = key as string;
+
+        if (keyString !== "trigger" && details[keyTyped]) {
+          if (typeof evolveMethods[keyString] === "object") {
+            const nameUrlDetail: NameUrlType = details[keyTyped] as NameUrlType;
+            evolveMethods[nameUrlDetail.name] = nameUrlDetail.url;
+          } else {
+            evolveMethods[keyString] = details[keyTyped];
+          }
+        }
+      });
+
+      const pokemonName = root.species.name;
+
+      const currStage: StageInfo = {
+        name: pokemonName,
+        trigger: details.trigger,
+        methods: evolveMethods,
+        sprite: "",
+      };
+
+      if (!evoStages[level]) {
+        evoStages.push([]);
+      }
+      evoStages[level].push(currStage);
+      // traverse tree
+      root.evolves_to.forEach((evolveTo) => {
+        evoTreeTraverse(evolveTo, level + 1, evoStages);
+      });
+    },
+    []
+  );
+
+  const getSprites = (stages: EvoStages) => {
+    stages.forEach((stage) => {
+      stage.forEach((pokemon) => {
+        sendGenericAPIRequest<PokemonDataResponseType>(
+          `https://pokeapi.co/api/v2/pokemon/${pokemon.name}`
+        ).then((data) => {
+          if (data) {
+            pokemon.sprite = data.sprites.front_default;
+          }
+        });
+      });
+    });
+  };
 
   useEffect(() => {
     if (pokemon)
       sendGenericAPIRequest<PokemonSpeciesResponseType>(
         `https://pokeapi.co/api/v2/pokemon-species/${pokemon}`
-      )
-        .then((data) => {
-          if (data) return data;
-        })
-        .then((chain) => {
+      ).then((data) => {
+        if (data) {
           sendGenericAPIRequest<PokemonEvolutionResponseType>(
-            `${chain?.evolution_chain.url}`
+            `${data?.evolution_chain.url}`
           ).then((data) => {
-            if (data) {
-              let nextEvo = data.chain;
-              const evoChain: EvoLineType[] = [];
-
-              while (nextEvo.species) {
-                const nextEvoUrl: string = nextEvo.evolves_to[0].species.url;
-
-                const details: PokemonEvoDetailsType =
-                  nextEvo.evolution_details[0];
-
-                const evolveMethods: Record<string, any> = {};
-                Object.keys(details).forEach((key) => {
-                  const keyTyped = key as keyof PokemonEvoDetailsType;
-                  const keyString = key as string;
-
-                  if (keyString !== "trigger" && details[keyTyped]) {
-                    if (typeof evolveMethods[keyString] === "object") {
-                      const nameUrlDetail: NameUrlType = details[
-                        keyTyped
-                      ] as NameUrlType;
-                      evolveMethods[nameUrlDetail.name] = nameUrlDetail.url;
-                    } else {
-                      evolveMethods[keyString] = details[keyTyped];
-                    }
-                  }
-                });
-
-                const currEvo: EvoLineType = {
-                  name: nextEvo.species.name,
-                  evolvesToUrl: nextEvoUrl,
-                  methods: evolveMethods,
-                  trigger: details.trigger,
-                };
-
-                evoChain.push(currEvo);
-                nextEvo = nextEvo.evolves_to[0] ?? [];
-              }
-
-              setEvolutionChain(evoChain);
-            }
+            const evoStagesTemp: EvoStages = [];
+            if (data) evoTreeTraverse(data.chain, 0, evoStagesTemp);
+            getSprites(evoStagesTemp);
+            setEvolutionStages(evoStagesTemp);
           });
-        });
-  }, [evolutionChain.length, pokemon]);
+        }
+      });
+  }, [evoTreeTraverse, pokemon]);
 
   useEffect(() => {
-    if (evolutionChain?.length !== 0) {
-      console.log(evolutionChain);
+    if (evolutionStages?.length !== 0) {
+      console.log(evolutionStages);
     }
-  }, [evolutionChain]);
+  }, [evolutionStages]);
 
-  return <>{}</>;
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        gap: "10px",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      {evolutionStages.map((stage, index_i) => (
+        <Box
+          key={index_i}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          {stage.map((evo, index_j) => (
+            <Box key={index_j}>
+              <Box component="img" src={evo.sprite} />
+            </Box>
+          ))}
+        </Box>
+      ))}
+    </Box>
+  );
 };
