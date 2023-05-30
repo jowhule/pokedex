@@ -34,6 +34,7 @@ type StageInfo = {
 
 export const EvolutionChain: React.FC<EvolutionChainProps> = ({ pokemon }) => {
   const [evolutionStages, setEvolutionStages] = useState<EvoStages>([]);
+  const [evolutionSprites, setEvolutionSprites] = useState<string[][]>([]);
 
   // revursively traverse the evolution tree and add it to per level
   const evoTreeTraverse = useCallback(
@@ -81,12 +82,17 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({ pokemon }) => {
   );
 
   const getSprites = useCallback(async (stages: EvoStages) => {
+    const evoSprites: string[][] = [];
     for (const stage of stages) {
+      const evoSprite: string[] = [];
       for (const pokemon of stage) {
         const url = await getSpritePromise(pokemon.name);
         pokemon.sprite = url;
+        evoSprite.push(url);
       }
+      evoSprites.push(evoSprite);
     }
+    setEvolutionSprites([...evoSprites]);
   }, []);
 
   const getSpritePromise = (name: string): Promise<string> => {
@@ -97,6 +103,39 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({ pokemon }) => {
         if (data) resolve(data.sprites.front_default);
       });
     });
+  };
+
+  const methodImage = (method: string, value: any) => {
+    if (method === "min_level") {
+      return (
+        <BodyText fontWeight="bold" fontSize="12px">
+          Lv.{value}
+        </BodyText>
+      );
+    } else if (method === "item") {
+      const valueTyped = value as NameUrlType;
+      return (
+        <Box
+          component="img"
+          src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${valueTyped.name}.png`}
+          alt={valueTyped.name}
+        />
+      );
+    }
+    return <>{`${method}: ${value}`}</>;
+  };
+
+  const getSprite = (i: number, j: number, name: string) => {
+    if (evolutionSprites[i] && evolutionSprites[i][j]) {
+      return (
+        <Box
+          component="img"
+          src={evolutionSprites[i][j] ?? ""}
+          alt={`${name}'s sprite`}
+          sx={{ wdith: "74px", height: "74px" }}
+        />
+      );
+    }
   };
 
   useEffect(() => {
@@ -121,33 +160,12 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({ pokemon }) => {
     if (evolutionStages) console.log(evolutionStages);
   }, [evolutionStages]);
 
-  const methodImage = (method: string, value: any) => {
-    if (method === "min_level") {
-      return (
-        <BodyText fontWeight="bold" fontSize="12px">
-          Lv.{value}
-        </BodyText>
-      );
-    } else if (typeof value === "object") {
-      const valueTyped = value as NameUrlType;
-      return (
-        <Box
-          component="img"
-          src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${valueTyped.name}.png`}
-          alt={valueTyped.name}
-        />
-      );
-    }
-    return <>{`${method}: ${value}`}</>;
-  };
-
   return (
     <Box
       sx={{
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        overflowY: "auto",
       }}
     >
       {evolutionStages.map((stage, index_i) => (
@@ -173,12 +191,13 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({ pokemon }) => {
                 <Box
                   sx={{
                     display: "flex",
-                    flexDirection: "column",
+                    flexFlow: "column warp",
                     alignItems: "center",
                     justifyContent: "center",
                     bgcolor: fontBgColour,
                     padding: "5px 10px",
                     borderRadius: "20px",
+                    maxHeight: "222px",
                   }}
                 >
                   {Object.keys(evo.methods).map((method, index_m) => (
@@ -188,12 +207,7 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({ pokemon }) => {
                   ))}
                 </Box>
               )}
-              <Box
-                component="img"
-                src={evo.sprite}
-                alt={`${evo.name}'s sprite`}
-                sx={{ wdith: "74px", height: "74px" }}
-              />
+              <>{getSprite(index_i, index_j, evo.name)}</>
             </Box>
           ))}
         </Box>

@@ -51,7 +51,7 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
           if (data) setPokemonData(data);
         }
       );
-    }, 200);
+    }, 300);
     return () => clearTimeout(timer);
   }, [activePokemonUrl]);
 
