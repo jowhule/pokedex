@@ -26,10 +26,12 @@ import {
 } from "./style";
 import LoopRoundedIcon from "@mui/icons-material/LoopRounded";
 import { primaryTextColour } from "../../../utils/colours";
+import { pokemonInfoSlideContainer } from "../../more-info-slide/style";
 
 type EvolutionChainProps = {
   pokemonData: PokemonDataResponseType;
   setActivePokemonName?: React.Dispatch<React.SetStateAction<string>>;
+  setTransition?: React.Dispatch<React.SetStateAction<Record<string, string>>>;
 };
 
 type EvoStages = StageInfo[][];
@@ -44,6 +46,7 @@ type StageInfo = {
 export const EvolutionChain: React.FC<EvolutionChainProps> = ({
   pokemonData,
   setActivePokemonName,
+  setTransition,
 }) => {
   const [evolutionStages, setEvolutionStages] = useState<EvoStages>([]);
   const [evolutionSprites, setEvolutionSprites] = useState<string[][]>([]);
@@ -260,6 +263,23 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
         }
       });
   }, [evoTreeTraverse, getSprites, pokemonData]);
+
+  useEffect(() => {
+    if (
+      evolutionStages.length > 0 &&
+      evolutionSprites.length > 0 &&
+      setTransition
+    ) {
+      setTimeout(() => {
+        setTransition(pokemonInfoSlideContainer);
+      }, 400);
+    }
+  }, [evolutionSprites.length, evolutionStages, setTransition]);
+
+  useEffect(() => {
+    setEvolutionSprites([]);
+    setEvolutionStages([]);
+  }, [pokemonData]);
 
   return (
     <>
