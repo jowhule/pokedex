@@ -50,14 +50,11 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
     // trigger translate
     if (activePokemonName) setTransition(noActivePokemonCardStyle);
     // get all pokemon data
-    const timer = setTimeout(() => {
-      sendGenericAPIRequest<PokemonDataResponseType>(
-        requestLinks.getData(activePokemonName)
-      ).then((data) => {
-        if (data) setPokemonData(data);
-      });
-    }, 300);
-    return () => clearTimeout(timer);
+    sendGenericAPIRequest<PokemonDataResponseType>(
+      requestLinks.getData(activePokemonName)
+    ).then((data) => {
+      if (data) setPokemonData(data);
+    });
   }, [activePokemonName]);
 
   useEffect(() => {
@@ -72,15 +69,13 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
       if (pokemonData.id > 650) {
         setPokemonAnimation(pokemonData.sprites.front_default);
       } else {
-        setPokemonAnimation(
-          `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/${pokemonData.id}.gif`
-        );
+        setPokemonAnimation(requestLinks.getAnimatedSprite(pokemonData.id));
       }
       // timer to setTransition so previous transition has time to slide out
       setHasLoaded(true);
       transitionTimer = setTimeout(() => {
         setTransition(pokemonInfoSlideContainer);
-      }, 300);
+      }, 400);
     }
 
     return () => {

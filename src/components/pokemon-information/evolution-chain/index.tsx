@@ -20,11 +20,12 @@ import {
 } from "../../../utils/styledComponents";
 import {
   pokemonEvoMethodContainer,
+  pokemonEvoSpriteStyle,
   pokemonEvoStageContainer,
   pokemonEvolutionContainer,
 } from "./style";
 import LoopRoundedIcon from "@mui/icons-material/LoopRounded";
-import { fontBgColour, primaryTextColour } from "../../../utils/colours";
+import { primaryTextColour } from "../../../utils/colours";
 
 type EvolutionChainProps = {
   pokemonId: number;
@@ -43,6 +44,7 @@ type StageInfo = {
 
 export const EvolutionChain: React.FC<EvolutionChainProps> = ({
   pokemonId,
+  activePokemonName,
   setActivePokemonName,
 }) => {
   const [evolutionStages, setEvolutionStages] = useState<EvoStages>([]);
@@ -217,28 +219,21 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
           component="img"
           src={evolutionSprites[i][j]}
           alt={`${name}'s sprite`}
-          sx={{
-            wdith: "74px",
-            height: "74px",
-            borderRadius: "15px",
-            margin: "0 5px",
-            "&:hover": {
-              bgcolor: `${fontBgColour}`,
-            },
-          }}
+          sx={pokemonEvoSpriteStyle}
         />
       );
     }
   };
 
   const handleEvoClick = (name: string) => {
-    if (setActivePokemonName) setActivePokemonName(name);
+    if (setActivePokemonName && name !== activePokemonName)
+      setActivePokemonName(name);
   };
 
   useEffect(() => {
     if (pokemonId)
       sendGenericAPIRequest<PokemonSpeciesResponseType>(
-        `https://pokeapi.co/api/v2/pokemon-species/${pokemonId}`,
+        requestLinks.getSpecies(pokemonId),
         () => setEvolutionStages([])
       ).then((data) => {
         if (data) {

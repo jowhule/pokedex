@@ -9,6 +9,12 @@ export const requestLinks = {
   getSpecies: (nameId: string | number): string => {
     return API + `pokemon-species/${nameId}`;
   },
+  getPokedex: (pokedexNum: number): string => {
+    return API + `pokedex/${pokedexNum}`;
+  },
+  getAnimatedSprite: (id: number): string => {
+    return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/${id}.gif`;
+  },
 };
 
 // using pokemon api, only get request

@@ -5,7 +5,10 @@ import {
   PokemonPokedexEntryType,
 } from "../../services/apiRequestsTypes";
 import { homePageContainerStyle } from "./style";
-import { sendGenericAPIRequest } from "../../services/apiRequests";
+import {
+  requestLinks,
+  sendGenericAPIRequest,
+} from "../../services/apiRequests";
 import { PokedexDisplay } from "../../components/pokedex-display";
 import { MoreInfoSlide } from "../../components/more-info-slide";
 
@@ -22,7 +25,7 @@ export const HomePage: React.FC = () => {
   // get all pokemon names
   useEffect(() => {
     sendGenericAPIRequest<PokemonDexResponseType>(
-      `https://pokeapi.co/api/v2/pokedex/1`
+      requestLinks.getPokedex(1)
     ).then((data) => {
       if (data) {
         setNationalDex(data.pokemon_entries);
