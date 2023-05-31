@@ -21,10 +21,11 @@ import {
   pokemonEvolutionContainer,
 } from "./style";
 import LoopRoundedIcon from "@mui/icons-material/LoopRounded";
-import { primaryTextColour } from "../../../utils/colours";
+import { fontBgColour, primaryTextColour } from "../../../utils/colours";
 
 type EvolutionChainProps = {
   pokemonId: number;
+  setActivePokemonUrl?: React.Dispatch<React.SetStateAction<string>>;
 };
 
 type EvoStages = StageInfo[][];
@@ -38,9 +39,11 @@ type StageInfo = {
 
 export const EvolutionChain: React.FC<EvolutionChainProps> = ({
   pokemonId,
+  setActivePokemonUrl,
 }) => {
   const [evolutionStages, setEvolutionStages] = useState<EvoStages>([]);
   const [evolutionSprites, setEvolutionSprites] = useState<string[][]>([]);
+  const [isEeveeLine, setIsEeveeLine] = useState<boolean>(false);
 
   // revursively traverse the evolution tree and add it to per level
   const evoTreeTraverse = useCallback(
@@ -210,10 +213,23 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
           component="img"
           src={evolutionSprites[i][j]}
           alt={`${name}'s sprite`}
-          sx={{ wdith: "74px", height: "74px" }}
+          sx={{
+            wdith: "74px",
+            height: "74px",
+            borderRadius: "15px",
+            margin: "0 5px",
+            "&:hover": {
+              bgcolor: `${fontBgColour}`,
+            },
+          }}
         />
       );
     }
+  };
+
+  const handleEvoClick = (name: string) => {
+    if (setActivePokemonUrl)
+      setActivePokemonUrl("https://pokeapi.co/api/v2/pokemon/" + name);
   };
 
   useEffect(() => {
@@ -223,6 +239,12 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
         () => setEvolutionStages([])
       ).then((data) => {
         if (data) {
+          if (data?.evolution_chain.url.split("/").at(-2) === "67") {
+            setIsEeveeLine(true);
+          } else {
+            setIsEeveeLine(false);
+          }
+
           sendGenericAPIRequest<PokemonEvolutionResponseType>(
             `${data?.evolution_chain.url}`
           ).then((data) => {
@@ -241,14 +263,8 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
     <>
       {evolutionStages.length > 1 && (
         <>
-          <StatTitleText fontSize="16px" sx={{ marginBottom: "-5px" }}>
-            Evolution
-          </StatTitleText>
-
-          <Box
-            display="flex"
-            sx={pokemonId === 133 ? { marginLeft: "-130px" } : {}}
-          >
+          <StatTitleText fontSize="16px">Evolution</StatTitleText>
+          <Box display="flex" sx={isEeveeLine ? { marginLeft: "-130px" } : {}}>
             {evolutionStages.map((stage, index_i) => (
               <Box key={index_i} sx={pokemonEvoStageContainer}>
                 {stage.map((evo, index_j) => (
@@ -267,7 +283,7 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
                         )}
                       </Box>
                     )}
-                    <Hoverable>
+                    <Hoverable onClick={() => handleEvoClick(evo.name)}>
                       {getSprite(index_i, index_j, evo.name)}
                     </Hoverable>
                   </Box>

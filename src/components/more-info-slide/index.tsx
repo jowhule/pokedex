@@ -26,10 +26,12 @@ import { pokemonDataDefault } from "../../utils/defaults";
 
 type MoreInfoSlideType = {
   activePokemonUrl: string;
+  setActivePokemonUrl: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
   activePokemonUrl,
+  setActivePokemonUrl,
 }) => {
   const [pokemonData, setPokemonData] =
     useState<PokemonDataResponseType>(pokemonDataDefault);
@@ -134,7 +136,10 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
                 ))}
               </Box>
 
-              <EvolutionChain pokemonId={pokemonData.id} />
+              <EvolutionChain
+                pokemonId={pokemonData.id}
+                setActivePokemonUrl={setActivePokemonUrl}
+              />
             </>
           ) : (
             <SecondaryText>Please select a Pokemon.</SecondaryText>

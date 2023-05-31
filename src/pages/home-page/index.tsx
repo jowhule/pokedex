@@ -42,7 +42,10 @@ export const HomePage: React.FC = () => {
       </Box>
       <Box>
         <Box sx={{ width: "350px" }}></Box>
-        <MoreInfoSlide activePokemonUrl={activePokemonUrl} />
+        <MoreInfoSlide
+          activePokemonUrl={activePokemonUrl}
+          setActivePokemonUrl={setActivePokemonUrl}
+        />
       </Box>
     </Box>
   );
