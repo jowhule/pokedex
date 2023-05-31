@@ -19,14 +19,17 @@ import {
 import { TypeTag } from "../../pokemon-information/type-tag";
 import { CustomCard } from "../../custom-card/CustomCard";
 import { pokemonDataDefault } from "../../../utils/defaults";
+import { capitalise } from "../../../utils/helpers";
 
 type PokemonCardProps = {
+  pokemonId: number;
   pokemonName: string;
   inDisplayList: boolean;
   setActivePokemonName: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export const PokemonCard: React.FC<PokemonCardProps> = ({
+  pokemonId,
   pokemonName,
   inDisplayList,
   setActivePokemonName,
@@ -49,24 +52,24 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
    * when card clicked set as active pokemon for the info slide
    */
   const handleCardClick = () => {
-    setActivePokemonName(pokemonName);
+    setActivePokemonName(pokemonData.name);
   };
 
   // get initial pokemon data if the card is supposed to be displayed
   useEffect(() => {
     if (inDisplayList && displayName) {
       sendGenericAPIRequest<PokemonDataResponseType>(
-        requestLinks.getData(pokemonName)
+        requestLinks.getData(pokemonId)
       ).then((data) => {
         if (data) setPokemonData(data);
       });
     }
-  }, [pokemonName, inDisplayList, displayName]);
+  }, [pokemonId, inDisplayList, displayName]);
 
   // get pokemon name and capitalise first letter
   useEffect(() => {
     if (pokemonName) {
-      setDisplayName(pokemonName[0].toUpperCase() + pokemonName.slice(1));
+      setDisplayName(capitalise(pokemonName));
       setHasLoaded(true);
     }
   }, [pokemonName]);

@@ -28,8 +28,7 @@ import LoopRoundedIcon from "@mui/icons-material/LoopRounded";
 import { primaryTextColour } from "../../../utils/colours";
 
 type EvolutionChainProps = {
-  pokemonId: number;
-  activePokemonName: string;
+  pokemonData: PokemonDataResponseType;
   setActivePokemonName?: React.Dispatch<React.SetStateAction<string>>;
 };
 
@@ -43,8 +42,7 @@ type StageInfo = {
 };
 
 export const EvolutionChain: React.FC<EvolutionChainProps> = ({
-  pokemonId,
-  activePokemonName,
+  pokemonData,
   setActivePokemonName,
 }) => {
   const [evolutionStages, setEvolutionStages] = useState<EvoStages>([]);
@@ -110,11 +108,17 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
 
   const getSpritePromise = (name: string): Promise<string> => {
     return new Promise((resolve) => {
-      sendGenericAPIRequest<PokemonDataResponseType>(
-        `https://pokeapi.co/api/v2/pokemon/${name}`,
-        () => setEvolutionStages([])
-      ).then((data) => {
-        if (data) resolve(data.sprites.front_default);
+      sendGenericAPIRequest<PokemonSpeciesResponseType>(
+        requestLinks.getSpecies(name)
+      ).then((species) => {
+        if (species) {
+          sendGenericAPIRequest<PokemonDataResponseType>(
+            requestLinks.getData(species.id),
+            () => setEvolutionStages([])
+          ).then((data) => {
+            if (data) resolve(data.sprites.front_default);
+          });
+        }
       });
     });
   };
@@ -226,14 +230,14 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
   };
 
   const handleEvoClick = (name: string) => {
-    if (setActivePokemonName && name !== activePokemonName)
+    if (setActivePokemonName && name !== pokemonData.species.name)
       setActivePokemonName(name);
   };
 
   useEffect(() => {
-    if (pokemonId)
+    if (pokemonData)
       sendGenericAPIRequest<PokemonSpeciesResponseType>(
-        requestLinks.getSpecies(pokemonId),
+        requestLinks.getSpecies(pokemonData.species.name),
         () => setEvolutionStages([])
       ).then((data) => {
         if (data) {
@@ -255,7 +259,7 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
           });
         }
       });
-  }, [evoTreeTraverse, getSprites, pokemonId]);
+  }, [evoTreeTraverse, getSprites, pokemonData]);
 
   return (
     <>

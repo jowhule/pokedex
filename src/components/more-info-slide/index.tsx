@@ -26,6 +26,7 @@ import { AbilityTag } from "../pokemon-information/ability-tag";
 import { StatBar } from "../pokemon-information/stat-bar";
 import { EvolutionChain } from "../pokemon-information/evolution-chain";
 import { pokemonDataDefault } from "../../utils/defaults";
+import { capitalise } from "../../utils/helpers";
 
 type MoreInfoSlideType = {
   activePokemonName: string;
@@ -48,13 +49,17 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
 
   useEffect(() => {
     // trigger translate
-    if (activePokemonName) setTransition(noActivePokemonCardStyle);
-    // get all pokemon data
-    sendGenericAPIRequest<PokemonDataResponseType>(
-      requestLinks.getData(activePokemonName)
-    ).then((data) => {
-      if (data) setPokemonData(data);
-    });
+    if (activePokemonName) {
+      console.log(activePokemonName);
+
+      setTransition(noActivePokemonCardStyle);
+      // get all pokemon data
+      sendGenericAPIRequest<PokemonDataResponseType>(
+        requestLinks.getData(activePokemonName)
+      ).then((data) => {
+        if (data) setPokemonData(data);
+      });
+    }
   }, [activePokemonName]);
 
   useEffect(() => {
@@ -107,7 +112,7 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
                 # {pokemonData.id}
               </SecondaryText>
               <BodyText fontWeight="bold" fontSize="24px">
-                {pokemonName}
+                {capitalise(pokemonData.species.name)}
               </BodyText>
 
               <Box display="flex" gap="10px" m="10px">
@@ -135,8 +140,7 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
               </Box>
 
               <EvolutionChain
-                pokemonId={pokemonData.id}
-                activePokemonName={activePokemonName}
+                pokemonData={pokemonData}
                 setActivePokemonName={setActivePokemonName}
               />
             </>
