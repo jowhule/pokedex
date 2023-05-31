@@ -1,8 +1,26 @@
-import axios, { AxiosError } from "axios";
+import axios from "axios";
+
+const API = "https://pokeapi.co/api/v2/";
+
+export const requestLinks = {
+  getData: (nameId: string | number): string => {
+    return API + `pokemon/${nameId}`;
+  },
+  getSpecies: (nameId: string | number): string => {
+    return API + `pokemon-species/${nameId}`;
+  },
+  getPokedex: (pokedexNum: number): string => {
+    return API + `pokedex/${pokedexNum}`;
+  },
+  getAnimatedSprite: (id: number): string => {
+    return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/${id}.gif`;
+  },
+};
 
 // using pokemon api, only get request
 export const sendGenericAPIRequest = async <T>(
-  url: string
+  url: string,
+  errorHandler?: () => void
 ): Promise<T | void> => {
   try {
     const headers: Record<string, string> = {
@@ -12,9 +30,6 @@ export const sendGenericAPIRequest = async <T>(
     const response = await axios.get(url, { headers });
     if (response) return response.data;
   } catch (err) {
-    if (err instanceof AxiosError) {
-      console.log(err);
-      return;
-    }
+    if (errorHandler) errorHandler();
   }
 };

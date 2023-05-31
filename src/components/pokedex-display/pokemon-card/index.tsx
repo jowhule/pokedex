@@ -1,10 +1,10 @@
 import { Box, CircularProgress, Grid } from "@mui/material";
 import React, { useEffect, useState } from "react";
+import { PokemonDataResponseType } from "../../../services/apiRequestsTypes";
 import {
-  PokemonDataResponseType,
-  pokemonDataDefault,
-} from "../../../services/apiRequestsTypes";
-import { sendGenericAPIRequest } from "../../../services/apiRequests";
+  requestLinks,
+  sendGenericAPIRequest,
+} from "../../../services/apiRequests";
 import {
   BodyText,
   Hoverable,
@@ -18,21 +18,22 @@ import {
 } from "./style";
 import { TypeTag } from "../../pokemon-information/type-tag";
 import { CustomCard } from "../../custom-card/CustomCard";
+import { pokemonDataDefault } from "../../../utils/defaults";
 
 type PokemonCardProps = {
-  pokemonUrl: string;
+  pokemonName: string;
   inDisplayList: boolean;
-  setActivePokemonUrl: React.Dispatch<React.SetStateAction<string>>;
+  setActivePokemonName: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export const PokemonCard: React.FC<PokemonCardProps> = ({
-  pokemonUrl,
+  pokemonName,
   inDisplayList,
-  setActivePokemonUrl,
+  setActivePokemonName,
 }) => {
   const [pokemonData, setPokemonData] =
     useState<PokemonDataResponseType>(pokemonDataDefault);
-  const [pokemonName, setPokemonName] = useState<string>("");
+  const [displayName, setDisplayName] = useState<string>("");
   const [isMouseOver, setIsMouseOver] = useState<boolean>(false);
   const [hasLoaded, setHasLoaded] = useState<boolean>(false);
 
@@ -48,29 +49,27 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
    * when card clicked set as active pokemon for the info slide
    */
   const handleCardClick = () => {
-    setActivePokemonUrl(pokemonUrl);
+    setActivePokemonName(pokemonName);
   };
 
   // get initial pokemon data if the card is supposed to be displayed
   useEffect(() => {
-    if (inDisplayList && !pokemonName) {
-      sendGenericAPIRequest<PokemonDataResponseType>(pokemonUrl).then(
-        (data) => {
-          if (data) setPokemonData(data);
-        }
-      );
+    if (inDisplayList && displayName) {
+      sendGenericAPIRequest<PokemonDataResponseType>(
+        requestLinks.getData(pokemonName)
+      ).then((data) => {
+        if (data) setPokemonData(data);
+      });
     }
-  }, [pokemonUrl, inDisplayList, pokemonName]);
+  }, [pokemonName, inDisplayList, displayName]);
 
   // get pokemon name and capitalise first letter
   useEffect(() => {
-    if (pokemonData.name) {
-      setPokemonName(
-        pokemonData.name[0].toUpperCase() + pokemonData.name.slice(1)
-      );
+    if (pokemonName) {
+      setDisplayName(pokemonName[0].toUpperCase() + pokemonName.slice(1));
       setHasLoaded(true);
     }
-  }, [pokemonData]);
+  }, [pokemonName]);
 
   return (
     <>
@@ -94,11 +93,11 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
                     component="img"
                     draggable="false"
                     src={pokemonData.sprites.front_default}
-                    alt={`${pokemonName}'s sprite`}
+                    alt={`${displayName}'s sprite`}
                     sx={isMouseOver ? pokemonSpriteHover : pokemonSpriteStyle}
                   />
                   <BodyText fontWeight="bold" fontSize="18px">
-                    {pokemonName}
+                    {displayName}
                   </BodyText>
                   <Box display="flex" gap="10px" marginTop="5px">
                     {pokemonData.types.map((type, index) => (

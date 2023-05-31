@@ -19,14 +19,14 @@ type PokedexDisplayProps = {
   pokedexList: PokemonPokedexEntryType[];
   displaySearch?: boolean;
   listLoaded: boolean;
-  setActivePokemonUrl: React.Dispatch<React.SetStateAction<string>>;
+  setActivePokemonName: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
   pokedexList,
   displaySearch,
   listLoaded,
-  setActivePokemonUrl,
+  setActivePokemonName,
 }) => {
   const [displayLimit, setDisplayLimit] = useState<number>(POKEMON_PER_LOAD);
 
@@ -168,14 +168,11 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
           >
             {pokedexList.map((pokemonInfo, index) => (
               <PokemonCard
-                pokemonUrl={pokemonInfo.pokemon_species.url.replace(
-                  "-species",
-                  ""
-                )}
+                pokemonName={pokemonInfo.pokemon_species.name}
                 inDisplayList={
                   displayList[pokemonInfo.pokemon_species.name] ? true : false
                 }
-                setActivePokemonUrl={setActivePokemonUrl}
+                setActivePokemonName={setActivePokemonName}
                 key={index}
               />
             ))}

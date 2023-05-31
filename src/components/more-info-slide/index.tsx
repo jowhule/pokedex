@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { CustomCard } from "../custom-card/CustomCard";
+import { PokemonDataResponseType } from "../../services/apiRequestsTypes";
 import {
-  PokemonDataResponseType,
-  pokemonDataDefault,
-} from "../../services/apiRequestsTypes";
-import { sendGenericAPIRequest } from "../../services/apiRequests";
+  requestLinks,
+  sendGenericAPIRequest,
+} from "../../services/apiRequests";
 import { Box } from "@mui/material";
 import {
   BodyText,
@@ -24,13 +24,17 @@ import {
 import defaultImage from "../../assets/default_pokemon_info.png";
 import { AbilityTag } from "../pokemon-information/ability-tag";
 import { StatBar } from "../pokemon-information/stat-bar";
+import { EvolutionChain } from "../pokemon-information/evolution-chain";
+import { pokemonDataDefault } from "../../utils/defaults";
 
 type MoreInfoSlideType = {
-  activePokemonUrl: string;
+  activePokemonName: string;
+  setActivePokemonName: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
-  activePokemonUrl,
+  activePokemonName,
+  setActivePokemonName,
 }) => {
   const [pokemonData, setPokemonData] =
     useState<PokemonDataResponseType>(pokemonDataDefault);
@@ -44,17 +48,14 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
 
   useEffect(() => {
     // trigger translate
-    if (activePokemonUrl) setTransition(noActivePokemonCardStyle);
+    if (activePokemonName) setTransition(noActivePokemonCardStyle);
     // get all pokemon data
-    const timer = setTimeout(() => {
-      sendGenericAPIRequest<PokemonDataResponseType>(activePokemonUrl).then(
-        (data) => {
-          if (data) setPokemonData(data);
-        }
-      );
-    }, 300);
-    return () => clearTimeout(timer);
-  }, [activePokemonUrl]);
+    sendGenericAPIRequest<PokemonDataResponseType>(
+      requestLinks.getData(activePokemonName)
+    ).then((data) => {
+      if (data) setPokemonData(data);
+    });
+  }, [activePokemonName]);
 
   useEffect(() => {
     let transitionTimer: ReturnType<typeof setTimeout> | null = null;
@@ -68,15 +69,13 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
       if (pokemonData.id > 650) {
         setPokemonAnimation(pokemonData.sprites.front_default);
       } else {
-        setPokemonAnimation(
-          `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/${pokemonData.id}.gif`
-        );
+        setPokemonAnimation(requestLinks.getAnimatedSprite(pokemonData.id));
       }
       // timer to setTransition so previous transition has time to slide out
       setHasLoaded(true);
       transitionTimer = setTimeout(() => {
         setTransition(pokemonInfoSlideContainer);
-      }, 500);
+      }, 400);
     }
 
     return () => {
@@ -135,7 +134,11 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
                 ))}
               </Box>
 
-              <StatTitleText fontSize="16px">Evolution</StatTitleText>
+              <EvolutionChain
+                pokemonId={pokemonData.id}
+                activePokemonName={activePokemonName}
+                setActivePokemonName={setActivePokemonName}
+              />
             </>
           ) : (
             <SecondaryText>Please select a Pokemon.</SecondaryText>

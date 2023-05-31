@@ -5,14 +5,17 @@ import {
   PokemonPokedexEntryType,
 } from "../../services/apiRequestsTypes";
 import { homePageContainerStyle } from "./style";
-import { sendGenericAPIRequest } from "../../services/apiRequests";
+import {
+  requestLinks,
+  sendGenericAPIRequest,
+} from "../../services/apiRequests";
 import { PokedexDisplay } from "../../components/pokedex-display";
 import { MoreInfoSlide } from "../../components/more-info-slide";
 
 export const HomePage: React.FC = () => {
   const [hasLoaded, setHasLoaded] = useState<boolean>(false);
   const [nationalDex, setNationalDex] = useState<PokemonPokedexEntryType[]>([]);
-  const [activePokemonUrl, setActivePokemonUrl] = useState<string>("");
+  const [activePokemonName, setActivePokemonName] = useState<string>("");
 
   // pokemon list finished fetching from api
   useEffect(() => {
@@ -22,7 +25,7 @@ export const HomePage: React.FC = () => {
   // get all pokemon names
   useEffect(() => {
     sendGenericAPIRequest<PokemonDexResponseType>(
-      `https://pokeapi.co/api/v2/pokedex/1`
+      requestLinks.getPokedex(1)
     ).then((data) => {
       if (data) {
         setNationalDex(data.pokemon_entries);
@@ -37,12 +40,15 @@ export const HomePage: React.FC = () => {
           pokedexList={nationalDex}
           displaySearch
           listLoaded={hasLoaded}
-          setActivePokemonUrl={setActivePokemonUrl}
+          setActivePokemonName={setActivePokemonName}
         />
       </Box>
       <Box>
         <Box sx={{ width: "350px" }}></Box>
-        <MoreInfoSlide activePokemonUrl={activePokemonUrl} />
+        <MoreInfoSlide
+          activePokemonName={activePokemonName}
+          setActivePokemonName={setActivePokemonName}
+        />
       </Box>
     </Box>
   );
