@@ -1,6 +1,13 @@
 import { keyframes } from "@emotion/react";
 import { fontBgColour } from "../../utils/colours";
 
+export const outterPokemonInfoSlideContainer = {
+  width: "350px",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+};
+
 export const pokemonInfoSlideContainer = {
   width: "350px",
   height: "80vh",
@@ -19,18 +26,7 @@ export const pokemonSpriteStyle = {
   bottom: "100%",
   imageRendering: "pixelated",
   overflowClipMargin: "content-box",
-};
-
-export const activePokemonSpriteStyle = {
-  ...pokemonSpriteStyle,
   transform: "scale(3)",
-};
-
-export const noActivePokemonSpriteStyle = {
-  ...pokemonSpriteStyle,
-  width: "150px",
-  marginBottom: "-50px",
-  marginLeft: "50px",
 };
 
 export const infoSlideContainer = {
@@ -65,7 +61,15 @@ export const statsContainer = {
   width: "90%",
 };
 
-export const spinAnimate = keyframes`
+const spinAnimate = keyframes`
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 `;
+
+export const infoSlideLoaderStyle = {
+  position: "fixed",
+  animation: `${spinAnimate} 2s linear infinite`,
+  width: "70px",
+  top: "50vh",
+  zIndex: "-1",
+};
