@@ -1,3 +1,4 @@
+import { keyframes } from "@emotion/react";
 import { fontBgColour } from "../../utils/colours";
 
 export const pokemonInfoSlideContainer = {
@@ -63,3 +64,8 @@ export const statsContainer = {
   gap: "5px",
   width: "90%",
 };
+
+export const spinAnimate = keyframes`
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+`;

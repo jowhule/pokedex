@@ -19,6 +19,7 @@ import {
   noActivePokemonCardStyle,
   noActivePokemonSpriteStyle,
   pokemonInfoSlideContainer,
+  spinAnimate,
   statsContainer,
 } from "./style";
 import { AbilityTag } from "../pokemon-information/ability-tag";
@@ -28,7 +29,7 @@ import { pokemonDataDefault } from "../../utils/defaults";
 import { capitalise } from "../../utils/helpers";
 
 import defaultImage from "../../assets/default_pokemon_info.png";
-import pokeballLoader from "../../assets/pokeballIcon.png";
+import pokeballLoader from "../../assets/pokeball-icon.png";
 
 type MoreInfoSlideType = {
   activePokemonName: string;
@@ -80,7 +81,14 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
   }, [pokemonData]);
 
   return (
-    <Box sx={{ width: "350px" }}>
+    <Box
+      sx={{
+        width: "350px",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
       <CustomCard sx={transition}>
         <>
           <Box sx={infoSlideContainer}>
@@ -143,6 +151,18 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
           </Box>
         </>
       </CustomCard>
+      <Box
+        component="img"
+        src={pokeballLoader}
+        alt="Loading"
+        sx={{
+          position: "fixed",
+          animation: `${spinAnimate} 2s linear infinite`,
+          width: "70px",
+          top: "50vh",
+          zIndex: "-1",
+        }}
+      />
     </Box>
   );
 };
