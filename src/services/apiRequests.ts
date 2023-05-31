@@ -1,5 +1,16 @@
 import axios from "axios";
 
+const API = "https://pokeapi.co/api/v2/";
+
+export const requestLinks = {
+  getData: (nameId: string | number): string => {
+    return API + `pokemon/${nameId}`;
+  },
+  getSpecies: (nameId: string | number): string => {
+    return API + `pokemon-species/${nameId}`;
+  },
+};
+
 // using pokemon api, only get request
 export const sendGenericAPIRequest = async <T>(
   url: string,

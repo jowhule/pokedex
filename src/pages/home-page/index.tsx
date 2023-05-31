@@ -12,7 +12,7 @@ import { MoreInfoSlide } from "../../components/more-info-slide";
 export const HomePage: React.FC = () => {
   const [hasLoaded, setHasLoaded] = useState<boolean>(false);
   const [nationalDex, setNationalDex] = useState<PokemonPokedexEntryType[]>([]);
-  const [activePokemonUrl, setActivePokemonUrl] = useState<string>("");
+  const [activePokemonName, setActivePokemonName] = useState<string>("");
 
   // pokemon list finished fetching from api
   useEffect(() => {
@@ -37,14 +37,14 @@ export const HomePage: React.FC = () => {
           pokedexList={nationalDex}
           displaySearch
           listLoaded={hasLoaded}
-          setActivePokemonUrl={setActivePokemonUrl}
+          setActivePokemonName={setActivePokemonName}
         />
       </Box>
       <Box>
         <Box sx={{ width: "350px" }}></Box>
         <MoreInfoSlide
-          activePokemonUrl={activePokemonUrl}
-          setActivePokemonUrl={setActivePokemonUrl}
+          activePokemonName={activePokemonName}
+          setActivePokemonName={setActivePokemonName}
         />
       </Box>
     </Box>

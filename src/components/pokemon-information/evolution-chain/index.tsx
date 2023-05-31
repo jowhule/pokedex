@@ -1,5 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { sendGenericAPIRequest } from "../../../services/apiRequests";
+import {
+  requestLinks,
+  sendGenericAPIRequest,
+} from "../../../services/apiRequests";
 import {
   NameUrlType,
   PokemonEvoChainType,
@@ -25,7 +28,8 @@ import { fontBgColour, primaryTextColour } from "../../../utils/colours";
 
 type EvolutionChainProps = {
   pokemonId: number;
-  setActivePokemonUrl?: React.Dispatch<React.SetStateAction<string>>;
+  activePokemonName: string;
+  setActivePokemonName?: React.Dispatch<React.SetStateAction<string>>;
 };
 
 type EvoStages = StageInfo[][];
@@ -39,7 +43,7 @@ type StageInfo = {
 
 export const EvolutionChain: React.FC<EvolutionChainProps> = ({
   pokemonId,
-  setActivePokemonUrl,
+  setActivePokemonName,
 }) => {
   const [evolutionStages, setEvolutionStages] = useState<EvoStages>([]);
   const [evolutionSprites, setEvolutionSprites] = useState<string[][]>([]);
@@ -228,8 +232,7 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
   };
 
   const handleEvoClick = (name: string) => {
-    if (setActivePokemonUrl)
-      setActivePokemonUrl("https://pokeapi.co/api/v2/pokemon/" + name);
+    if (setActivePokemonName) setActivePokemonName(name);
   };
 
   useEffect(() => {

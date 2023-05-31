@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { CustomCard } from "../custom-card/CustomCard";
 import { PokemonDataResponseType } from "../../services/apiRequestsTypes";
-import { sendGenericAPIRequest } from "../../services/apiRequests";
+import {
+  requestLinks,
+  sendGenericAPIRequest,
+} from "../../services/apiRequests";
 import { Box } from "@mui/material";
 import {
   BodyText,
@@ -25,13 +28,13 @@ import { EvolutionChain } from "../pokemon-information/evolution-chain";
 import { pokemonDataDefault } from "../../utils/defaults";
 
 type MoreInfoSlideType = {
-  activePokemonUrl: string;
-  setActivePokemonUrl: React.Dispatch<React.SetStateAction<string>>;
+  activePokemonName: string;
+  setActivePokemonName: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
-  activePokemonUrl,
-  setActivePokemonUrl,
+  activePokemonName,
+  setActivePokemonName,
 }) => {
   const [pokemonData, setPokemonData] =
     useState<PokemonDataResponseType>(pokemonDataDefault);
@@ -45,17 +48,17 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
 
   useEffect(() => {
     // trigger translate
-    if (activePokemonUrl) setTransition(noActivePokemonCardStyle);
+    if (activePokemonName) setTransition(noActivePokemonCardStyle);
     // get all pokemon data
     const timer = setTimeout(() => {
-      sendGenericAPIRequest<PokemonDataResponseType>(activePokemonUrl).then(
-        (data) => {
-          if (data) setPokemonData(data);
-        }
-      );
+      sendGenericAPIRequest<PokemonDataResponseType>(
+        requestLinks.getData(activePokemonName)
+      ).then((data) => {
+        if (data) setPokemonData(data);
+      });
     }, 300);
     return () => clearTimeout(timer);
-  }, [activePokemonUrl]);
+  }, [activePokemonName]);
 
   useEffect(() => {
     let transitionTimer: ReturnType<typeof setTimeout> | null = null;
@@ -138,7 +141,8 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
 
               <EvolutionChain
                 pokemonId={pokemonData.id}
-                setActivePokemonUrl={setActivePokemonUrl}
+                activePokemonName={activePokemonName}
+                setActivePokemonName={setActivePokemonName}
               />
             </>
           ) : (
