@@ -96,7 +96,7 @@ export const EvolutionMethod: React.FC<EvolutionMethodType> = ({
     switch (trigger.name) {
       case "trade":
         return <LoopRoundedIcon style={{ color: `${primaryTextColour}` }} />;
-      default:
+      case "level-up":
         if (
           !Object.keys(stageInfo.methods).includes("min_level") &&
           !Object.keys(stageInfo.methods).includes("item")
@@ -106,6 +106,13 @@ export const EvolutionMethod: React.FC<EvolutionMethodType> = ({
               lvl up
             </BodyText>
           );
+        break;
+      default:
+        return (
+          <BodyText fontWeight="bold" fontSize="10px">
+            {trigger.name}
+          </BodyText>
+        );
     }
   };
 

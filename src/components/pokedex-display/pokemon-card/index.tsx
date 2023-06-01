@@ -55,7 +55,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
    * when card clicked set as active pokemon for the info slide
    */
   const handleCardClick = () => {
-    setActivePokemonName(pokemonData.name);
+    setActivePokemonName(pokemonData.species.name);
   };
 
   // get initial pokemon data if the card is supposed to be displayed

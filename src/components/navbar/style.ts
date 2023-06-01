@@ -1,5 +1,4 @@
 import { SxProps, Theme } from "@mui/material";
-import { secondaryColour } from "../../utils/colours";
 
 export const NAVBAR_HEIGHT = "60px";
 
@@ -10,8 +9,7 @@ export const navbarContainer: React.CSSProperties = {
   zIndex: "3",
   height: NAVBAR_HEIGHT,
   width: "100%",
-  backgroundColor: "white",
-  boxShadow: `0 5px 5px ${secondaryColour}`,
+  backgroundColor: "#FFFFFF90",
   transition: "transform 0.5s ease",
 };
 
