@@ -10,7 +10,7 @@ export const outterPokemonInfoSlideContainer = {
 
 export const pokemonInfoSlideContainer = {
   width: "350px",
-  height: "78vh",
+  height: "80vh",
   position: "fixed",
   bottom: "-10px",
   transition: "transform 0.3s ease-out",

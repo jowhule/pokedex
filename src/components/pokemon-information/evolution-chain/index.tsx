@@ -11,7 +11,7 @@ import {
   PokemonSpeciesResponseType,
 } from "../../../services/apiRequestsTypes";
 import { pokemonEvoDetailsDefault } from "../../../utils/defaults";
-import { Box } from "@mui/material";
+import { Box, Tooltip } from "@mui/material";
 import { PokemonDataResponseType } from "../../../services/apiRequestsTypes";
 import { Hoverable, StatTitleText } from "../../../utils/styledComponents";
 import { EvolutionMethod } from "./evolution-method";
@@ -21,6 +21,7 @@ import {
   pokemonEvolutionContainer,
 } from "./style";
 import { pokemonInfoSlideContainer } from "../../more-info-slide/style";
+import { capitalise } from "../../../utils/helpers";
 
 type EvolutionChainProps = {
   pokemonData: PokemonDataResponseType;
@@ -210,9 +211,11 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
                 {stage.map((evo, index_j) => (
                   <Box sx={pokemonEvolutionContainer} key={index_j}>
                     <EvolutionMethod stageInfo={evo} />
-                    <Hoverable onClick={() => handleEvoClick(evo.name)}>
-                      {getSprite(index_i, index_j, evo.name)}
-                    </Hoverable>
+                    <Tooltip title={capitalise(evo.name)}>
+                      <Hoverable onClick={() => handleEvoClick(evo.name)}>
+                        {getSprite(index_i, index_j, evo.name)}
+                      </Hoverable>
+                    </Tooltip>
                   </Box>
                 ))}
               </Box>
@@ -223,9 +226,3 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
     </>
   );
 };
-
-// {
-//   Object.keys(evo.methods).map((method) => (
-//     <Box>{method as string}</Box>
-//   ));
-// }
