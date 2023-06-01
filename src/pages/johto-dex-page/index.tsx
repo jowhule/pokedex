@@ -15,7 +15,7 @@ import { MoreInfoSlide } from "../../components/more-info-slide";
 export const JohtoDex: React.FC = () => {
   const [hasLoaded, setHasLoaded] = useState<boolean>(false);
   const [nationalDex, setNationalDex] = useState<PokemonPokedexEntryType[]>([]);
-  const [activePokemon, setActivePokemon] = useState<string | number>(-1);
+  const [activePokemon, setActivePokemon] = useState<string | number>("");
 
   // pokemon list finished fetching from api
   useEffect(() => {

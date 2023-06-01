@@ -15,7 +15,7 @@ import { MoreInfoSlide } from "../../components/more-info-slide";
 export const NationalDex: React.FC = () => {
   const [hasLoaded, setHasLoaded] = useState<boolean>(false);
   const [nationalDex, setNationalDex] = useState<PokemonPokedexEntryType[]>([]);
-  const [activePokemon, setActivePokemon] = useState<number | string>(-1);
+  const [activePokemon, setActivePokemon] = useState<number | string>("");
 
   // pokemon list finished fetching from api
   useEffect(() => {
