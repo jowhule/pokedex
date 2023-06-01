@@ -1,6 +1,9 @@
 import { Box, CircularProgress, Grid } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { PokemonDataResponseType } from "../../../services/apiRequestsTypes";
+import {
+  PokemonDataResponseType,
+  PokemonPokedexEntryType,
+} from "../../../services/apiRequestsTypes";
 import {
   requestLinks,
   sendGenericAPIRequest,
@@ -22,15 +25,13 @@ import { pokemonDataDefault } from "../../../utils/defaults";
 import { capitalise } from "../../../utils/helpers";
 
 type PokemonCardProps = {
-  pokemonId: number;
-  pokemonName: string;
+  pokemonEntry: PokemonPokedexEntryType;
   inDisplayList: boolean;
   setActivePokemonName: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export const PokemonCard: React.FC<PokemonCardProps> = ({
-  pokemonId,
-  pokemonName,
+  pokemonEntry,
   inDisplayList,
   setActivePokemonName,
 }) => {
@@ -57,21 +58,19 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
 
   // get initial pokemon data if the card is supposed to be displayed
   useEffect(() => {
-    if (inDisplayList && displayName) {
-      sendGenericAPIRequest<PokemonDataResponseType>(
-        requestLinks.getData(pokemonId)
-      ).then((data) => {
-        if (data) setPokemonData(data);
-      });
-    }
-  }, [pokemonId, inDisplayList, displayName]);
+    if (pokemonEntry) {
+      setDisplayName(capitalise(pokemonEntry.pokemon_species.name));
+      const id = parseInt(pokemonEntry.pokemon_species.url.split("/")[6]);
 
-  // get pokemon name and capitalise first letter
-  useEffect(() => {
-    if (pokemonName) {
-      setDisplayName(capitalise(pokemonName));
+      if (id) {
+        sendGenericAPIRequest<PokemonDataResponseType>(
+          requestLinks.getData(id)
+        ).then((data) => {
+          if (data) setPokemonData(data);
+        });
+      }
     }
-  }, [pokemonName]);
+  }, [pokemonEntry]);
 
   // check if sprite has loaded
   useEffect(() => {
@@ -90,7 +89,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
             <CustomCard sx={pokemonCardContainer}>
               <Box sx={pokemonIdContainer}>
                 <SecondaryText fontSize="12px" fontWeight="bold">
-                  # {pokemonData.id}
+                  # {pokemonEntry.entry_number}
                 </SecondaryText>
               </Box>
 

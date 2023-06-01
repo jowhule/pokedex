@@ -1,6 +1,6 @@
 import { SxProps, Theme } from "@mui/material";
 
-export const homePageContainerStyle: SxProps<Theme> = {
+export const pageContainerStyle: SxProps<Theme> = {
   display: "flex",
   boxSizing: "border-box",
   width: "100%",
