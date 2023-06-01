@@ -23,12 +23,6 @@ import {
 import { pokemonInfoSlideContainer } from "../../more-info-slide/style";
 import { capitalise } from "../../../utils/helpers";
 
-type EvolutionChainProps = {
-  pokemonData: PokemonDataResponseType;
-  setActivePokemonName?: React.Dispatch<React.SetStateAction<string>>;
-  setTransition?: React.Dispatch<React.SetStateAction<Record<string, string>>>;
-};
-
 type EvoStages = StageInfo[][];
 
 export type StageInfo = {
@@ -38,9 +32,15 @@ export type StageInfo = {
   trigger: NameUrlType;
 };
 
+type EvolutionChainProps = {
+  pokemonData: PokemonDataResponseType;
+  setActivePokemon?: React.Dispatch<React.SetStateAction<string | number>>;
+  setTransition?: React.Dispatch<React.SetStateAction<Record<string, string>>>;
+};
+
 export const EvolutionChain: React.FC<EvolutionChainProps> = ({
   pokemonData,
-  setActivePokemonName,
+  setActivePokemon,
   setTransition,
 }) => {
   const [evolutionStages, setEvolutionStages] = useState<EvoStages>([]);
@@ -154,8 +154,8 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
    * @param name name of pokem on clicked on
    */
   const handleEvoClick = (name: string) => {
-    if (setActivePokemonName && name !== pokemonData.species.name)
-      setActivePokemonName(name);
+    if (setActivePokemon && name !== pokemonData.species.name)
+      setActivePokemon(name);
   };
 
   useEffect(() => {

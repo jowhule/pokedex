@@ -32,13 +32,13 @@ import defaultImage from "../../assets/default_pokemon_info.png";
 import pokeballLoader from "../../assets/pokeball-icon.png";
 
 type MoreInfoSlideType = {
-  activePokemonName: string;
-  setActivePokemonName: React.Dispatch<React.SetStateAction<string>>;
+  activePokemon: string | number;
+  setActivePokemon: React.Dispatch<React.SetStateAction<string | number>>;
 };
 
 export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
-  activePokemonName,
-  setActivePokemonName,
+  activePokemon,
+  setActivePokemon,
 }) => {
   const [pokemonData, setPokemonData] =
     useState<PokemonDataResponseType>(pokemonDataDefault);
@@ -51,16 +51,16 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
 
   useEffect(() => {
     // trigger translate
-    if (activePokemonName) {
+    if (activePokemon) {
       setTransition(noActivePokemonCardStyle);
       // get all pokemon data
       sendGenericAPIRequest<PokemonDataResponseType>(
-        requestLinks.getData(activePokemonName)
+        requestLinks.getData(activePokemon)
       ).then((data) => {
         if (data) setPokemonData(data);
       });
     }
-  }, [activePokemonName]);
+  }, [activePokemon]);
 
   useEffect(() => {
     if (pokemonData.name) {
@@ -81,7 +81,7 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
           <Box
             component="img"
             src={pokemonAnimation}
-            alt={`${activePokemonName ?? "Default"}'s Sprite`}
+            alt={`${activePokemon ?? "Default"}'s Sprite`}
             sx={pokemonSpriteStyle}
           />
           {hasSelectedActive ? (
@@ -123,7 +123,7 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
 
               <EvolutionChain
                 pokemonData={pokemonData}
-                setActivePokemonName={setActivePokemonName}
+                setActivePokemon={setActivePokemon}
                 setTransition={setTransition}
               />
             </>

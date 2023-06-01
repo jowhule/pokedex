@@ -28,14 +28,14 @@ type PokemonCardProps = {
   entryNum: number;
   pokemonEntry: PokemonPokedexEntryType;
   inDisplayList: boolean;
-  setActivePokemonName: React.Dispatch<React.SetStateAction<string>>;
+  setActivePokemon: React.Dispatch<React.SetStateAction<number | string>>;
 };
 
 export const PokemonCard: React.FC<PokemonCardProps> = ({
   entryNum,
   pokemonEntry,
   inDisplayList,
-  setActivePokemonName,
+  setActivePokemon,
 }) => {
   const [pokemonData, setPokemonData] =
     useState<PokemonDataResponseType>(pokemonDataDefault);
@@ -55,7 +55,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
    * when card clicked set as active pokemon for the info slide
    */
   const handleCardClick = () => {
-    setActivePokemonName(pokemonData.species.name);
+    setActivePokemon(pokemonData.id);
   };
 
   // get initial pokemon data if the card is supposed to be displayed
