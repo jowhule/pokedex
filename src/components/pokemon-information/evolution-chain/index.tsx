@@ -164,11 +164,9 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
         () => setEvolutionStages([])
       ).then((data) => {
         if (data) {
-          if (data?.evolution_chain.url.split("/").at(-2) === "67") {
-            setIsEeveeLine(true);
-          } else {
-            setIsEeveeLine(false);
-          }
+          data?.evolution_chain.url.split("/").at(-2) === "67"
+            ? setIsEeveeLine(true)
+            : setIsEeveeLine(false);
 
           sendGenericAPIRequest<PokemonEvolutionResponseType>(
             `${data?.evolution_chain.url}`

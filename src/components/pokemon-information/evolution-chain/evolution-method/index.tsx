@@ -3,10 +3,13 @@ import { Box } from "@mui/material";
 import { BodyText } from "../../../../utils/styledComponents";
 import { NameUrlType } from "../../../../services/apiRequestsTypes";
 import { primaryTextColour } from "../../../../utils/colours";
-import LoopRoundedIcon from "@mui/icons-material/LoopRounded";
 import { pokemonEvoMethodContainer } from "./style";
 import { StageInfo } from "..";
 import { requestLinks } from "../../../../services/apiRequests";
+
+import LoopRoundedIcon from "@mui/icons-material/LoopRounded";
+import femaleIcon from "../../../../assets/female_symbol.png";
+import maleIcon from "../../../../assets/male_symbol.png";
 
 type EvolutionMethodType = {
   stageInfo: StageInfo;
@@ -59,7 +62,7 @@ export const EvolutionMethod: React.FC<EvolutionMethodType> = ({
       return (
         <Box
           component="img"
-          src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/tm-${valueTyped.name}.png`}
+          src={requestLinks.getTMType(valueTyped.name)}
           alt={`${valueTyped.name} TM`}
         />
       );
@@ -67,6 +70,17 @@ export const EvolutionMethod: React.FC<EvolutionMethodType> = ({
       return (
         <BodyText fontWeight="bold" fontSize="12px">
           {valueTyped.name}
+        </BodyText>
+      );
+    } else if (method === "gender") {
+      if (value === 1) {
+        return <Box component="img" src={femaleIcon} alt="Female icon" />;
+      } else if (value === 2)
+        return <Box component="img" src={maleIcon} alt="male icon" />;
+    } else if (method === "known_move") {
+      return (
+        <BodyText fontWeight="bold" fontSize="10px">
+          {valueTyped.name.replace("-", " ")}
         </BodyText>
       );
     }

@@ -18,6 +18,9 @@ export const requestLinks = {
   getItemSprite: (name: string): string => {
     return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${name}.png`;
   },
+  getTMType: (type: string): string => {
+    return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/tm-${type}.png`;
+  },
 };
 
 // using pokemon api, only get request
