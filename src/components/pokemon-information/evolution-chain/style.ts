@@ -15,7 +15,7 @@ export const pokemonEvolutionContainer: SxProps<Theme> = {
 };
 
 export const pokemonEvoSpriteStyle: SxProps<Theme> = {
-  wdith: "74px",
+  width: "74px",
   height: "74px",
   borderRadius: "15px",
   margin: "0 5px",

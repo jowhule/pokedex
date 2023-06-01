@@ -25,12 +25,14 @@ import { pokemonDataDefault } from "../../../utils/defaults";
 import { capitalise } from "../../../utils/helpers";
 
 type PokemonCardProps = {
+  entryNum: number;
   pokemonEntry: PokemonPokedexEntryType;
   inDisplayList: boolean;
   setActivePokemonName: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export const PokemonCard: React.FC<PokemonCardProps> = ({
+  entryNum,
   pokemonEntry,
   inDisplayList,
   setActivePokemonName,
@@ -89,7 +91,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
             <CustomCard sx={pokemonCardContainer}>
               <Box sx={pokemonIdContainer}>
                 <SecondaryText fontSize="12px" fontWeight="bold">
-                  # {pokemonEntry.entry_number}
+                  # {entryNum}
                 </SecondaryText>
               </Box>
 

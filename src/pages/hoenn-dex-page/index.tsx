@@ -11,38 +11,31 @@ import {
 } from "../../services/apiRequests";
 import { PokedexDisplay } from "../../components/pokedex-display";
 import { MoreInfoSlide } from "../../components/more-info-slide";
-import { useNavigate, useParams } from "react-router-dom";
 
-export const GenDex: React.FC = () => {
-  const { dexName } = useParams();
-  const navigate = useNavigate();
+export const HoennDex: React.FC = () => {
   const [hasLoaded, setHasLoaded] = useState<boolean>(false);
-  const [genDex, setGenDex] = useState<PokemonPokedexEntryType[]>([]);
+  const [nationalDex, setNationalDex] = useState<PokemonPokedexEntryType[]>([]);
   const [activePokemonName, setActivePokemonName] = useState<string>("");
 
   // pokemon list finished fetching from api
   useEffect(() => {
-    if (genDex.length !== 0) setHasLoaded(true);
-  }, [genDex]);
+    if (nationalDex.length !== 0) setHasLoaded(true);
+  }, [nationalDex]);
 
   // get all pokemon names
   useEffect(() => {
     sendGenericAPIRequest<PokemonDexResponseType>(
-      requestLinks.getPokedex(dexName ?? "")
+      requestLinks.getPokedex("hoenn")
     ).then((data) => {
-      if (data?.name) {
-        setGenDex(data.pokemon_entries);
-      } else {
-        navigate("/");
-      }
+      if (data) setNationalDex(data.pokemon_entries);
     });
-  }, [dexName, navigate]);
+  }, []);
 
   return (
     <Box sx={pageContainerStyle}>
       <Box width="100%">
         <PokedexDisplay
-          pokedexList={genDex}
+          pokedexList={nationalDex}
           displaySearch
           listLoaded={hasLoaded}
           setActivePokemonName={setActivePokemonName}

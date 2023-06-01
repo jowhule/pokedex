@@ -4,7 +4,7 @@ import { secondaryColour } from "../../utils/colours";
 import { Theme } from "@emotion/react";
 
 type CustomCardProp = {
-  sx: SxProps<Theme>;
+  sx: SxProps<Theme> | React.CSSProperties;
   children?: JSX.Element | JSX.Element[] | string | string[];
 };
 
