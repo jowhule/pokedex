@@ -91,7 +91,7 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
                 fontWeight="bold"
                 marginBottom="-5px"
               >
-                # {pokemonData.id}
+                N# {pokemonData.id}
               </SecondaryText>
               <BodyText fontWeight="bold" fontSize="24px">
                 {capitalise(pokemonData.species.name)}

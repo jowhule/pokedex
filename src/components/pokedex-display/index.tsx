@@ -166,12 +166,12 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
             overflow="visible"
             paddingRight="8px"
           >
-            {pokedexList.map((pokemonInfo, index) => (
+            {pokedexList.map((pokemonEntry, index) => (
               <PokemonCard
-                pokemonId={index + 1}
-                pokemonName={pokemonInfo.pokemon_species.name}
+                entryNum={index + 1}
+                pokemonEntry={pokemonEntry}
                 inDisplayList={
-                  displayList[pokemonInfo.pokemon_species.name] ? true : false
+                  displayList[pokemonEntry.pokemon_species.name] ? true : false
                 }
                 setActivePokemonName={setActivePokemonName}
                 key={index}

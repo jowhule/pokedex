@@ -32,7 +32,7 @@ export const pokemonIdContainer: SxProps<Theme> = {
   width: "55px",
   boxSizing: "border-box",
   borderRadius: "0 5px 0 10px",
-  bgcolor: `${secondaryColour}`,
+  backgroundColor: secondaryColour,
 };
 
 export const pokemonSpriteStyle: SxProps<Theme> = {

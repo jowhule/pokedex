@@ -4,7 +4,7 @@ import {
   PokemonDexResponseType,
   PokemonPokedexEntryType,
 } from "../../services/apiRequestsTypes";
-import { homePageContainerStyle } from "./style";
+import { pageContainerStyle } from "../style";
 import {
   requestLinks,
   sendGenericAPIRequest,
@@ -12,7 +12,7 @@ import {
 import { PokedexDisplay } from "../../components/pokedex-display";
 import { MoreInfoSlide } from "../../components/more-info-slide";
 
-export const HomePage: React.FC = () => {
+export const HoennDex: React.FC = () => {
   const [hasLoaded, setHasLoaded] = useState<boolean>(false);
   const [nationalDex, setNationalDex] = useState<PokemonPokedexEntryType[]>([]);
   const [activePokemonName, setActivePokemonName] = useState<string>("");
@@ -25,16 +25,14 @@ export const HomePage: React.FC = () => {
   // get all pokemon names
   useEffect(() => {
     sendGenericAPIRequest<PokemonDexResponseType>(
-      requestLinks.getPokedex(1)
+      requestLinks.getPokedex("hoenn")
     ).then((data) => {
-      if (data) {
-        setNationalDex(data.pokemon_entries);
-      }
+      if (data) setNationalDex(data.pokemon_entries);
     });
   }, []);
 
   return (
-    <Box sx={homePageContainerStyle}>
+    <Box sx={pageContainerStyle}>
       <Box width="100%">
         <PokedexDisplay
           pokedexList={nationalDex}
