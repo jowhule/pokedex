@@ -13,29 +13,24 @@ import {
 import { pokemonEvoDetailsDefault } from "../../../utils/defaults";
 import { Box } from "@mui/material";
 import { PokemonDataResponseType } from "../../../services/apiRequestsTypes";
+import { Hoverable, StatTitleText } from "../../../utils/styledComponents";
+import { EvolutionMethod } from "./evolution-method";
 import {
-  BodyText,
-  Hoverable,
-  StatTitleText,
-} from "../../../utils/styledComponents";
-import {
-  pokemonEvoMethodContainer,
   pokemonEvoSpriteStyle,
   pokemonEvoStageContainer,
   pokemonEvolutionContainer,
 } from "./style";
-import LoopRoundedIcon from "@mui/icons-material/LoopRounded";
-import { primaryTextColour } from "../../../utils/colours";
+import { pokemonInfoSlideContainer } from "../../more-info-slide/style";
 
 type EvolutionChainProps = {
-  pokemonId: number;
-  activePokemonName: string;
+  pokemonData: PokemonDataResponseType;
   setActivePokemonName?: React.Dispatch<React.SetStateAction<string>>;
+  setTransition?: React.Dispatch<React.SetStateAction<Record<string, string>>>;
 };
 
 type EvoStages = StageInfo[][];
 
-type StageInfo = {
+export type StageInfo = {
   stage: number;
   name: string;
   methods: Record<string, any>;
@@ -43,15 +38,15 @@ type StageInfo = {
 };
 
 export const EvolutionChain: React.FC<EvolutionChainProps> = ({
-  pokemonId,
-  activePokemonName,
+  pokemonData,
   setActivePokemonName,
+  setTransition,
 }) => {
   const [evolutionStages, setEvolutionStages] = useState<EvoStages>([]);
   const [evolutionSprites, setEvolutionSprites] = useState<string[][]>([]);
   const [isEeveeLine, setIsEeveeLine] = useState<boolean>(false);
 
-  // revursively traverse the evolution tree and add it to per level
+  // recursively traverse the evolution tree and add it to per level array
   const evoTreeTraverse = useCallback(
     (root: PokemonEvoChainType, level: number, evoStages: EvoStages) => {
       if (!root.species) return;
@@ -95,6 +90,9 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
     []
   );
 
+  /**
+   * in the same structure as the stages, get the sprites to display
+   */
   const getSprites = useCallback(async (stages: EvoStages) => {
     const evoSprites: string[][] = [];
     for (const stage of stages) {
@@ -108,110 +106,35 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
     setEvolutionSprites([...evoSprites]);
   }, []);
 
+  /**
+   * a promise to ensure the url is received
+   * @param name of pokemon to get sprite of
+   * @returns url of the sprite
+   */
   const getSpritePromise = (name: string): Promise<string> => {
     return new Promise((resolve) => {
-      sendGenericAPIRequest<PokemonDataResponseType>(
-        `https://pokeapi.co/api/v2/pokemon/${name}`,
-        () => setEvolutionStages([])
-      ).then((data) => {
-        if (data) resolve(data.sprites.front_default);
+      sendGenericAPIRequest<PokemonSpeciesResponseType>(
+        requestLinks.getSpecies(name)
+      ).then((species) => {
+        if (species) {
+          sendGenericAPIRequest<PokemonDataResponseType>(
+            requestLinks.getData(species.id),
+            () => setEvolutionStages([])
+          ).then((data) => {
+            if (data) resolve(data.sprites.front_default);
+          });
+        }
       });
     });
   };
 
-  const methodImage = (method: string, value: any) => {
-    const valueTyped =
-      typeof method === "object" ? (value as NameUrlType) : value;
-    switch (method) {
-      case "min_level":
-        return (
-          <BodyText fontWeight="bold" fontSize="12px">
-            Lv.{value}
-          </BodyText>
-        );
-      case "held_item":
-        return (
-          <Box
-            component="img"
-            src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${valueTyped.name}.png`}
-            alt={valueTyped.name}
-          />
-        );
-      case "item":
-        return (
-          <Box
-            component="img"
-            src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${valueTyped.name}.png`}
-            alt={valueTyped.name}
-          />
-        );
-      case "min_affection":
-        return (
-          <Box>
-            <Box
-              component="img"
-              src={
-                "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/soothe-bell.png"
-              }
-              alt="affection"
-            />
-            <BodyText
-              fontWeight="bold"
-              fontSize="10px"
-              sx={{ marginTop: "-10px" }}
-            >
-              {value}
-            </BodyText>
-          </Box>
-        );
-      case "min_happiness":
-        return (
-          <Box>
-            <Box
-              component="img"
-              src={
-                "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/soothe-bell.png"
-              }
-              alt="friendship"
-            />
-            <BodyText
-              fontWeight="bold"
-              fontSize="10px"
-              sx={{ marginTop: "-10px" }}
-            >
-              {value}
-            </BodyText>
-          </Box>
-        );
-      case "time_of_day":
-        return (
-          <BodyText fontWeight="bold" fontSize="10px">
-            ({value})
-          </BodyText>
-        );
-      case "known_move_type":
-        return (
-          <Box
-            component="img"
-            src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/tm-${valueTyped.name}.png`}
-            alt={`${valueTyped.name} TM`}
-          />
-        );
-      case "trade_species":
-        return (
-          <BodyText fontWeight="bold" fontSize="12px">
-            {valueTyped.name}
-          </BodyText>
-        );
-    }
-
-    return (
-      <BodyText fontWeight="bold" fontSize="10px">
-        {method}
-      </BodyText>
-    );
-  };
-
+  /**
+   * displays the sprite of the pokemon onto th eapp
+   * @param i ith stage of evolution
+   * @param j jth evolution
+   * @param name name of pokemon
+   * @returns sprite of said pokemon
+   */
   const getSprite = (i: number, j: number, name: string) => {
     if (evolutionSprites[i] && evolutionSprites[i][j]) {
       return (
@@ -225,23 +148,25 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
     }
   };
 
+  /**
+   * click on an evo to change active pokemon (slide change)
+   * @param name name of pokem on clicked on
+   */
   const handleEvoClick = (name: string) => {
-    if (setActivePokemonName && name !== activePokemonName)
+    if (setActivePokemonName && name !== pokemonData.species.name)
       setActivePokemonName(name);
   };
 
   useEffect(() => {
-    if (pokemonId)
+    if (pokemonData)
       sendGenericAPIRequest<PokemonSpeciesResponseType>(
-        requestLinks.getSpecies(pokemonId),
+        requestLinks.getSpecies(pokemonData.species.name),
         () => setEvolutionStages([])
       ).then((data) => {
         if (data) {
-          if (data?.evolution_chain.url.split("/").at(-2) === "67") {
-            setIsEeveeLine(true);
-          } else {
-            setIsEeveeLine(false);
-          }
+          data?.evolution_chain.url.split("/").at(-2) === "67"
+            ? setIsEeveeLine(true)
+            : setIsEeveeLine(false);
 
           sendGenericAPIRequest<PokemonEvolutionResponseType>(
             `${data?.evolution_chain.url}`
@@ -255,7 +180,24 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
           });
         }
       });
-  }, [evoTreeTraverse, getSprites, pokemonId]);
+  }, [evoTreeTraverse, getSprites, pokemonData]);
+
+  useEffect(() => {
+    if (
+      evolutionStages.length > 0 &&
+      evolutionSprites.length > 0 &&
+      setTransition
+    ) {
+      setTimeout(() => {
+        setTransition(pokemonInfoSlideContainer);
+      }, 400);
+    }
+  }, [evolutionSprites.length, evolutionStages, setTransition]);
+
+  useEffect(() => {
+    setEvolutionSprites([]);
+    setEvolutionStages([]);
+  }, [pokemonData]);
 
   return (
     <>
@@ -267,20 +209,7 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
               <Box key={index_i} sx={pokemonEvoStageContainer}>
                 {stage.map((evo, index_j) => (
                   <Box sx={pokemonEvolutionContainer} key={index_j}>
-                    {evo.stage > 0 && (
-                      <Box sx={pokemonEvoMethodContainer}>
-                        {Object.keys(evo.methods).map((method, index_m) => (
-                          <Box key={index_m}>
-                            {methodImage(method, evo.methods[method])}
-                          </Box>
-                        ))}
-                        {evo.trigger.name === "trade" && (
-                          <LoopRoundedIcon
-                            style={{ color: `${primaryTextColour}` }}
-                          />
-                        )}
-                      </Box>
-                    )}
+                    <EvolutionMethod stageInfo={evo} />
                     <Hoverable onClick={() => handleEvoClick(evo.name)}>
                       {getSprite(index_i, index_j, evo.name)}
                     </Hoverable>

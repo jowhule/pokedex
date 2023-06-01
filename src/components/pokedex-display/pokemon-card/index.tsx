@@ -19,14 +19,17 @@ import {
 import { TypeTag } from "../../pokemon-information/type-tag";
 import { CustomCard } from "../../custom-card/CustomCard";
 import { pokemonDataDefault } from "../../../utils/defaults";
+import { capitalise } from "../../../utils/helpers";
 
 type PokemonCardProps = {
+  pokemonId: number;
   pokemonName: string;
   inDisplayList: boolean;
   setActivePokemonName: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export const PokemonCard: React.FC<PokemonCardProps> = ({
+  pokemonId,
   pokemonName,
   inDisplayList,
   setActivePokemonName,
@@ -35,7 +38,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
     useState<PokemonDataResponseType>(pokemonDataDefault);
   const [displayName, setDisplayName] = useState<string>("");
   const [isMouseOver, setIsMouseOver] = useState<boolean>(false);
-  const [hasLoaded, setHasLoaded] = useState<boolean>(false);
+  const [hasImgLoaded, setHasImgLoaded] = useState<boolean>(false);
 
   const handleMouseOver = () => {
     setIsMouseOver(true);
@@ -49,27 +52,31 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
    * when card clicked set as active pokemon for the info slide
    */
   const handleCardClick = () => {
-    setActivePokemonName(pokemonName);
+    setActivePokemonName(pokemonData.name);
   };
 
   // get initial pokemon data if the card is supposed to be displayed
   useEffect(() => {
     if (inDisplayList && displayName) {
       sendGenericAPIRequest<PokemonDataResponseType>(
-        requestLinks.getData(pokemonName)
+        requestLinks.getData(pokemonId)
       ).then((data) => {
         if (data) setPokemonData(data);
       });
     }
-  }, [pokemonName, inDisplayList, displayName]);
+  }, [pokemonId, inDisplayList, displayName]);
 
   // get pokemon name and capitalise first letter
   useEffect(() => {
     if (pokemonName) {
-      setDisplayName(pokemonName[0].toUpperCase() + pokemonName.slice(1));
-      setHasLoaded(true);
+      setDisplayName(capitalise(pokemonName));
     }
   }, [pokemonName]);
+
+  // check if sprite has loaded
+  useEffect(() => {
+    if (pokemonData.sprites.front_default) setHasImgLoaded(true);
+  }, [pokemonData]);
 
   return (
     <>
@@ -87,27 +94,25 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
                 </SecondaryText>
               </Box>
 
-              {hasLoaded ? (
-                <>
-                  <Box
-                    component="img"
-                    draggable="false"
-                    src={pokemonData.sprites.front_default}
-                    alt={`${displayName}'s sprite`}
-                    sx={isMouseOver ? pokemonSpriteHover : pokemonSpriteStyle}
-                  />
-                  <BodyText fontWeight="bold" fontSize="18px">
-                    {displayName}
-                  </BodyText>
-                  <Box display="flex" gap="10px" marginTop="5px">
-                    {pokemonData.types.map((type, index) => (
-                      <TypeTag type={type.type.name} key={index} />
-                    ))}
-                  </Box>
-                </>
+              {hasImgLoaded ? (
+                <Box
+                  component="img"
+                  draggable="false"
+                  src={pokemonData.sprites.front_default}
+                  alt={`${displayName}'s sprite`}
+                  sx={isMouseOver ? pokemonSpriteHover : pokemonSpriteStyle}
+                />
               ) : (
                 <CircularProgress />
               )}
+              <BodyText fontWeight="bold" fontSize="18px">
+                {displayName}
+              </BodyText>
+              <Box display="flex" gap="10px" marginTop="5px">
+                {pokemonData.types.map((type, index) => (
+                  <TypeTag type={type.type.name} key={index} />
+                ))}
+              </Box>
             </CustomCard>
           </Hoverable>
         </Grid>

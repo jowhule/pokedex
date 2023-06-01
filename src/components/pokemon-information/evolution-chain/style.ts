@@ -14,16 +14,6 @@ export const pokemonEvolutionContainer: SxProps<Theme> = {
   justifyContent: "center",
 };
 
-export const pokemonEvoMethodContainer: SxProps<Theme> = {
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  justifyContent: "center",
-  bgcolor: fontBgColour,
-  padding: "5px 10px",
-  borderRadius: "20px",
-};
-
 export const pokemonEvoSpriteStyle: SxProps<Theme> = {
   wdith: "74px",
   height: "74px",

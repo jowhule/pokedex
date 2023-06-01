@@ -168,6 +168,7 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
           >
             {pokedexList.map((pokemonInfo, index) => (
               <PokemonCard
+                pokemonId={index + 1}
                 pokemonName={pokemonInfo.pokemon_species.name}
                 inDisplayList={
                   displayList[pokemonInfo.pokemon_species.name] ? true : false

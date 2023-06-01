@@ -44,7 +44,6 @@ export const HomePage: React.FC = () => {
         />
       </Box>
       <Box>
-        <Box sx={{ width: "350px" }}></Box>
         <MoreInfoSlide
           activePokemonName={activePokemonName}
           setActivePokemonName={setActivePokemonName}

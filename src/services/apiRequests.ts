@@ -3,7 +3,7 @@ import axios from "axios";
 const API = "https://pokeapi.co/api/v2/";
 
 export const requestLinks = {
-  getData: (nameId: string | number): string => {
+  getData: (nameId: number | string): string => {
     return API + `pokemon/${nameId}`;
   },
   getSpecies: (nameId: string | number): string => {
@@ -14,6 +14,12 @@ export const requestLinks = {
   },
   getAnimatedSprite: (id: number): string => {
     return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/${id}.gif`;
+  },
+  getItemSprite: (name: string): string => {
+    return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${name}.png`;
+  },
+  getTMType: (type: string): string => {
+    return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/tm-${type}.png`;
   },
 };
 
