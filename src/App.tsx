@@ -29,7 +29,7 @@ function App() {
     <BrowserRouter>
       <ThemeProvider theme={theme}>
         <Navbar />
-        <Box height={NAVBAR_HEIGHT} />
+        <Box height={`calc(${NAVBAR_HEIGHT} + 20px)`} />
         <MoveToTop />
         <Routes>
           <Route path="/" element={<NationalDex />} />

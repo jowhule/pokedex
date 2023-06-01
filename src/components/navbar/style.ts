@@ -12,6 +12,7 @@ export const navbarContainer: React.CSSProperties = {
   width: "100%",
   backgroundColor: "white",
   boxShadow: `0 5px 5px ${secondaryColour}`,
+  transition: "transform 0.5s ease",
 };
 
 export const navbarWrapper: SxProps<Theme> = {
@@ -22,4 +23,9 @@ export const navbarWrapper: SxProps<Theme> = {
   padding: "0 10px",
   justifyContent: "space-between",
   alignItems: "center",
+};
+
+export const hideNavbar: React.CSSProperties = {
+  ...navbarContainer,
+  transform: "translateY(-65px)",
 };

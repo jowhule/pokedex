@@ -8,21 +8,35 @@ import {
   Paper,
   Popper,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { BodyText, Hoverable } from "../../utils/styledComponents";
 
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
-import { navbarContainer, navbarWrapper } from "./style";
+import { hideNavbar, navbarContainer, navbarWrapper } from "./style";
 import iconLogo from "../../assets/pokeball-icon.png";
 
 export const Navbar: React.FC = () => {
   const navigate = useNavigate();
+  const [scrollPosition, setScrollPosition] = useState(0);
 
   const menuItemClick = (path: string) => {
     navigate(path);
     setOpen(false);
   };
+
+  const handleScroll = () => {
+    const position = window.pageYOffset;
+    setScrollPosition(position);
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   // click on logo and go to home page
   const handleLogoClick = () => navigate("/");
@@ -39,9 +53,8 @@ export const Navbar: React.FC = () => {
     if (
       anchorRef.current &&
       anchorRef.current.contains(event.target as HTMLElement)
-    ) {
+    )
       return;
-    }
 
     setOpen(false);
   };
@@ -66,7 +79,7 @@ export const Navbar: React.FC = () => {
   }, [open]);
 
   return (
-    <nav style={navbarContainer}>
+    <nav style={scrollPosition > 0 ? hideNavbar : navbarContainer}>
       <Box sx={navbarWrapper}>
         <Hoverable onClick={handleLogoClick}>
           <Box
