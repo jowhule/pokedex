@@ -1,5 +1,5 @@
 import React from "react";
-import { Box } from "@mui/material";
+import { Box, Tooltip } from "@mui/material";
 import { BodyText } from "../../../../utils/styledComponents";
 import { NameUrlType } from "../../../../services/apiRequestsTypes";
 import { primaryTextColour } from "../../../../utils/colours";
@@ -10,6 +10,7 @@ import { requestLinks } from "../../../../services/apiRequests";
 import LoopRoundedIcon from "@mui/icons-material/LoopRounded";
 import femaleIcon from "../../../../assets/female_symbol.png";
 import maleIcon from "../../../../assets/male_symbol.png";
+import { capitalise, removeDash } from "../../../../utils/helpers";
 
 type EvolutionMethodType = {
   stageInfo: StageInfo;
@@ -29,28 +30,24 @@ export const EvolutionMethod: React.FC<EvolutionMethodType> = ({
       );
     } else if (method === "held_item" || method === "item") {
       return (
-        <Box
-          component="img"
-          src={requestLinks.getItemSprite(valueTyped.name)}
-          alt={valueTyped.name}
-        />
+        <Tooltip title={`${capitalise(removeDash(valueTyped.name), true)}`}>
+          <Box
+            component="img"
+            src={requestLinks.getItemSprite(valueTyped.name)}
+            alt={valueTyped.name}
+          />
+        </Tooltip>
       );
     } else if (method === "min_affection" || method === "min_happiness") {
       return (
-        <Box>
+        <Tooltip title={`${capitalise(removeDash(method))}: ${value}`}>
           <Box
             component="img"
             src={requestLinks.getItemSprite("soothe-bell")}
             alt="affection"
+            m="-8px 0"
           />
-          <BodyText
-            fontWeight="bold"
-            fontSize="10px"
-            sx={{ marginTop: "-10px" }}
-          >
-            {value}
-          </BodyText>
-        </Box>
+        </Tooltip>
       );
     } else if (method === "time_of_day") {
       return (
@@ -60,16 +57,18 @@ export const EvolutionMethod: React.FC<EvolutionMethodType> = ({
       );
     } else if (method === "known_move_type") {
       return (
-        <Box
-          component="img"
-          src={requestLinks.getTMType(valueTyped.name)}
-          alt={`${valueTyped.name} TM`}
-        />
+        <Tooltip title={`Know ${capitalise(valueTyped.name)}-move`}>
+          <Box
+            component="img"
+            src={requestLinks.getTMType(valueTyped.name)}
+            alt={`${valueTyped.name} TM`}
+          />
+        </Tooltip>
       );
     } else if (method === "trade_species") {
       return (
         <BodyText fontWeight="bold" fontSize="12px">
-          {valueTyped.name}
+          {capitalise(valueTyped.name)}
         </BodyText>
       );
     } else if (method === "gender") {
@@ -80,14 +79,14 @@ export const EvolutionMethod: React.FC<EvolutionMethodType> = ({
     } else if (method === "known_move") {
       return (
         <BodyText fontWeight="bold" fontSize="10px">
-          {valueTyped.name.replace("-", " ")}
+          {capitalise(removeDash(valueTyped.name), true)}
         </BodyText>
       );
     }
 
     return (
       <BodyText fontWeight="bold" fontSize="10px">
-        {method}
+        {capitalise(method)}
       </BodyText>
     );
   };
@@ -98,12 +97,12 @@ export const EvolutionMethod: React.FC<EvolutionMethodType> = ({
         return <LoopRoundedIcon style={{ color: `${primaryTextColour}` }} />;
       case "level-up":
         if (
-          !Object.keys(stageInfo.methods).includes("min_level") ||
+          !Object.keys(stageInfo.methods).includes("min_level") &&
           !Object.keys(stageInfo.methods).includes("item")
         )
           return (
             <BodyText fontWeight="bold" fontSize="10px">
-              lvl up
+              Lvl up
             </BodyText>
           );
         break;
@@ -111,7 +110,7 @@ export const EvolutionMethod: React.FC<EvolutionMethodType> = ({
         if (!Object.keys(stageInfo.methods).includes("item"))
           return (
             <BodyText fontWeight="bold" fontSize="10px">
-              {trigger.name}
+              {capitalise(trigger.name)}
             </BodyText>
           );
     }
