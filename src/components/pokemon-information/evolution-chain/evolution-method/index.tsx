@@ -34,7 +34,7 @@ export const EvolutionMethod: React.FC<EvolutionMethodType> = ({
           <Box
             component="img"
             src={requestLinks.getItemSprite(valueTyped.name)}
-            alt={valueTyped.name}
+            alt={capitalise(removeDash(valueTyped.name), true)}
           />
         </Tooltip>
       );
@@ -44,7 +44,7 @@ export const EvolutionMethod: React.FC<EvolutionMethodType> = ({
           <Box
             component="img"
             src={requestLinks.getItemSprite("soothe-bell")}
-            alt="affection"
+            alt={`${capitalise(removeDash(method))}}`}
             m="-8px 0"
           />
         </Tooltip>
@@ -61,7 +61,7 @@ export const EvolutionMethod: React.FC<EvolutionMethodType> = ({
           <Box
             component="img"
             src={requestLinks.getTMType(valueTyped.name)}
-            alt={`${valueTyped.name} TM`}
+            alt={`${capitalise(valueTyped.name)} TM`}
           />
         </Tooltip>
       );
