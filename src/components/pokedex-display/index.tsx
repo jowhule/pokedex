@@ -120,8 +120,13 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
    * list has loaded
    */
   useEffect(() => {
-    if (listLoaded) setDisplayLimit(POKEMON_PER_LOAD);
-  }, [listLoaded]);
+    if (listLoaded) {
+      setDisplayList({});
+      setDisplayLimit(POKEMON_PER_LOAD);
+    }
+  }, [listLoaded, setActivePokemon]);
+
+  useEffect(() => {}, []);
 
   return (
     <>
@@ -168,7 +173,7 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
           >
             {pokedexList.map((pokemonEntry, index) => (
               <PokemonCard
-                entryNum={index + 1}
+                entryNum={pokemonEntry.entry_number}
                 pokemonEntry={pokemonEntry}
                 inDisplayList={
                   displayList[pokemonEntry.pokemon_species.name] ? true : false

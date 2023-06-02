@@ -27,7 +27,7 @@ export const GalarDex: React.FC = () => {
     sendGenericAPIRequest<PokemonDexResponseType>(
       requestLinks.getPokedex("national")
     ).then((data) => {
-      if (data) setNationalDex(data.pokemon_entries.slice(809, 897));
+      if (data) setNationalDex(data.pokemon_entries.slice(809, 898));
     });
   }, []);
 
