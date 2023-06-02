@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { primaryTextColour, secondaryColour } from "../../utils/colours";
+import { secondaryColour } from "../../utils/colours";
 import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded";
 import { Hoverable } from "../../utils/styledComponents";
 
 export const MoveToTop: React.FC = () => {
-  const [scrollPosition, setScrollPosition] = useState(0);
+  const [scrollPosition, setScrollPosition] = useState<number>(0);
 
   const handleScroll = () => {
     const position = window.pageYOffset;
@@ -47,7 +47,6 @@ export const MoveToTop: React.FC = () => {
         >
           <KeyboardArrowUpRoundedIcon
             sx={{
-              color: primaryTextColour,
               width: "50px",
               height: "50px",
               marginTop: "2px",
