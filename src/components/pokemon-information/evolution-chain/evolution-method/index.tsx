@@ -108,11 +108,12 @@ export const EvolutionMethod: React.FC<EvolutionMethodType> = ({
           );
         break;
       default:
-        return (
-          <BodyText fontWeight="bold" fontSize="10px">
-            {trigger.name}
-          </BodyText>
-        );
+        if (!Object.keys(stageInfo.methods).includes("item"))
+          return (
+            <BodyText fontWeight="bold" fontSize="10px">
+              {trigger.name}
+            </BodyText>
+          );
     }
   };
 
