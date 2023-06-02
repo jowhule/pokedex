@@ -1,20 +1,14 @@
 import React from "react";
 import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { NationalDex } from "./pages/national-dex-page";
-import { KantoDex } from "./pages/kanto-dex-page";
-import { JohtoDex } from "./pages/johto-dex-page";
-import { HoennDex } from "./pages/hoenn-dex-page";
-import { SinnohDex } from "./pages/sinnoh-dex-page";
-import { UnovaDex } from "./pages/unova-dex-page";
-import { AlolaDex } from "./pages/alola-dex-page";
+import { PokedexDisplayPage } from "./pages/pokedex-display-page";
 import { GalarDex } from "./pages/galar-dex-page";
+import { PaldeaDex } from "./pages/paldea-dex-page";
 
 import { MoveToTop } from "./components/move-to-top";
 import { Navbar } from "./components/navbar";
 import { Box, ThemeProvider, createTheme } from "@mui/material";
 import { NAVBAR_HEIGHT } from "./components/navbar/style";
-import { PaldeaDex } from "./pages/paldea-dex-page";
 
 const theme = createTheme({
   palette: {
@@ -32,13 +26,34 @@ function App() {
         <Box height={`calc(${NAVBAR_HEIGHT} + 20px)`} />
         <MoveToTop />
         <Routes>
-          <Route path="/" element={<NationalDex />} />
-          <Route path="/kanto" element={<KantoDex />} />
-          <Route path="/johto" element={<JohtoDex />} />
-          <Route path="/hoenn" element={<HoennDex />} />
-          <Route path="/sinnoh" element={<SinnohDex />} />
-          <Route path="/unova" element={<UnovaDex />} />
-          <Route path="/alola" element={<AlolaDex />} />
+          <Route
+            path="/"
+            element={<PokedexDisplayPage generation="national" />}
+          />
+          <Route
+            path="/kanto"
+            element={<PokedexDisplayPage generation="kanto" />}
+          />
+          <Route
+            path="/johto"
+            element={<PokedexDisplayPage generation="original-johto" />}
+          />
+          <Route
+            path="/hoenn"
+            element={<PokedexDisplayPage generation="hoenn" />}
+          />
+          <Route
+            path="/sinnoh"
+            element={<PokedexDisplayPage generation="original-sinnoh" />}
+          />
+          <Route
+            path="/unova"
+            element={<PokedexDisplayPage generation="original-unova" />}
+          />
+          <Route
+            path="/alola"
+            element={<PokedexDisplayPage generation="original-alola" />}
+          />
           <Route path="/galar" element={<GalarDex />} />
           <Route path="/paldea" element={<PaldeaDex />} />
         </Routes>

@@ -59,6 +59,11 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
       ).then((data) => {
         if (data) setPokemonData(data);
       });
+    } else {
+      // set default state
+      setHasSelectedActive(false);
+      setPokemonData(pokemonDataDefault);
+      setPokemonAnimation(defaultImage);
     }
   }, [activePokemon]);
 

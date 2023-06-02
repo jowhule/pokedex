@@ -11,6 +11,7 @@ export const navbarContainer: React.CSSProperties = {
   width: "100%",
   backgroundColor: "#FFFFFF90",
   transition: "transform 0.5s ease",
+  backdropFilter: "blur(3px)",
 };
 
 export const navbarWrapper: SxProps<Theme> = {

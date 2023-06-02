@@ -12,24 +12,32 @@ import {
 import { PokedexDisplay } from "../../components/pokedex-display";
 import { MoreInfoSlide } from "../../components/more-info-slide";
 
-export const AlolaDex: React.FC = () => {
+export type PokedexDisplayrops = {
+  generation: string;
+};
+
+export const PokedexDisplayPage: React.FC<PokedexDisplayrops> = ({
+  generation,
+}) => {
   const [hasLoaded, setHasLoaded] = useState<boolean>(false);
   const [nationalDex, setNationalDex] = useState<PokemonPokedexEntryType[]>([]);
   const [activePokemon, setActivePokemon] = useState<string | number>("");
 
   // pokemon list finished fetching from api
   useEffect(() => {
-    if (nationalDex.length !== 0) setHasLoaded(true);
+    nationalDex.length !== 0 ? setHasLoaded(true) : setHasLoaded(false);
   }, [nationalDex]);
 
   // get all pokemon names
   useEffect(() => {
+    setActivePokemon("");
+    setHasLoaded(false);
     sendGenericAPIRequest<PokemonDexResponseType>(
-      requestLinks.getPokedex("original-alola")
+      requestLinks.getPokedex(generation)
     ).then((data) => {
       if (data) setNationalDex(data.pokemon_entries);
     });
-  }, []);
+  }, [generation]);
 
   return (
     <Box sx={pageContainerStyle}>
