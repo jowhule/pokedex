@@ -98,7 +98,7 @@ export const EvolutionMethod: React.FC<EvolutionMethodType> = ({
         return <LoopRoundedIcon style={{ color: `${primaryTextColour}` }} />;
       case "level-up":
         if (
-          !Object.keys(stageInfo.methods).includes("min_level") &&
+          !Object.keys(stageInfo.methods).includes("min_level") ||
           !Object.keys(stageInfo.methods).includes("item")
         )
           return (
