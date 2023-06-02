@@ -122,9 +122,12 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
   useEffect(() => {
     if (listLoaded) {
       setDisplayList({});
+      setHasMoreToLoad(true);
       setDisplayLimit(POKEMON_PER_LOAD);
+      setCurrSearchInput("");
+      setPrevSearchInput("");
     }
-  }, [listLoaded, setActivePokemon]);
+  }, [listLoaded]);
 
   useEffect(() => {}, []);
 
