@@ -8,7 +8,7 @@ import {
   Paper,
   Popper,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { BodyText, Hoverable } from "../../utils/styledComponents";
 
@@ -18,35 +18,36 @@ import iconLogo from "../../assets/pokeball-icon.png";
 
 export const Navbar: React.FC = () => {
   const navigate = useNavigate();
-  const [scrollPosition, setScrollPosition] = useState(0);
+  const [scrollPosition, setScrollPosition] = useState<number>(0);
+  const [open, setOpen] = useState(false);
+  const [hideNav, setHideNav] = useState<boolean>(false);
 
   const menuItemClick = (path: string) => {
     navigate(path);
     setOpen(false);
   };
 
-  const handleScroll = () => {
+  const handleScroll = useCallback(() => {
     const position = window.pageYOffset;
+    position > scrollPosition ? setHideNav(true) : setHideNav(false);
+
     setScrollPosition(position);
-  };
+  }, [scrollPosition]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll, { passive: true });
 
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [handleScroll]);
 
   // click on logo and go to home page
   const handleLogoClick = () => navigate("/");
 
   /*-- drop down menu code taken from mui demos --*/
-  const [open, setOpen] = React.useState(false);
-  const anchorRef = React.useRef<HTMLButtonElement>(null);
+  const anchorRef = useRef<HTMLButtonElement>(null);
 
   const handleToggle = () => {
-    setOpen((prevOpen) => !prevOpen);
+    setOpen(!open);
   };
 
   const handleClose = (event: Event | React.SyntheticEvent) => {
@@ -71,15 +72,13 @@ export const Navbar: React.FC = () => {
   // return focus to the button when we transitioned from !open -> open
   const prevOpen = React.useRef(open);
   React.useEffect(() => {
-    if (prevOpen.current === true && open === false) {
-      anchorRef.current!.focus();
-    }
+    if (prevOpen.current === true && open === false) anchorRef.current!.focus();
 
     prevOpen.current = open;
   }, [open]);
 
   return (
-    <nav style={scrollPosition > 0 ? hideNavbar : navbarContainer}>
+    <nav style={hideNav ? hideNavbar : navbarContainer}>
       <Box sx={navbarWrapper}>
         <Hoverable onClick={handleLogoClick}>
           <Box
