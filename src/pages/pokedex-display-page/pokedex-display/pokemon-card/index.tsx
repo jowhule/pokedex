@@ -3,26 +3,26 @@ import React, { useEffect, useState } from "react";
 import {
   PokemonDataResponseType,
   PokemonPokedexEntryType,
-} from "../../../services/apiRequestsTypes";
+} from "../../../../services/apiRequestsTypes";
 import {
   requestLinks,
   sendGenericAPIRequest,
-} from "../../../services/apiRequests";
+} from "../../../../services/apiRequests";
 import {
   BodyText,
   Hoverable,
   SecondaryText,
-} from "../../../utils/styledComponents";
+} from "../../../../utils/styledComponents";
 import {
   pokemonCardContainer,
   pokemonIdContainer,
   pokemonSpriteHover,
   pokemonSpriteStyle,
 } from "./style";
-import { TypeTag } from "../../pokemon-information/type-tag";
-import { CustomCard } from "../../custom-card/CustomCard";
-import { pokemonDataDefault } from "../../../utils/defaults";
-import { capitalise } from "../../../utils/helpers";
+import { TypeTag } from "../../../../components/pokemon-information/type-tag";
+import { CustomCard } from "../../../../components/custom-card/CustomCard";
+import { pokemonDataDefault } from "../../../../utils/defaults";
+import { capitalise } from "../../../../utils/helpers";
 
 type PokemonCardProps = {
   entryNum: number;

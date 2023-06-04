@@ -1,5 +1,5 @@
 import { SxProps, Theme } from "@mui/material";
-import { secondaryColour } from "../../../utils/colours";
+import { secondaryColour } from "../../../../utils/colours";
 
 export const pokemonCardContainer = {
   display: "flex",

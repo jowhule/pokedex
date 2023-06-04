@@ -1,17 +1,10 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { CustomCard } from "../custom-card/CustomCard";
-import { Box, CircularProgress, Grid, Input } from "@mui/material";
+import { Box, CircularProgress, Grid } from "@mui/material";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { PokemonCard } from "./pokemon-card";
-import { PokemonPokedexEntryType } from "../../services/apiRequestsTypes";
-import {
-  clearButtonContainer,
-  clearButtonStyle,
-  loadMoreContainer,
-  searchBarStyle,
-} from "./style";
-import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
-import { Hoverable } from "../../utils/styledComponents";
+import { PokemonPokedexEntryType } from "../../../services/apiRequestsTypes";
+import { loadMoreContainer } from "./style";
+import { Searchbar } from "./searchbar";
 
 const POKEMON_PER_LOAD = 30;
 
@@ -40,19 +33,6 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
    */
   const handleNext = () => {
     setDisplayLimit(displayLimit + 1);
-  };
-
-  /**
-   * update search input
-   * @param e input event
-   */
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const input: string = e.target.value;
-    setCurrSearchInput(input.toLowerCase());
-  };
-
-  const handleClearSearch = () => {
-    setCurrSearchInput("");
   };
 
   /**
@@ -134,24 +114,7 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
   return (
     <>
       {displaySearch && (
-        <CustomCard sx={searchBarStyle}>
-          <Input
-            fullWidth
-            placeholder="Search"
-            value={currSearchInput}
-            disableUnderline
-            onChange={handleSearchChange}
-            sx={{ height: "100%", padding: "0 20px" }}
-          />
-
-          <>
-            {currSearchInput && (
-              <Hoverable onClick={handleClearSearch} sx={clearButtonContainer}>
-                <CloseRoundedIcon sx={clearButtonStyle} />
-              </Hoverable>
-            )}
-          </>
-        </CustomCard>
+        <Searchbar input={currSearchInput} setInput={setCurrSearchInput} />
       )}
       {listLoaded ? (
         <InfiniteScroll

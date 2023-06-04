@@ -9,7 +9,7 @@ import {
   requestLinks,
   sendGenericAPIRequest,
 } from "../../services/apiRequests";
-import { PokedexDisplay } from "../../components/pokedex-display";
+import { PokedexDisplay } from "./pokedex-display";
 import { MoreInfoSlide } from "../../components/more-info-slide";
 
 export type PokedexDisplayrops = {

@@ -7,6 +7,7 @@ import {
   MenuList,
   Paper,
   Popper,
+  useTheme,
 } from "@mui/material";
 import React, { useCallback, useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
@@ -18,6 +19,7 @@ import iconLogo from "../../assets/pokeball-icon.png";
 
 export const Navbar: React.FC = () => {
   const navigate = useNavigate();
+  const theme = useTheme();
   const [scrollPosition, setScrollPosition] = useState<number>(0);
   const [open, setOpen] = useState(false);
   const [hideNav, setHideNav] = useState<boolean>(false);
@@ -92,7 +94,9 @@ export const Navbar: React.FC = () => {
         <Box>
           <Button variant="text" ref={anchorRef} onClick={handleToggle}>
             <BodyText fontWeight="bold">Pokedexes</BodyText>
-            <KeyboardArrowDownRoundedIcon />
+            <KeyboardArrowDownRoundedIcon
+              sx={{ color: theme.palette.text.primary }}
+            />
           </Button>
         </Box>
       </Box>

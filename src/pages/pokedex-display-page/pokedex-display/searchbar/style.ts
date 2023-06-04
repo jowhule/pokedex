@@ -1,4 +1,4 @@
-import { secondaryColour } from "../../utils/colours";
+import { secondaryColour } from "../../../../utils/colours";
 
 export const searchBarStyle = {
   height: "65px",
@@ -6,12 +6,6 @@ export const searchBarStyle = {
   boxSizing: "border-box",
   border: `2px solid ${secondaryColour}`,
   position: "relative",
-};
-
-export const loadMoreContainer = {
-  display: "flex",
-  justifyContent: "center",
-  marginBottom: "50px",
 };
 
 export const clearButtonContainer = {

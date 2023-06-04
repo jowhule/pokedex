@@ -13,7 +13,11 @@ import { NAVBAR_HEIGHT } from "./components/navbar/style";
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#0c214a",
+      light: "#f0f3f8",
+      main: "#c3c9cf",
+    },
+    text: {
+      primary: "#0c214a",
     },
   },
 });
