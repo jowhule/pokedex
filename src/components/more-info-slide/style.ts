@@ -16,7 +16,6 @@ export const pokemonInfoSlideContainer = {
   transition: "transform 0.3s ease-out",
   display: "flex",
   justifyContent: "center",
-  paddingTop: "90px",
 };
 
 export const infoSlideScrollContainer = {
@@ -34,7 +33,7 @@ export const infoSlideContainer = {
   width: "calc(100% + 20px)",
   height: "100%",
   boxSizing: "border-box",
-  padding: "20px",
+  padding: "90px 20px 50px 20px",
   textAlign: "center",
   overflow: "scroll",
   overflowX: "hidden",
@@ -52,6 +51,7 @@ export const pokemonSpriteStyle = {
   imageRendering: "pixelated",
   overflowClipMargin: "content-box",
   transform: "scale(3)",
+  zIndex: "1",
 };
 
 export const abilitiesContainer = {
