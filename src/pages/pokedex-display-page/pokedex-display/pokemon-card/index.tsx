@@ -39,10 +39,10 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
 }) => {
   const [pokemonData, setPokemonData] =
     useState<PokemonDataResponseType>(pokemonDataDefault);
-  const [displayName, setDisplayName] = useState<string>("");
+  const [displayName, setTypeMatchesName] = useState<string>("");
   const [isMouseOver, setIsMouseOver] = useState<boolean>(false);
   const [hasImgLoaded, setHasImgLoaded] = useState<boolean>(false);
-  const [display, setDisplay] = useState<boolean>(false);
+  const [typeMatches, setTypeMatches] = useState<boolean>(false);
 
   const handleMouseOver = () => {
     setIsMouseOver(true);
@@ -61,7 +61,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
   // get initial pokemon data if the card is supposed to be displayed
   useEffect(() => {
     if (pokemonEntry && inSearchList) {
-      setDisplayName(capitalise(pokemonEntry.pokemon_species.name));
+      setTypeMatchesName(capitalise(pokemonEntry.pokemon_species.name));
       const id = parseInt(pokemonEntry.pokemon_species.url.split("/")[6]);
 
       if (id) {
@@ -83,27 +83,26 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
         pokemonData.types[0]?.type?.name,
         pokemonData.types[1]?.type?.name,
       ];
-      console.log("hi");
 
       if (filterList.length === 1 && pokemonTypes.includes(filterList[0])) {
-        setDisplay(inSearchList && true);
+        setTypeMatches(inSearchList && true);
       } else if (
         filterList.length === 2 &&
         pokemonTypes.includes(filterList[0]) &&
         pokemonTypes.includes(filterList[1])
       ) {
-        setDisplay(inSearchList && true);
+        setTypeMatches(inSearchList && true);
       } else {
-        setDisplay(false);
+        setTypeMatches(false);
       }
     } else {
-      setDisplay(inSearchList);
+      setTypeMatches(inSearchList);
     }
   }, [filterList, pokemonData, inSearchList]);
 
   return (
     <>
-      {inSearchList && display && (
+      {inSearchList && typeMatches && (
         <Grid item sm={6} md={6} lg={4} xl={3} height="210px">
           <Hoverable
             onMouseEnter={handleMouseOver}
