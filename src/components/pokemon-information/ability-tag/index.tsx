@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { PokemonAbilityType } from "../../../services/apiRequestsTypes";
 import { Box } from "@mui/material";
 import { BodyText, SecondaryText } from "../../../utils/styledComponents";
+import { capitalise, removeDash } from "../../../utils/helpers";
 
 type AbilityTagProps = {
   abilityInfo: PokemonAbilityType;
@@ -13,7 +14,7 @@ export const AbilityTag: React.FC<AbilityTagProps> = ({ abilityInfo }) => {
   useEffect(() => {
     if (abilityInfo.ability) {
       const name = abilityInfo.ability.name;
-      setAbilityName(name[0].toUpperCase() + name.slice(1));
+      setAbilityName(capitalise(removeDash(name), true));
     }
   }, [abilityInfo]);
 

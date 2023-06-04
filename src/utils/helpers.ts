@@ -21,5 +21,5 @@ export const capitalise = (str: string, all?: boolean): string => {
  * @returns {str}
  */
 export const removeDash = (str: string): string => {
-  return str.replace("-", " ").replace("_", " ");
+  return str.replaceAll("-", " ").replaceAll("_", " ");
 };

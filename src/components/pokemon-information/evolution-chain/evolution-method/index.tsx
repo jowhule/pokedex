@@ -110,7 +110,7 @@ export const EvolutionMethod: React.FC<EvolutionMethodType> = ({
         if (!Object.keys(stageInfo.methods).includes("item"))
           return (
             <BodyText fontWeight="bold" fontSize="10px">
-              {capitalise(trigger.name)}
+              {capitalise(removeDash(trigger.name))}
             </BodyText>
           );
     }
