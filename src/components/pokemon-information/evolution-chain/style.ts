@@ -20,7 +20,7 @@ export const pokemonEvoSpriteStyle: SxProps<Theme> = {
   width: "74px",
   height: "74px",
   borderRadius: "15px",
-  marginLeft: "5px",
+  margin: "0 5px",
   "&:hover": {
     bgcolor: `${fontBgColour}`,
   },
