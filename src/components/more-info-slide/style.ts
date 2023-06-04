@@ -14,6 +14,31 @@ export const pokemonInfoSlideContainer = {
   position: "fixed",
   bottom: "-10px",
   transition: "transform 0.3s ease-out",
+  display: "flex",
+  justifyContent: "center",
+  paddingTop: "90px",
+};
+
+export const infoSlideScrollContainer = {
+  display: "flex",
+  width: "100%",
+  height: "100%",
+  overflow: "hidden",
+  position: "relative",
+};
+
+export const infoSlideContainer = {
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  width: "calc(100% + 20px)",
+  height: "100%",
+  boxSizing: "border-box",
+  padding: "20px",
+  textAlign: "center",
+  overflow: "scroll",
+  overflowX: "hidden",
+  position: "absolute",
 };
 
 export const noActivePokemonCardStyle = {
@@ -29,25 +54,11 @@ export const pokemonSpriteStyle = {
   transform: "scale(3)",
 };
 
-export const infoSlideContainer = {
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  width: "100%",
-  boxSizing: "border-box",
-  padding: "20px",
-  paddingTop: "90px",
-  textAlign: "center",
-  position: "relative",
-  height: "100%",
-};
-
 export const abilitiesContainer = {
   display: "flex",
   flexFlow: "row wrap",
   alignItems: "center",
   justifyContent: "center",
-  gap: "10px",
   bgcolor: `${fontBgColour}`,
   borderRadius: "15px",
   width: "100%",
@@ -57,8 +68,9 @@ export const abilitiesContainer = {
 export const statsContainer = {
   display: "flex",
   flexDirection: "column",
-  gap: "5px",
-  width: "90%",
+  gap: "2px",
+  justifyContent: "center",
+  padding: "0 12px",
 };
 
 const spinAnimate = keyframes`

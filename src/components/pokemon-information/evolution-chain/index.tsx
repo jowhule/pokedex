@@ -205,7 +205,11 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
       {evolutionStages.length > 1 && (
         <>
           <StatTitleText fontSize="16px">Evolution</StatTitleText>
-          <Box display="flex" sx={isEeveeLine ? { marginLeft: "-130px" } : {}}>
+          <Box
+            display="flex"
+            justifyContent="center"
+            sx={isEeveeLine ? { marginLeft: "-138px" } : {}}
+          >
             {evolutionStages.map((stage, index_i) => (
               <Box key={index_i} sx={pokemonEvoStageContainer}>
                 {stage.map((evo, index_j) => (
