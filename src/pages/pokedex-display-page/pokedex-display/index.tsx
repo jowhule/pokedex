@@ -1,10 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Box, CircularProgress, Grid } from "@mui/material";
+import { Box, CircularProgress, Divider, Grid } from "@mui/material";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { PokemonCard } from "./pokemon-card";
 import { PokemonPokedexEntryType } from "../../../services/apiRequestsTypes";
 import { loadMoreContainer } from "./style";
 import { Searchbar } from "./searchbar";
+
+import { TypeFilter } from "./type-filter";
 
 const POKEMON_PER_LOAD = 30;
 
@@ -22,10 +24,12 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
   setActivePokemon,
 }) => {
   const [displayLimit, setDisplayLimit] = useState<number>(POKEMON_PER_LOAD);
+  const [displayList, setDisplayList] = useState<Record<string, string>>({});
 
   const [prevSearchInput, setPrevSearchInput] = useState<string>("");
   const [currSearchInput, setCurrSearchInput] = useState<string>("");
-  const [displayList, setDisplayList] = useState<Record<string, string>>({});
+  const [filters, setFilters] = useState<string[]>([]);
+
   const [hasMoreToLoad, setHasMoreToLoad] = useState<boolean>(true);
 
   /**
@@ -109,13 +113,15 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
     }
   }, [listLoaded]);
 
-  useEffect(() => {}, []);
-
   return (
     <>
       {displaySearch && (
         <Searchbar input={currSearchInput} setInput={setCurrSearchInput} />
       )}
+
+      <TypeFilter types={filters} setTypes={setFilters} />
+      <Divider />
+
       {listLoaded ? (
         <InfiniteScroll
           dataLength={displayLimit}
@@ -133,7 +139,7 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
             container
             columns={12}
             spacing="25px"
-            marginTop="50px"
+            marginTop="40px"
             overflow="visible"
             paddingRight="8px"
           >
