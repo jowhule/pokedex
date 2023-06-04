@@ -25,17 +25,15 @@ import { pokemonDataDefault } from "../../../../utils/defaults";
 import { capitalise } from "../../../../utils/helpers";
 
 type PokemonCardProps = {
-  entryNum: number;
   pokemonEntry: PokemonPokedexEntryType;
-  inDisplayList: boolean;
+  inSearchList: boolean;
   filterList: string[];
   setActivePokemon: React.Dispatch<React.SetStateAction<number | string>>;
 };
 
 export const PokemonCard: React.FC<PokemonCardProps> = ({
-  entryNum,
   pokemonEntry,
-  inDisplayList,
+  inSearchList,
   filterList,
   setActivePokemon,
 }) => {
@@ -62,7 +60,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
 
   // get initial pokemon data if the card is supposed to be displayed
   useEffect(() => {
-    if (pokemonEntry) {
+    if (pokemonEntry && inSearchList) {
       setDisplayName(capitalise(pokemonEntry.pokemon_species.name));
       const id = parseInt(pokemonEntry.pokemon_species.url.split("/")[6]);
 
@@ -74,34 +72,38 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
         });
       }
     }
-  }, [pokemonEntry]);
+  }, [inSearchList, pokemonEntry]);
 
   // check if sprite has loaded
   useEffect(() => {
     if (pokemonData.sprites.front_default) setHasImgLoaded(true);
 
-    if (pokemonData.types && filterList.length > 0) {
+    if (pokemonData.types && filterList.length > 0 && inSearchList) {
       const pokemonTypes = [
-        pokemonData.types[0].type.name,
-        pokemonData.types[1]?.type.name,
+        pokemonData.types[0]?.type?.name,
+        pokemonData.types[1]?.type?.name,
       ];
+      console.log("hi");
 
       if (filterList.length === 1 && pokemonTypes.includes(filterList[0])) {
-        setDisplay(inDisplayList && true);
+        setDisplay(inSearchList && true);
       } else if (
         filterList.length === 2 &&
         pokemonTypes.includes(filterList[0]) &&
         pokemonTypes.includes(filterList[1])
       ) {
-        setDisplay(inDisplayList && true);
-        console.log("hi");
+        setDisplay(inSearchList && true);
+      } else {
+        setDisplay(false);
       }
+    } else {
+      setDisplay(inSearchList);
     }
-  }, [filterList, pokemonData]);
+  }, [filterList, pokemonData, inSearchList]);
 
   return (
     <>
-      {inDisplayList && display && (
+      {inSearchList && display && (
         <Grid item sm={6} md={6} lg={4} xl={3} height="210px">
           <Hoverable
             onMouseEnter={handleMouseOver}
@@ -111,7 +113,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
             <CustomCard sx={pokemonCardContainer}>
               <Box sx={pokemonIdContainer}>
                 <SecondaryText fontSize="12px" fontWeight="bold">
-                  # {entryNum}
+                  # {pokemonEntry?.entry_number}
                 </SecondaryText>
               </Box>
 

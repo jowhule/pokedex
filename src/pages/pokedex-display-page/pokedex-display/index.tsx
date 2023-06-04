@@ -109,6 +109,7 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
       setDisplayLimit(POKEMON_PER_LOAD);
       setCurrSearchInput("");
       setPrevSearchInput("");
+      setFilters([]);
     }
   }, [listLoaded]);
 
@@ -144,10 +145,9 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
           >
             {pokedexList.map((pokemonEntry, index) => (
               <PokemonCard
-                entryNum={pokemonEntry.entry_number}
                 pokemonEntry={pokemonEntry}
                 filterList={filters}
-                inDisplayList={
+                inSearchList={
                   displayList[pokemonEntry.pokemon_species.name] ? true : false
                 }
                 setActivePokemon={setActivePokemon}
@@ -157,7 +157,9 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
           </Grid>
         </InfiniteScroll>
       ) : (
-        <CircularProgress />
+        <Box display="flex" justifyContent="center">
+          <CircularProgress />
+        </Box>
       )}
     </>
   );
