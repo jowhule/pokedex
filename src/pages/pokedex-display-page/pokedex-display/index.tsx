@@ -56,11 +56,10 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
    * loads at most 30 more items into display list based on search input
    */
   useEffect(() => {
-    const currList: Record<string, string> = getCurrentList();
+    const currList: Record<string, string> = { ...getCurrentList() };
     const lenCurrDisplayList = Object.keys(currList).length;
 
     if (
-      pokedexList &&
       pokedexList.length !== 0 &&
       Object.keys(currList).length < displayLimit
     ) {
@@ -147,6 +146,7 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
               <PokemonCard
                 entryNum={pokemonEntry.entry_number}
                 pokemonEntry={pokemonEntry}
+                filterList={filters}
                 inDisplayList={
                   displayList[pokemonEntry.pokemon_species.name] ? true : false
                 }

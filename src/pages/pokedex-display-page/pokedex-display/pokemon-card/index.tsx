@@ -28,6 +28,7 @@ type PokemonCardProps = {
   entryNum: number;
   pokemonEntry: PokemonPokedexEntryType;
   inDisplayList: boolean;
+  filterList: string[];
   setActivePokemon: React.Dispatch<React.SetStateAction<number | string>>;
 };
 
@@ -35,6 +36,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
   entryNum,
   pokemonEntry,
   inDisplayList,
+  filterList,
   setActivePokemon,
 }) => {
   const [pokemonData, setPokemonData] =
@@ -42,11 +44,11 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
   const [displayName, setDisplayName] = useState<string>("");
   const [isMouseOver, setIsMouseOver] = useState<boolean>(false);
   const [hasImgLoaded, setHasImgLoaded] = useState<boolean>(false);
+  const [display, setDisplay] = useState<boolean>(false);
 
   const handleMouseOver = () => {
     setIsMouseOver(true);
   };
-
   const handleMouseLeave = () => {
     setIsMouseOver(false);
   };
@@ -77,11 +79,29 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
   // check if sprite has loaded
   useEffect(() => {
     if (pokemonData.sprites.front_default) setHasImgLoaded(true);
-  }, [pokemonData]);
+
+    if (pokemonData.types && filterList.length > 0) {
+      const pokemonTypes = [
+        pokemonData.types[0].type.name,
+        pokemonData.types[1]?.type.name,
+      ];
+
+      if (filterList.length === 1 && pokemonTypes.includes(filterList[0])) {
+        setDisplay(inDisplayList && true);
+      } else if (
+        filterList.length === 2 &&
+        pokemonTypes.includes(filterList[0]) &&
+        pokemonTypes.includes(filterList[1])
+      ) {
+        setDisplay(inDisplayList && true);
+        console.log("hi");
+      }
+    }
+  }, [filterList, pokemonData]);
 
   return (
     <>
-      {inDisplayList && (
+      {inDisplayList && display && (
         <Grid item sm={6} md={6} lg={4} xl={3} height="210px">
           <Hoverable
             onMouseEnter={handleMouseOver}
