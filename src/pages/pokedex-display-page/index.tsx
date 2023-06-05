@@ -146,10 +146,10 @@ export const PokedexDisplayPage: React.FC<PokedexDisplayrops> = ({
       setPokedexSpecies({ ...speciesHolder });
     };
 
-    if (pokedexEntries.length > 0) {
+    if (pokedexEntries.length > 0 || Object.keys(pokedexData).length === 0) {
       fetchData();
     }
-  }, [generation, pokedexEntries]);
+  }, [generation, pokedexData, pokedexEntries]);
 
   // pokemon list finished fetching from api
   useEffect(() => {
