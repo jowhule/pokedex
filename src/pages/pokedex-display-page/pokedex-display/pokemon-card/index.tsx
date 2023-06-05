@@ -22,15 +22,13 @@ import {
 
 type PokemonCardProps = {
   pokedexEntryNum: number;
-  generation: string;
   pokemonData: PokemonDataResponseType;
   inSearchList: boolean;
-  setActivePokemon: React.Dispatch<React.SetStateAction<number | string>>;
+  setActivePokemon: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export const PokemonCard: React.FC<PokemonCardProps> = ({
   pokedexEntryNum,
-  generation,
   pokemonData,
   inSearchList,
   setActivePokemon,
@@ -50,13 +48,14 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
    * when card clicked set as active pokemon for the info slide
    */
   const handleCardClick = () => {
-    setActivePokemon(pokemonData?.id ?? 0);
+    setActivePokemon(pokemonData?.species.name);
   };
 
   // get initial pokemon data if the card is supposed to be displayed
   useEffect(() => {
-    if (pokemonData.name && inSearchList) {
-      const name = pokemonData.name;
+    const name = pokemonData?.species.name;
+
+    if (name && inSearchList) {
       name.includes("iron-")
         ? setDisplayName(capitalise(removeDash(name), true))
         : setDisplayName(capitaliseDash(name));
@@ -65,7 +64,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
 
   // check if sprite has loaded
   useEffect(() => {
-    if (pokemonData?.sprites?.front_default) setHasImgLoaded(true);
+    if (pokemonData?.sprites.front_default) setHasImgLoaded(true);
   }, [pokemonData]);
 
   return (
@@ -99,7 +98,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
                 {displayName}
               </BodyText>
               <Box display="flex" gap="10px" marginTop="5px">
-                {pokemonData.types.map((type) => (
+                {pokemonData?.types.map((type) => (
                   <TypeTag type={type.type.name} key={type.slot} />
                 ))}
               </Box>

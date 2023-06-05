@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import { Box, Dialog, useTheme } from "@mui/material";
 import { BodyText, Hoverable } from "../../../../utils/styledComponents";
@@ -12,10 +12,11 @@ type TypeFilterProps = {
 
 export const TypeFilter: React.FC<TypeFilterProps> = ({ types, setTypes }) => {
   const theme = useTheme();
-  const [availableTypes, setAvailableTypes] = useState<string[]>(
-    Object.keys(typeColours)
-  );
+  const [availableTypes, setAvailableTypes] = useState<string[]>([]);
 
+  useEffect(() => {
+    setAvailableTypes(Object.keys(typeColours));
+  }, []);
   const [openTypeOptions, setOpenTypeOptions] = useState<boolean>(false);
 
   const addType = (type: string) => {
