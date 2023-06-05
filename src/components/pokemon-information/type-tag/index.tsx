@@ -1,28 +1,36 @@
 import React from "react";
-import { SecondaryText } from "../../../utils/styledComponents";
-import { Box } from "@mui/material";
+import { Chip } from "@mui/material";
 import { typeBorderColours, typeColours } from "../../../utils/colours";
 
 type TypeTagProps = {
   type: string;
+  deleteFn?: () => void;
+  clickFn?: () => void;
 };
 
-export const TypeTag: React.FC<TypeTagProps> = ({ type }) => {
+export const TypeTag: React.FC<TypeTagProps> = ({
+  type,
+  deleteFn,
+  clickFn,
+}) => {
   return (
-    <Box
+    <Chip
       sx={{
         bgcolor: `${typeColours[type]}`,
-        padding: "0 10px",
-        borderRadius: "15px",
+        border: `2px solid ${typeBorderColours[type]}`,
+        fontWeight: "bold",
+        fontSize: "14px",
+        height: "28px",
         display: "flex",
         alignItems: "center",
-        justifyContent: "center",
-        border: `2px solid ${typeBorderColours[type]}80`,
+        "&:hover": {
+          cursor: `${clickFn && "pointer"}`,
+          bgcolor: `${clickFn ? typeBorderColours[type] : typeColours[type]}`,
+        },
       }}
-    >
-      <SecondaryText fontWeight="bold" fontSize="14px">
-        {type}
-      </SecondaryText>
-    </Box>
+      onClick={clickFn}
+      onDelete={deleteFn}
+      label={type}
+    />
   );
 };

@@ -69,7 +69,7 @@ type PokemonStatType = {
   stat: NameUrlType;
 };
 
-type PokemonTypeType = {
+export type PokemonTypeType = {
   slot: number;
   type: NameUrlType;
 };
