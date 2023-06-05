@@ -17,7 +17,11 @@ import {
 } from "./style";
 import { TypeTag } from "../../../../components/pokemon-information/type-tag";
 import { CustomCard } from "../../../../components/custom-card/CustomCard";
-import { capitalise } from "../../../../utils/helpers";
+import {
+  capitalise,
+  capitaliseDash,
+  removeDash,
+} from "../../../../utils/helpers";
 
 type PokemonCardProps = {
   pokemonEntry: PokemonPokedexEntryType;
@@ -53,7 +57,10 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
   // get initial pokemon data if the card is supposed to be displayed
   useEffect(() => {
     if (pokemonEntry && inSearchList) {
-      setDisplayName(capitalise(pokemonEntry.pokemon_species.name));
+      const name = pokemonEntry.pokemon_species.name;
+      name.includes("iron-")
+        ? setDisplayName(capitalise(removeDash(name), true))
+        : setDisplayName(capitaliseDash(name));
     }
   }, [inSearchList, pokemonEntry]);
 

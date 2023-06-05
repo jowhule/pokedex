@@ -5,7 +5,7 @@ import {
   PokemonDexResponseType,
   PokemonPokedexEntryType,
 } from "../../services/apiRequestsTypes";
-import { pageContainerStyle } from "../style";
+import { pageContainerStyle } from "./style";
 import {
   requestLinks,
   sendGenericAPIRequest,
@@ -17,9 +17,6 @@ import { pokemonDataDefault } from "../../utils/defaults";
 export type PokedexDisplayrops = {
   generation: string;
 };
-
-// the region is not in https://pokeapi.co/api/v2/pokedex yet
-const NO_POKEDEX_REGIONS: string[] = ["paldea", "galar"];
 
 export const PokedexDisplayPage: React.FC<PokedexDisplayrops> = ({
   generation,
@@ -38,28 +35,12 @@ export const PokedexDisplayPage: React.FC<PokedexDisplayrops> = ({
   useEffect(() => {
     setActivePokemon("");
     setHasLoaded(false);
-    if (NO_POKEDEX_REGIONS.includes(generation)) {
-      sendGenericAPIRequest<PokemonDexResponseType>(
-        requestLinks.getPokedex("national")
-      ).then((data) => {
-        if (data) {
-          switch (generation) {
-            case "galar":
-              setPokedexEntries(data.pokemon_entries.slice(809, 898));
-              break;
-            case "paldea":
-              setPokedexEntries(data.pokemon_entries.slice(905, 1010));
-              break;
-          }
-        }
-      });
-    } else {
-      sendGenericAPIRequest<PokemonDexResponseType>(
-        requestLinks.getPokedex(generation)
-      ).then((data) => {
-        if (data) setPokedexEntries(data.pokemon_entries);
-      });
-    }
+
+    sendGenericAPIRequest<PokemonDexResponseType>(
+      requestLinks.getPokedex(generation)
+    ).then((data) => {
+      if (data) setPokedexEntries(data.pokemon_entries);
+    });
   }, [generation]);
 
   // get all pokemon's data

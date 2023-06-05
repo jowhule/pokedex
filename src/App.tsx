@@ -53,6 +53,10 @@ function App() {
             element={<PokedexDisplayPage generation="original-unova" />}
           />
           <Route
+            path="/kalos"
+            element={<PokedexDisplayPage generation="kalos-central" />}
+          />
+          <Route
             path="/alola"
             element={<PokedexDisplayPage generation="original-alola" />}
           />
