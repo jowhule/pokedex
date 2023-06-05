@@ -124,7 +124,9 @@ export const PokedexDisplayPage: React.FC<PokedexDisplayrops> = ({
             // check for regional forms
             if (
               variety.pokemon.name.match(
-                new RegExp(`-${generation.replace("original-", "")}`)
+                new RegExp(
+                  `${speciesName}-${generation.replace("original-", "")}`
+                )
               )
             ) {
               // regional form found
