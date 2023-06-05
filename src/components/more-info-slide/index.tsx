@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { CustomCard } from "../custom-card/CustomCard";
 import { PokemonDataResponseType } from "../../services/apiRequestsTypes";
-import {
-  requestLinks,
-  sendGenericAPIRequest,
-} from "../../services/apiRequests";
+import { requestLinks } from "../../services/apiRequests";
 import { Box, Stack } from "@mui/material";
 import {
   BodyText,
@@ -33,12 +30,14 @@ import defaultImage from "../../assets/default_pokemon_info.png";
 import pokeballLoader from "../../assets/pokeball-icon.png";
 
 type MoreInfoSlideType = {
-  activePokemon: string | number;
-  setActivePokemon: React.Dispatch<React.SetStateAction<string | number>>;
+  pokedexData: Record<string, PokemonDataResponseType>;
+  activePokemonData: PokemonDataResponseType;
+  setActivePokemon: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
-  activePokemon,
+  pokedexData,
+  activePokemonData,
   setActivePokemon,
 }) => {
   const [pokemonData, setPokemonData] =
@@ -51,22 +50,21 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
   );
 
   useEffect(() => {
+    let setDataTimer: ReturnType<typeof setTimeout> | null = null;
     // trigger translate
-    if (activePokemon) {
+    if (activePokemonData) {
       setTransition(noActivePokemonCardStyle);
-      // get all pokemon data
-      sendGenericAPIRequest<PokemonDataResponseType>(
-        requestLinks.getData(activePokemon)
-      ).then((data) => {
-        if (data) setPokemonData(data);
-      });
+      setDataTimer = setTimeout(() => setPokemonData(activePokemonData), 300);
     } else {
       // set default state
       setHasSelectedActive(false);
       setPokemonData(pokemonDataDefault);
       setPokemonAnimation(defaultImage);
     }
-  }, [activePokemon]);
+    return () => {
+      if (setDataTimer) clearTimeout(setDataTimer);
+    };
+  }, [activePokemonData]);
 
   useEffect(() => {
     if (pokemonData.name) {
@@ -86,7 +84,7 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
         <Box
           component="img"
           src={pokemonAnimation}
-          alt={`${activePokemon ?? "Default"}'s Sprite`}
+          alt={`${activePokemonData?.name ?? "Default"}'s Sprite`}
           sx={pokemonSpriteStyle}
         />
         <Box sx={infoSlideScrollContainer}>
@@ -129,6 +127,7 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
                 </Box>
 
                 <EvolutionChain
+                  pokedexData={pokedexData}
                   pokemonData={pokemonData}
                   setActivePokemon={setActivePokemon}
                   setTransition={setTransition}

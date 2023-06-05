@@ -29,12 +29,11 @@ export const PokedexDisplayPage: React.FC<PokedexDisplayrops> = ({
   const [pokedexData, setPokedexData] = useState<
     Record<string, PokemonDataResponseType>
   >({});
-
   const [pokedexSpecies, setPokedexSpecies] = useState<
     Record<string, PokemonSpeciesResponseType>
   >({});
 
-  const [activePokemon, setActivePokemon] = useState<string | number>("");
+  const [activePokemon, setActivePokemon] = useState<string>("");
   const [hasReset, setHasReset] = useState<boolean>(false);
 
   // restart variables onMount
@@ -123,7 +122,11 @@ export const PokedexDisplayPage: React.FC<PokedexDisplayrops> = ({
           speciesHolder[speciesName] = speciesResponse;
           for (const variety of speciesResponse.varieties) {
             // check for regional forms
-            if (variety.pokemon.name.match(new RegExp(`-${generation}`))) {
+            if (
+              variety.pokemon.name.match(
+                new RegExp(`-${generation.replace("original-", "")}`)
+              )
+            ) {
               // regional form found
               const regionalResponse =
                 await sendGenericAPIRequest<PokemonDataResponseType>(
@@ -171,7 +174,8 @@ export const PokedexDisplayPage: React.FC<PokedexDisplayrops> = ({
       </Box>
       <Box>
         <MoreInfoSlide
-          activePokemon={activePokemon}
+          pokedexData={pokedexData}
+          activePokemonData={pokedexData[activePokemon]}
           setActivePokemon={setActivePokemon}
         />
       </Box>
