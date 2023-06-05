@@ -175,7 +175,6 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
                 <PokemonCard
                   pokemonEntry={pokemonEntry}
                   pokemonData={pokedexData[pokemonEntry.pokemon_species.name]}
-                  filterList={currFilters}
                   inSearchList={
                     displayList[pokemonEntry.pokemon_species.name]
                       ? true

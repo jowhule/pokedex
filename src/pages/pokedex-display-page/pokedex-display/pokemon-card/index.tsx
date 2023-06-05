@@ -23,7 +23,6 @@ type PokemonCardProps = {
   pokemonEntry: PokemonPokedexEntryType;
   pokemonData: PokemonDataResponseType;
   inSearchList: boolean;
-  filterList: string[];
   setActivePokemon: React.Dispatch<React.SetStateAction<number | string>>;
 };
 
@@ -31,7 +30,6 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
   pokemonEntry,
   pokemonData,
   inSearchList,
-  filterList,
   setActivePokemon,
 }) => {
   const [displayName, setDisplayName] = useState<string>("");

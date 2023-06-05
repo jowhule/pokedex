@@ -2,8 +2,6 @@ import React from "react";
 import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { PokedexDisplayPage } from "./pages/pokedex-display-page";
-import { GalarDex } from "./pages/galar-dex-page";
-import { PaldeaDex } from "./pages/paldea-dex-page";
 
 import { MoveToTop } from "./components/move-to-top";
 import { Navbar } from "./components/navbar";
@@ -58,8 +56,14 @@ function App() {
             path="/alola"
             element={<PokedexDisplayPage generation="original-alola" />}
           />
-          <Route path="/galar" element={<GalarDex />} />
-          <Route path="/paldea" element={<PaldeaDex />} />
+          <Route
+            path="/galar"
+            element={<PokedexDisplayPage generation="galar" />}
+          />
+          <Route
+            path="/paldea"
+            element={<PokedexDisplayPage generation="paldea" />}
+          />
         </Routes>
       </ThemeProvider>
     </BrowserRouter>
