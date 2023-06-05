@@ -44,7 +44,9 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
    * call to trigger adding more pokemon to display for infinite scroll
    */
   const handleNext = () => {
-    setDisplayLimit(displayLimit + 1);
+    displayLimit + POKEMON_PER_LOAD > pokedexEntries.length
+      ? setDisplayLimit(pokedexEntries.length)
+      : setDisplayLimit(displayLimit + POKEMON_PER_LOAD);
   };
 
   /**
@@ -52,9 +54,12 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
    */
   const getCurrentList = useCallback((): Record<string, string> => {
     let currList: Record<string, string> = displayList;
-    if (prevSearchInput !== currSearchInput || prevFilters !== currFilters) {
+    if (prevSearchInput !== currSearchInput) {
       currList = {};
       setPrevSearchInput(currSearchInput);
+    }
+    if (prevFilters !== currFilters) {
+      currList = {};
       setPrevFilters(currFilters);
     }
 
@@ -67,6 +72,7 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
   useEffect(() => {
     const currList: Record<string, string> = { ...getCurrentList() };
     const lenCurrDisplayList = Object.keys(currList).length;
+    console.log(Object.keys(currList).length, displayLimit);
 
     if (listLoaded && Object.keys(currList).length < displayLimit) {
       const nextSearchPage: Record<string, string> = {};
@@ -79,10 +85,11 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
         currPokemon < pokedexEntries.length
       ) {
         const { name, url } = pokedexEntries[currPokemon].pokemon_species;
+
         if (name.includes(currSearchInput) && !currList[name]) {
           const pokemonTypes = [
-            pokedexData[name].types[0]?.type?.name,
-            pokedexData[name].types[1]?.type?.name,
+            pokedexData[name]?.types[0]?.type.name,
+            pokedexData[name]?.types[1]?.type.name,
           ];
           // check typing filters
           if (
@@ -104,9 +111,9 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
       if (numAdded < POKEMON_PER_LOAD) setHasMoreToLoad(false);
     }
   }, [
+    currFilters,
     currSearchInput,
     displayLimit,
-    currFilters,
     getCurrentList,
     listLoaded,
     pokedexData,
@@ -122,28 +129,18 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
   }, [currSearchInput, currFilters]);
 
   /**
-   * update display limit when display list is updated
-   */
-  useEffect(() => {
-    const lenDisplayList = Object.keys(displayList).length;
-    setDisplayLimit(lenDisplayList);
-  }, [displayList]);
-
-  /**
    * load display list for the first time when the component mounts and pokemon
    * list has loaded
    */
   useEffect(() => {
-    if (listLoaded) {
-      setDisplayList({});
-      setHasMoreToLoad(true);
-      setDisplayLimit(POKEMON_PER_LOAD);
-      setCurrSearchInput("");
-      setPrevSearchInput("");
-      setCurrFilters([]);
-      setPrevFilters([]);
-    }
-  }, [listLoaded]);
+    setDisplayList({});
+    setHasMoreToLoad(true);
+    setDisplayLimit(POKEMON_PER_LOAD);
+    setCurrSearchInput("");
+    setPrevSearchInput("");
+    setCurrFilters([]);
+    setPrevFilters([]);
+  }, [generation]);
 
   return (
     <>
@@ -175,28 +172,23 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
             overflow="visible"
             paddingRight="8px"
           >
-            {listLoaded &&
-              pokedexEntries.map((pokemonEntry, index) => (
-                <PokemonCard
-                  pokedexEntryNum={
-                    generation === "kalos"
-                      ? index + 1
-                      : pokemonEntry.entry_number
-                  }
-                  pokemonData={pokedexData[pokemonEntry.pokemon_species.name]}
-                  inSearchList={
-                    displayList[pokemonEntry.pokemon_species.name]
-                      ? true
-                      : false
-                  }
-                  setActivePokemon={setActivePokemon}
-                  key={index}
-                />
-              ))}
+            {pokedexEntries.map((entry, index) => (
+              <PokemonCard
+                pokedexEntryNum={
+                  generation === "kalos" ? index + 1 : entry.entry_number
+                }
+                pokemonData={pokedexData[entry.pokemon_species.name]}
+                inSearchList={
+                  displayList[entry.pokemon_species.name] ? true : false
+                }
+                setActivePokemon={setActivePokemon}
+                key={index}
+              />
+            ))}
           </Grid>
         </InfiniteScroll>
       ) : (
-        <Box display="flex" justifyContent="center">
+        <Box display="flex" justifyContent="center" marginTop="40px">
           <CircularProgress />
         </Box>
       )}

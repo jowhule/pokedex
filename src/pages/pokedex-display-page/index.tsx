@@ -13,10 +13,6 @@ import {
 } from "../../services/apiRequests";
 import { PokedexDisplay } from "./pokedex-display";
 import { MoreInfoSlide } from "../../components/more-info-slide";
-import {
-  pokemonDataDefault,
-  pokemonSpeciesDefault,
-} from "../../utils/defaults";
 import { getIdFromLink } from "../../utils/helpers";
 
 export type PokedexDisplayrops = {
@@ -33,107 +29,133 @@ export const PokedexDisplayPage: React.FC<PokedexDisplayrops> = ({
   const [pokedexData, setPokedexData] = useState<
     Record<string, PokemonDataResponseType>
   >({});
+
   const [pokedexSpecies, setPokedexSpecies] = useState<
     Record<string, PokemonSpeciesResponseType>
   >({});
 
   const [activePokemon, setActivePokemon] = useState<string | number>("");
+  const [hasReset, setHasReset] = useState<boolean>(false);
 
-  // initialise
+  // restart variables onMount
   useEffect(() => {
-    setActivePokemon("");
-    setPokedexData({});
-    setPokedexSpecies({});
+    setHasReset(false);
     setHasLoaded(false);
-
-    if (generation === "kalos") {
-      sendGenericAPIRequest<PokemonDexResponseType>(
-        requestLinks.getPokedex("kalos-central")
-      ).then((kalos_one) => {
-        if (kalos_one) {
-          sendGenericAPIRequest<PokemonDexResponseType>(
-            requestLinks.getPokedex("kalos-coastal")
-          ).then((kalos_two) => {
-            if (kalos_two) {
-              sendGenericAPIRequest<PokemonDexResponseType>(
-                requestLinks.getPokedex("kalos-mountain")
-              ).then((kalos_three) => {
-                if (kalos_three) {
-                  setPokedexEntries([
-                    ...kalos_one.pokemon_entries,
-                    ...kalos_two.pokemon_entries,
-                    ...kalos_three.pokemon_entries,
-                  ]);
-                }
-              });
-            }
-          });
-        }
-      });
-    } else {
-      sendGenericAPIRequest<PokemonDexResponseType>(
-        requestLinks.getPokedex(generation)
-      ).then((data) => {
-        if (data) setPokedexEntries(data.pokemon_entries);
-      });
-    }
   }, [generation]);
+
+  useEffect(() => {
+    if (!hasReset) {
+      setActivePokemon("");
+      setPokedexData({});
+      setPokedexSpecies({});
+      setPokedexEntries([]);
+    }
+  }, [hasReset]);
+
+  useEffect(() => {
+    if (
+      Object.keys(pokedexData).length === 0 &&
+      Object.keys(pokedexSpecies).length === 0 &&
+      pokedexEntries.length === 0
+    ) {
+      setHasReset(true);
+    }
+  }, [hasLoaded, pokedexData, pokedexEntries, pokedexSpecies]);
+
+  useEffect(() => {
+    if (hasReset && pokedexEntries.length === 0) {
+      if (generation === "kalos") {
+        sendGenericAPIRequest<PokemonDexResponseType>(
+          requestLinks.getPokedex("kalos-central")
+        ).then((kalos_one) => {
+          if (kalos_one) {
+            sendGenericAPIRequest<PokemonDexResponseType>(
+              requestLinks.getPokedex("kalos-coastal")
+            ).then((kalos_two) => {
+              if (kalos_two) {
+                sendGenericAPIRequest<PokemonDexResponseType>(
+                  requestLinks.getPokedex("kalos-mountain")
+                ).then((kalos_three) => {
+                  if (kalos_three) {
+                    setPokedexEntries([
+                      ...kalos_one.pokemon_entries,
+                      ...kalos_two.pokemon_entries,
+                      ...kalos_three.pokemon_entries,
+                    ]);
+                  }
+                });
+              }
+            });
+          }
+        });
+      } else {
+        sendGenericAPIRequest<PokemonDexResponseType>(
+          requestLinks.getPokedex(generation)
+        ).then((data) => {
+          if (data) setPokedexEntries(data.pokemon_entries);
+        });
+      }
+    }
+  }, [generation, hasReset, pokedexEntries.length]);
 
   // get all pokemon's data
   useEffect(() => {
-    if (pokedexEntries.length > 0) {
+    const fetchData = async () => {
       const dataHolder: Record<string, PokemonDataResponseType> = {};
       const speciesHolder: Record<string, PokemonSpeciesResponseType> = {};
 
       for (const entry of pokedexEntries) {
         const speciesName = entry.pokemon_species.name;
-        dataHolder[speciesName] = pokemonDataDefault;
-        speciesHolder[speciesName] = pokemonSpeciesDefault;
 
         const id = parseInt(getIdFromLink(entry.pokemon_species.url));
-        sendGenericAPIRequest<PokemonDataResponseType>(
-          requestLinks.getData(id)
-        ).then((data) => {
-          if (data && !dataHolder[speciesName].name)
-            dataHolder[speciesName] = data;
-        });
+        const dataResponse =
+          await sendGenericAPIRequest<PokemonDataResponseType>(
+            requestLinks.getData(id)
+          );
+        if (dataResponse) dataHolder[speciesName] = dataResponse;
 
-        sendGenericAPIRequest<PokemonSpeciesResponseType>(
-          requestLinks.getSpecies(id)
-        ).then((species) => {
-          if (species) {
-            speciesHolder[speciesName] = species;
-            for (const variety of species.varieties) {
-              // check for regional forms
-              if (variety.pokemon.name.match(new RegExp(`-${generation}`))) {
-                // regional form found
-                sendGenericAPIRequest<PokemonDataResponseType>(
+        const speciesResponse =
+          await sendGenericAPIRequest<PokemonSpeciesResponseType>(
+            requestLinks.getSpecies(id)
+          );
+
+        if (speciesResponse) {
+          speciesHolder[speciesName] = speciesResponse;
+          for (const variety of speciesResponse.varieties) {
+            // check for regional forms
+            if (variety.pokemon.name.match(new RegExp(`-${generation}`))) {
+              // regional form found
+              const regionalResponse =
+                await sendGenericAPIRequest<PokemonDataResponseType>(
                   requestLinks.getData(getIdFromLink(variety.pokemon.url))
-                ).then((data) => {
-                  if (data) {
-                    dataHolder[speciesName] = data;
-                    dataHolder[speciesName].id = id;
-                  }
-                });
+                );
+              if (regionalResponse) {
+                dataHolder[speciesName] = regionalResponse;
+                dataHolder[speciesName].id = id;
               }
             }
           }
-        });
+        }
       }
-      setPokedexData(dataHolder);
-      setPokedexSpecies(speciesHolder);
+      setPokedexData({ ...dataHolder });
+      setPokedexSpecies({ ...speciesHolder });
+    };
+
+    if (pokedexEntries.length > 0) {
+      fetchData();
     }
   }, [generation, pokedexEntries]);
 
   // pokemon list finished fetching from api
   useEffect(() => {
     if (
+      pokedexEntries.length > 0 &&
       Object.keys(pokedexData).length > 0 &&
       Object.keys(pokedexSpecies).length > 0
     ) {
       setHasLoaded(true);
     }
-  }, [pokedexData, pokedexSpecies]);
+  }, [pokedexData, pokedexEntries, pokedexSpecies]);
 
   return (
     <Box sx={pageContainerStyle}>
