@@ -14,21 +14,21 @@ import { TypeFilter } from "./type-filter";
 const POKEMON_PER_LOAD = 30;
 
 type PokedexDisplayProps = {
-  pokedexList: PokemonPokedexEntryType[];
   generation: string;
+  pokedexEntries: PokemonPokedexEntryType[];
+  pokedexData: Record<string, PokemonDataResponseType>;
   displaySearch?: boolean;
   listLoaded: boolean;
   setActivePokemon: React.Dispatch<React.SetStateAction<number | string>>;
-  pokedexData: Record<string, PokemonDataResponseType>;
 };
 
 export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
-  pokedexList,
   generation,
+  pokedexEntries,
+  pokedexData,
   displaySearch,
   listLoaded,
   setActivePokemon,
-  pokedexData,
 }) => {
   const [displayLimit, setDisplayLimit] = useState<number>(POKEMON_PER_LOAD);
   const [displayList, setDisplayList] = useState<Record<string, string>>({});
@@ -74,8 +74,11 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
       let numAdded = 0;
 
       // load at least 30 pokemon into display list
-      while (numAdded < POKEMON_PER_LOAD && currPokemon < pokedexList.length) {
-        const { name, url } = pokedexList[currPokemon].pokemon_species;
+      while (
+        numAdded < POKEMON_PER_LOAD &&
+        currPokemon < pokedexEntries.length
+      ) {
+        const { name, url } = pokedexEntries[currPokemon].pokemon_species;
         if (name.includes(currSearchInput) && !currList[name]) {
           const pokemonTypes = [
             pokedexData[name].types[0]?.type?.name,
@@ -107,7 +110,7 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
     getCurrentList,
     listLoaded,
     pokedexData,
-    pokedexList,
+    pokedexEntries,
   ]);
 
   /**
@@ -173,14 +176,13 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
             paddingRight="8px"
           >
             {listLoaded &&
-              pokedexList.map((pokemonEntry, index) => (
+              pokedexEntries.map((pokemonEntry, index) => (
                 <PokemonCard
                   pokedexEntryNum={
                     generation === "kalos"
                       ? index + 1
                       : pokemonEntry.entry_number
                   }
-                  generation={generation}
                   pokemonData={pokedexData[pokemonEntry.pokemon_species.name]}
                   inSearchList={
                     displayList[pokemonEntry.pokemon_species.name]

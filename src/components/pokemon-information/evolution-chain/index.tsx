@@ -21,7 +21,7 @@ import {
   pokemonEvolutionContainer,
 } from "./style";
 import { pokemonInfoSlideContainer } from "../../more-info-slide/style";
-import { capitalise } from "../../../utils/helpers";
+import { capitalise, getIdFromLink } from "../../../utils/helpers";
 
 type EvoStages = StageInfo[][];
 
@@ -165,7 +165,7 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
         () => setEvolutionStages([])
       ).then((data) => {
         if (data) {
-          data?.evolution_chain.url.split("/").at(-2) === "67"
+          getIdFromLink(data?.evolution_chain.url) === "67"
             ? setIsEeveeLine(true)
             : setIsEeveeLine(false);
 

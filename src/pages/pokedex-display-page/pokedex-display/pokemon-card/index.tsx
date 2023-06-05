@@ -22,7 +22,6 @@ import {
 
 type PokemonCardProps = {
   pokedexEntryNum: number;
-  generation: string;
   pokemonData: PokemonDataResponseType;
   inSearchList: boolean;
   setActivePokemon: React.Dispatch<React.SetStateAction<number | string>>;
@@ -30,7 +29,6 @@ type PokemonCardProps = {
 
 export const PokemonCard: React.FC<PokemonCardProps> = ({
   pokedexEntryNum,
-  generation,
   pokemonData,
   inSearchList,
   setActivePokemon,
@@ -55,7 +53,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
 
   // get initial pokemon data if the card is supposed to be displayed
   useEffect(() => {
-    if (pokemonData.name && inSearchList) {
+    if (pokemonData?.name && inSearchList) {
       const name = pokemonData.name;
       name.includes("iron-")
         ? setDisplayName(capitalise(removeDash(name), true))
@@ -65,7 +63,9 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
 
   // check if sprite has loaded
   useEffect(() => {
-    if (pokemonData?.sprites?.front_default) setHasImgLoaded(true);
+    if (pokemonData?.sprites.front_default) {
+      setHasImgLoaded(true);
+    }
   }, [pokemonData]);
 
   return (
