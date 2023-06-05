@@ -34,12 +34,12 @@ export const PaldeaDex: React.FC = () => {
   return (
     <Box sx={pageContainerStyle}>
       <Box width="100%">
-        <PokedexDisplay
+        {/* <PokedexDisplay
           pokedexList={nationalDex}
           displaySearch
           listLoaded={hasLoaded}
           setActivePokemon={setActivePokemon}
-        />
+        /> */}
       </Box>
       <Box>
         <MoreInfoSlide

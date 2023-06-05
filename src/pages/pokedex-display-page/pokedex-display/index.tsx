@@ -2,7 +2,10 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Box, CircularProgress, Divider, Grid } from "@mui/material";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { PokemonCard } from "./pokemon-card";
-import { PokemonPokedexEntryType } from "../../../services/apiRequestsTypes";
+import {
+  PokemonDataResponseType,
+  PokemonPokedexEntryType,
+} from "../../../services/apiRequestsTypes";
 import { loadMoreContainer } from "./style";
 import { Searchbar } from "./searchbar";
 
@@ -15,6 +18,7 @@ type PokedexDisplayProps = {
   displaySearch?: boolean;
   listLoaded: boolean;
   setActivePokemon: React.Dispatch<React.SetStateAction<number | string>>;
+  pokedexData: Record<string, PokemonDataResponseType>;
 };
 
 export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
@@ -22,13 +26,15 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
   displaySearch,
   listLoaded,
   setActivePokemon,
+  pokedexData,
 }) => {
   const [displayLimit, setDisplayLimit] = useState<number>(POKEMON_PER_LOAD);
   const [displayList, setDisplayList] = useState<Record<string, string>>({});
 
   const [prevSearchInput, setPrevSearchInput] = useState<string>("");
   const [currSearchInput, setCurrSearchInput] = useState<string>("");
-  const [filters, setFilters] = useState<string[]>([]);
+  const [currFilters, setCurrFilters] = useState<string[]>([]);
+  const [prevFilters, setPrevFilters] = useState<string[]>([]);
 
   const [hasMoreToLoad, setHasMoreToLoad] = useState<boolean>(true);
 
@@ -44,13 +50,14 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
    */
   const getCurrentList = useCallback((): Record<string, string> => {
     let currList: Record<string, string> = displayList;
-    if (prevSearchInput !== currSearchInput) {
+    if (prevSearchInput !== currSearchInput || prevFilters !== currFilters) {
       currList = {};
       setPrevSearchInput(currSearchInput);
+      setPrevFilters(currFilters);
     }
 
     return currList;
-  }, [currSearchInput, displayList, prevSearchInput]);
+  }, [currFilters, currSearchInput, displayList, prevFilters, prevSearchInput]);
 
   /**
    * loads at most 30 more items into display list based on search input
@@ -59,20 +66,31 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
     const currList: Record<string, string> = { ...getCurrentList() };
     const lenCurrDisplayList = Object.keys(currList).length;
 
-    if (
-      pokedexList.length !== 0 &&
-      Object.keys(currList).length < displayLimit
-    ) {
+    if (listLoaded && Object.keys(currList).length < displayLimit) {
       const nextSearchPage: Record<string, string> = {};
       let currPokemon = lenCurrDisplayList;
       let numAdded = 0;
 
-      // load 30 pokemon into display list
+      // load at least 30 pokemon into display list
       while (numAdded < POKEMON_PER_LOAD && currPokemon < pokedexList.length) {
         const { name, url } = pokedexList[currPokemon].pokemon_species;
         if (name.includes(currSearchInput) && !currList[name]) {
-          nextSearchPage[name] = url;
-          numAdded += 1;
+          const pokemonTypes = [
+            pokedexData[name].types[0]?.type?.name,
+            pokedexData[name].types[1]?.type?.name,
+          ];
+          // check typing filters
+          if (
+            currFilters.length === 0 ||
+            (currFilters.length === 1 &&
+              pokemonTypes.includes(currFilters[0])) ||
+            (currFilters.length === 2 &&
+              pokemonTypes.includes(currFilters[0]) &&
+              pokemonTypes.includes(currFilters[1]))
+          ) {
+            nextSearchPage[name] = url;
+            numAdded += 1;
+          }
         }
         currPokemon += 1;
       }
@@ -80,7 +98,15 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
       // tell infinite scroll that there is no more pokemon to load
       if (numAdded < POKEMON_PER_LOAD) setHasMoreToLoad(false);
     }
-  }, [pokedexList, currSearchInput, displayList, displayLimit, getCurrentList]);
+  }, [
+    currSearchInput,
+    displayLimit,
+    currFilters,
+    getCurrentList,
+    listLoaded,
+    pokedexData,
+    pokedexList,
+  ]);
 
   /**
    * trigger loading into new list based when search input changes
@@ -88,7 +114,7 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
   useEffect(() => {
     setDisplayLimit(POKEMON_PER_LOAD);
     setHasMoreToLoad(true);
-  }, [currSearchInput]);
+  }, [currSearchInput, currFilters]);
 
   /**
    * update display limit when display list is updated
@@ -109,7 +135,8 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
       setDisplayLimit(POKEMON_PER_LOAD);
       setCurrSearchInput("");
       setPrevSearchInput("");
-      setFilters([]);
+      setCurrFilters([]);
+      setPrevFilters([]);
     }
   }, [listLoaded]);
 
@@ -119,7 +146,7 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
         <Searchbar input={currSearchInput} setInput={setCurrSearchInput} />
       )}
 
-      <TypeFilter types={filters} setTypes={setFilters} />
+      <TypeFilter types={currFilters} setTypes={setCurrFilters} />
       <Divider />
 
       {listLoaded ? (
@@ -143,17 +170,21 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
             overflow="visible"
             paddingRight="8px"
           >
-            {pokedexList.map((pokemonEntry, index) => (
-              <PokemonCard
-                pokemonEntry={pokemonEntry}
-                filterList={filters}
-                inSearchList={
-                  displayList[pokemonEntry.pokemon_species.name] ? true : false
-                }
-                setActivePokemon={setActivePokemon}
-                key={index}
-              />
-            ))}
+            {listLoaded &&
+              pokedexList.map((pokemonEntry, index) => (
+                <PokemonCard
+                  pokemonEntry={pokemonEntry}
+                  pokemonData={pokedexData[pokemonEntry.pokemon_species.name]}
+                  filterList={currFilters}
+                  inSearchList={
+                    displayList[pokemonEntry.pokemon_species.name]
+                      ? true
+                      : false
+                  }
+                  setActivePokemon={setActivePokemon}
+                  key={index}
+                />
+              ))}
           </Grid>
         </InfiniteScroll>
       ) : (

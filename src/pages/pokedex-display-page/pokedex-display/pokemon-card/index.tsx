@@ -5,10 +5,6 @@ import {
   PokemonPokedexEntryType,
 } from "../../../../services/apiRequestsTypes";
 import {
-  requestLinks,
-  sendGenericAPIRequest,
-} from "../../../../services/apiRequests";
-import {
   BodyText,
   Hoverable,
   SecondaryText,
@@ -21,11 +17,11 @@ import {
 } from "./style";
 import { TypeTag } from "../../../../components/pokemon-information/type-tag";
 import { CustomCard } from "../../../../components/custom-card/CustomCard";
-import { pokemonDataDefault } from "../../../../utils/defaults";
 import { capitalise } from "../../../../utils/helpers";
 
 type PokemonCardProps = {
   pokemonEntry: PokemonPokedexEntryType;
+  pokemonData: PokemonDataResponseType;
   inSearchList: boolean;
   filterList: string[];
   setActivePokemon: React.Dispatch<React.SetStateAction<number | string>>;
@@ -33,16 +29,14 @@ type PokemonCardProps = {
 
 export const PokemonCard: React.FC<PokemonCardProps> = ({
   pokemonEntry,
+  pokemonData,
   inSearchList,
   filterList,
   setActivePokemon,
 }) => {
-  const [pokemonData, setPokemonData] =
-    useState<PokemonDataResponseType>(pokemonDataDefault);
-  const [displayName, setTypeMatchesName] = useState<string>("");
+  const [displayName, setDisplayName] = useState<string>("");
   const [isMouseOver, setIsMouseOver] = useState<boolean>(false);
   const [hasImgLoaded, setHasImgLoaded] = useState<boolean>(false);
-  const [typeMatches, setTypeMatches] = useState<boolean>(false);
 
   const handleMouseOver = () => {
     setIsMouseOver(true);
@@ -55,54 +49,24 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
    * when card clicked set as active pokemon for the info slide
    */
   const handleCardClick = () => {
-    setActivePokemon(pokemonData.id);
+    setActivePokemon(pokemonData?.id ?? 0);
   };
 
   // get initial pokemon data if the card is supposed to be displayed
   useEffect(() => {
     if (pokemonEntry && inSearchList) {
-      setTypeMatchesName(capitalise(pokemonEntry.pokemon_species.name));
-      const id = parseInt(pokemonEntry.pokemon_species.url.split("/")[6]);
-
-      if (id) {
-        sendGenericAPIRequest<PokemonDataResponseType>(
-          requestLinks.getData(id)
-        ).then((data) => {
-          if (data) setPokemonData(data);
-        });
-      }
+      setDisplayName(capitalise(pokemonEntry.pokemon_species.name));
     }
   }, [inSearchList, pokemonEntry]);
 
   // check if sprite has loaded
   useEffect(() => {
-    if (pokemonData.sprites.front_default) setHasImgLoaded(true);
-
-    if (pokemonData.types && filterList.length > 0 && inSearchList) {
-      const pokemonTypes = [
-        pokemonData.types[0]?.type?.name,
-        pokemonData.types[1]?.type?.name,
-      ];
-
-      if (filterList.length === 1 && pokemonTypes.includes(filterList[0])) {
-        setTypeMatches(inSearchList && true);
-      } else if (
-        filterList.length === 2 &&
-        pokemonTypes.includes(filterList[0]) &&
-        pokemonTypes.includes(filterList[1])
-      ) {
-        setTypeMatches(inSearchList && true);
-      } else {
-        setTypeMatches(false);
-      }
-    } else {
-      setTypeMatches(inSearchList);
-    }
-  }, [filterList, pokemonData, inSearchList]);
+    if (pokemonData?.sprites?.front_default) setHasImgLoaded(true);
+  }, [pokemonData]);
 
   return (
     <>
-      {inSearchList && typeMatches && (
+      {inSearchList && (
         <Grid item sm={6} md={6} lg={4} xl={3} height="210px">
           <Hoverable
             onMouseEnter={handleMouseOver}
@@ -120,7 +84,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
                 <Box
                   component="img"
                   draggable="false"
-                  src={pokemonData.sprites.front_default}
+                  src={pokemonData?.sprites?.front_default}
                   alt={`${displayName}'s sprite`}
                   sx={isMouseOver ? pokemonSpriteHover : pokemonSpriteStyle}
                 />
@@ -131,8 +95,8 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
                 {displayName}
               </BodyText>
               <Box display="flex" gap="10px" marginTop="5px">
-                {pokemonData.types.map((type, index) => (
-                  <TypeTag type={type.type.name} key={index} />
+                {pokemonData.types.map((type) => (
+                  <TypeTag type={type.type.name} key={type.slot} />
                 ))}
               </Box>
             </CustomCard>
