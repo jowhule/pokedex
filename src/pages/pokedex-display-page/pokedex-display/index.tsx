@@ -15,6 +15,7 @@ const POKEMON_PER_LOAD = 30;
 
 type PokedexDisplayProps = {
   pokedexList: PokemonPokedexEntryType[];
+  generation: string;
   displaySearch?: boolean;
   listLoaded: boolean;
   setActivePokemon: React.Dispatch<React.SetStateAction<number | string>>;
@@ -23,6 +24,7 @@ type PokedexDisplayProps = {
 
 export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
   pokedexList,
+  generation,
   displaySearch,
   listLoaded,
   setActivePokemon,
@@ -173,7 +175,12 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
             {listLoaded &&
               pokedexList.map((pokemonEntry, index) => (
                 <PokemonCard
-                  pokemonEntry={pokemonEntry}
+                  pokedexEntryNum={
+                    generation === "kalos"
+                      ? index + 1
+                      : pokemonEntry.entry_number
+                  }
+                  generation={generation}
                   pokemonData={pokedexData[pokemonEntry.pokemon_species.name]}
                   inSearchList={
                     displayList[pokemonEntry.pokemon_species.name]

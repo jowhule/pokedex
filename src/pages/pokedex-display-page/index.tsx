@@ -31,7 +31,7 @@ export const PokedexDisplayPage: React.FC<PokedexDisplayrops> = ({
     Record<string, PokemonDataResponseType>
   >({});
 
-  // get all pokemon names
+  // get all pokemon data
   useEffect(() => {
     setActivePokemon("");
     setHasLoaded(false);
@@ -97,6 +97,7 @@ export const PokedexDisplayPage: React.FC<PokedexDisplayrops> = ({
     <Box sx={pageContainerStyle}>
       <Box width="100%">
         <PokedexDisplay
+          generation={generation}
           pokedexList={pokedexEntries}
           pokedexData={pokedexData}
           displaySearch

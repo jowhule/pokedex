@@ -1,9 +1,6 @@
 import { Box, CircularProgress, Grid } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import {
-  PokemonDataResponseType,
-  PokemonPokedexEntryType,
-} from "../../../../services/apiRequestsTypes";
+import { PokemonDataResponseType } from "../../../../services/apiRequestsTypes";
 import {
   BodyText,
   Hoverable,
@@ -24,14 +21,16 @@ import {
 } from "../../../../utils/helpers";
 
 type PokemonCardProps = {
-  pokemonEntry: PokemonPokedexEntryType;
+  pokedexEntryNum: number;
+  generation: string;
   pokemonData: PokemonDataResponseType;
   inSearchList: boolean;
   setActivePokemon: React.Dispatch<React.SetStateAction<number | string>>;
 };
 
 export const PokemonCard: React.FC<PokemonCardProps> = ({
-  pokemonEntry,
+  pokedexEntryNum,
+  generation,
   pokemonData,
   inSearchList,
   setActivePokemon,
@@ -56,13 +55,13 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
 
   // get initial pokemon data if the card is supposed to be displayed
   useEffect(() => {
-    if (pokemonEntry && inSearchList) {
-      const name = pokemonEntry.pokemon_species.name;
+    if (pokemonData.name && inSearchList) {
+      const name = pokemonData.name;
       name.includes("iron-")
         ? setDisplayName(capitalise(removeDash(name), true))
         : setDisplayName(capitaliseDash(name));
     }
-  }, [inSearchList, pokemonEntry]);
+  }, [inSearchList, pokemonData]);
 
   // check if sprite has loaded
   useEffect(() => {
@@ -81,7 +80,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
             <CustomCard sx={pokemonCardContainer}>
               <Box sx={pokemonIdContainer}>
                 <SecondaryText fontSize="12px" fontWeight="bold">
-                  # {pokemonEntry?.entry_number}
+                  # {pokedexEntryNum}
                 </SecondaryText>
               </Box>
 
