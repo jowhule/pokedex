@@ -72,7 +72,6 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
   useEffect(() => {
     const currList: Record<string, string> = { ...getCurrentList() };
     const lenCurrDisplayList = Object.keys(currList).length;
-    console.log(Object.keys(currList).length, displayLimit);
 
     if (listLoaded && Object.keys(currList).length < displayLimit) {
       const nextSearchPage: Record<string, string> = {};
@@ -108,7 +107,10 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
       }
       setDisplayList({ ...currList, ...nextSearchPage });
       // tell infinite scroll that there is no more pokemon to load
-      if (numAdded < POKEMON_PER_LOAD) setHasMoreToLoad(false);
+      if (numAdded < POKEMON_PER_LOAD) {
+        setHasMoreToLoad(false);
+        setDisplayLimit(lenCurrDisplayList + numAdded);
+      }
     }
   }, [
     currFilters,
