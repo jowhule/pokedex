@@ -9,7 +9,7 @@ export const navbarContainer: React.CSSProperties = {
   zIndex: "3",
   height: NAVBAR_HEIGHT,
   width: "100%",
-  backgroundColor: "#FFFFFF90",
+  backgroundColor: "#FFFFFF9",
   transition: "transform 0.5s ease",
   backdropFilter: "blur(3px)",
 };

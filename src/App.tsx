@@ -54,7 +54,7 @@ function App() {
           />
           <Route
             path="/kalos"
-            element={<PokedexDisplayPage generation="kalos-central" />}
+            element={<PokedexDisplayPage generation="kalos" />}
           />
           <Route
             path="/alola"
@@ -63,6 +63,10 @@ function App() {
           <Route
             path="/galar"
             element={<PokedexDisplayPage generation="galar" />}
+          />
+          <Route
+            path="/hisui"
+            element={<PokedexDisplayPage generation="hisui" />}
           />
           <Route
             path="/paldea"

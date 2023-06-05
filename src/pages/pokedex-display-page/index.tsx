@@ -36,11 +36,37 @@ export const PokedexDisplayPage: React.FC<PokedexDisplayrops> = ({
     setActivePokemon("");
     setHasLoaded(false);
 
-    sendGenericAPIRequest<PokemonDexResponseType>(
-      requestLinks.getPokedex(generation)
-    ).then((data) => {
-      if (data) setPokedexEntries(data.pokemon_entries);
-    });
+    if (generation === "kalos") {
+      sendGenericAPIRequest<PokemonDexResponseType>(
+        requestLinks.getPokedex("kalos-central")
+      ).then((kalos_one) => {
+        if (kalos_one) {
+          sendGenericAPIRequest<PokemonDexResponseType>(
+            requestLinks.getPokedex("kalos-coastal")
+          ).then((kalos_two) => {
+            if (kalos_two) {
+              sendGenericAPIRequest<PokemonDexResponseType>(
+                requestLinks.getPokedex("kalos-mountain")
+              ).then((kalos_three) => {
+                if (kalos_three) {
+                  setPokedexEntries([
+                    ...kalos_one.pokemon_entries,
+                    ...kalos_two.pokemon_entries,
+                    ...kalos_three.pokemon_entries,
+                  ]);
+                }
+              });
+            }
+          });
+        }
+      });
+    } else {
+      sendGenericAPIRequest<PokemonDexResponseType>(
+        requestLinks.getPokedex(generation)
+      ).then((data) => {
+        if (data) setPokedexEntries(data.pokemon_entries);
+      });
+    }
   }, [generation]);
 
   // get all pokemon's data

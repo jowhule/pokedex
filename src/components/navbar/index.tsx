@@ -145,6 +145,9 @@ export const Navbar: React.FC = () => {
                   <MenuItem onClick={() => menuItemClick("/galar")}>
                     Galar
                   </MenuItem>
+                  <MenuItem onClick={() => menuItemClick("/hisui")}>
+                    Hisui
+                  </MenuItem>
                   <MenuItem onClick={() => menuItemClick("/paldea")}>
                     Paldea
                   </MenuItem>
