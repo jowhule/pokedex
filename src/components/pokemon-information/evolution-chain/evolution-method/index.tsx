@@ -86,7 +86,7 @@ export const EvolutionMethod: React.FC<EvolutionMethodType> = ({
 
     return (
       <BodyText fontWeight="bold" fontSize="10px">
-        {capitalise(method)}
+        {capitalise(removeDash(method), true)}
       </BodyText>
     );
   };

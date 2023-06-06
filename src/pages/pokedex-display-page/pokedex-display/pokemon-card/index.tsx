@@ -56,7 +56,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
   // get initial pokemon data if the card is supposed to be displayed
   useEffect(() => {
     if (pokemonData.name && inSearchList) {
-      const name = pokemonData.name;
+      const name = pokemonData.species.name;
       name.includes("iron-")
         ? setDisplayName(capitalise(removeDash(name), true))
         : setDisplayName(capitaliseDash(name));
