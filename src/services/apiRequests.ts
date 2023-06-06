@@ -15,9 +15,6 @@ export const requestLinks = {
   getAnimatedSprite: (id: number): string => {
     return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/${id}.gif`;
   },
-  getDefaultSprite: (id: number): string => {
-    return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
-  },
   getItemSprite: (name: string): string => {
     return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${name}.png`;
   },
