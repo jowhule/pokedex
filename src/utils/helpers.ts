@@ -36,12 +36,3 @@ export const capitaliseDash = (str: string): string => {
 export const removeDash = (str: string): string => {
   return str.replaceAll("-", " ").replaceAll("_", " ");
 };
-
-/**
- * get the id from a link
- * @param str the link
- * @returns {str}
- */
-export const getIdFromLink = (str: string): string => {
-  return str.split("/")[6];
-};
