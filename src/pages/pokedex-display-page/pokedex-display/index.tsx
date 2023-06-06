@@ -148,7 +148,11 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
         <Searchbar input={currSearchInput} setInput={setCurrSearchInput} />
       )}
 
-      <TypeFilter types={currFilters} setTypes={setCurrFilters} />
+      <TypeFilter
+        types={currFilters}
+        setTypes={setCurrFilters}
+        generation={generation}
+      />
       <Divider />
 
       {listLoaded ? (

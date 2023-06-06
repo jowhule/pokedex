@@ -6,15 +6,18 @@ import { typeColours } from "../../../../utils/colours";
 import { TypeTag } from "../../../../components/pokemon-information/type-tag";
 
 type TypeFilterProps = {
+  generation: string;
   types: string[];
   setTypes: React.Dispatch<React.SetStateAction<string[]>>;
 };
 
-export const TypeFilter: React.FC<TypeFilterProps> = ({ types, setTypes }) => {
+export const TypeFilter: React.FC<TypeFilterProps> = ({
+  types,
+  setTypes,
+  generation,
+}) => {
   const theme = useTheme();
-  const [availableTypes, setAvailableTypes] = useState<string[]>(
-    Object.keys(typeColours)
-  );
+  const [availableTypes, setAvailableTypes] = useState<string[]>([]);
 
   const [openTypeOptions, setOpenTypeOptions] = useState<boolean>(false);
 
@@ -42,8 +45,8 @@ export const TypeFilter: React.FC<TypeFilterProps> = ({ types, setTypes }) => {
   };
 
   useEffect(() => {
-    console.log("hi");
-  }, [types]);
+    setAvailableTypes(Object.keys(typeColours));
+  }, [generation]);
 
   return (
     <>
