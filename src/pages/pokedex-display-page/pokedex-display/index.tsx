@@ -194,7 +194,7 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
           </Grid>
         </InfiniteScroll>
       ) : (
-        <Box display="flex" justifyContent="center">
+        <Box display="flex" justifyContent="center" marginTop="40px">
           <CircularProgress />
         </Box>
       )}
