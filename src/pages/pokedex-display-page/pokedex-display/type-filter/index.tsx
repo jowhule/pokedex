@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import { Box, Dialog, useTheme } from "@mui/material";
 import { BodyText, Hoverable } from "../../../../utils/styledComponents";
@@ -40,6 +40,10 @@ export const TypeFilter: React.FC<TypeFilterProps> = ({ types, setTypes }) => {
   const handleCloseModal = () => {
     setOpenTypeOptions(false);
   };
+
+  useEffect(() => {
+    console.log("hi");
+  }, [types]);
 
   return (
     <>

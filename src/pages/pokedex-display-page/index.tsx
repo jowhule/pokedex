@@ -44,13 +44,13 @@ export const PokedexDisplayPage: React.FC<PokedexDisplayrops> = ({
       ),
     ];
 
-    let kalosDex: PokemonPokedexEntryType[] = [];
     Promise.all(kalosPromises).then((responses) => {
+      let kalosDex: PokemonPokedexEntryType[] = [];
       for (const response of responses) {
         if (response) kalosDex = [...kalosDex, ...response.pokemon_entries];
       }
+      setPokedexEntries([...kalosDex]);
     });
-    setPokedexEntries([...kalosDex]);
   };
 
   // get all pokemon data
