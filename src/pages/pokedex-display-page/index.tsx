@@ -72,17 +72,22 @@ export const PokedexDisplayPage: React.FC<PokedexDisplayrops> = ({
   // get all pokemon's data
   useEffect(() => {
     if (pokedexEntries.length > 0) {
+      const dataPromises: Promise<void | PokemonDataResponseType>[] = [];
       const entriesHolder: Record<string, PokemonDataResponseType> = {};
       for (const entry of pokedexEntries) {
         entriesHolder[entry.pokemon_species.name] = pokemonDataDefault;
         const id = parseInt(entry.pokemon_species.url.split("/")[6]);
-        sendGenericAPIRequest<PokemonDataResponseType>(
-          requestLinks.getData(id)
-        ).then((data) => {
-          if (data) entriesHolder[entry.pokemon_species.name] = data;
-        });
+        dataPromises.push(
+          sendGenericAPIRequest<PokemonDataResponseType>(
+            requestLinks.getData(id)
+          ).then((data) => {
+            if (data) entriesHolder[entry.pokemon_species.name] = data;
+          })
+        );
       }
-      setPokedexData(entriesHolder);
+      Promise.allSettled(dataPromises).then(() =>
+        setPokedexData(entriesHolder)
+      );
     }
   }, [pokedexEntries]);
 
@@ -90,6 +95,7 @@ export const PokedexDisplayPage: React.FC<PokedexDisplayrops> = ({
   useEffect(() => {
     if (Object.keys(pokedexData).length > 0) {
       setHasLoaded(true);
+      console.log(pokedexData);
     }
   }, [pokedexData]);
 
