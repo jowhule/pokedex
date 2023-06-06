@@ -31,35 +31,35 @@ export const PokedexDisplayPage: React.FC<PokedexDisplayrops> = ({
     Record<string, PokemonDataResponseType>
   >({});
 
+  const getKalosDex = async () => {
+    const kalosPromises: Promise<void | PokemonDexResponseType>[] = [
+      sendGenericAPIRequest<PokemonDexResponseType>(
+        requestLinks.getPokedex("kalos-central")
+      ),
+      sendGenericAPIRequest<PokemonDexResponseType>(
+        requestLinks.getPokedex("kalos-coastal")
+      ),
+      sendGenericAPIRequest<PokemonDexResponseType>(
+        requestLinks.getPokedex("kalos-mountain")
+      ),
+    ];
+
+    let kalosDex: PokemonPokedexEntryType[] = [];
+    Promise.all(kalosPromises).then((responses) => {
+      for (const response of responses) {
+        if (response) kalosDex = [...kalosDex, ...response.pokemon_entries];
+      }
+    });
+    setPokedexEntries([...kalosDex]);
+  };
+
   // get all pokemon data
   useEffect(() => {
     setActivePokemon("");
     setHasLoaded(false);
 
     if (generation === "kalos") {
-      sendGenericAPIRequest<PokemonDexResponseType>(
-        requestLinks.getPokedex("kalos-central")
-      ).then((kalos_one) => {
-        if (kalos_one) {
-          sendGenericAPIRequest<PokemonDexResponseType>(
-            requestLinks.getPokedex("kalos-coastal")
-          ).then((kalos_two) => {
-            if (kalos_two) {
-              sendGenericAPIRequest<PokemonDexResponseType>(
-                requestLinks.getPokedex("kalos-mountain")
-              ).then((kalos_three) => {
-                if (kalos_three) {
-                  setPokedexEntries([
-                    ...kalos_one.pokemon_entries,
-                    ...kalos_two.pokemon_entries,
-                    ...kalos_three.pokemon_entries,
-                  ]);
-                }
-              });
-            }
-          });
-        }
-      });
+      getKalosDex();
     } else {
       sendGenericAPIRequest<PokemonDexResponseType>(
         requestLinks.getPokedex(generation)
@@ -95,7 +95,6 @@ export const PokedexDisplayPage: React.FC<PokedexDisplayrops> = ({
   useEffect(() => {
     if (Object.keys(pokedexData).length > 0) {
       setHasLoaded(true);
-      console.log(pokedexData);
     }
   }, [pokedexData]);
 
