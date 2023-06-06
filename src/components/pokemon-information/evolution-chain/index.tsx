@@ -97,8 +97,9 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
    * click on an evo to change active pokemon (slide change)
    * @param name name of pokem on clicked on
    */
-  const handleEvoClick = (id: number) => {
-    if (setActivePokemon && id !== pokemonData.id) setActivePokemon(id);
+  const handleEvoClick = (name: string) => {
+    if (setActivePokemon && name !== pokemonData.species.name)
+      setActivePokemon(name);
   };
 
   useEffect(() => {
@@ -153,7 +154,7 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
                   <Box sx={pokemonEvolutionContainer} key={index_j}>
                     <EvolutionMethod stageInfo={evo} />
                     <Tooltip title={capitalise(evo.name)}>
-                      <Hoverable onClick={() => handleEvoClick(evo.id)}>
+                      <Hoverable onClick={() => handleEvoClick(evo.name)}>
                         <Box
                           component="img"
                           src={requestLinks.getPokemonSprite(evo.id)}

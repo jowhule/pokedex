@@ -112,7 +112,7 @@ export const PokedexDisplayPage: React.FC<PokedexDisplayrops> = ({
       </Box>
       <Box>
         <MoreInfoSlide
-          activePokemon={activePokemon}
+          activePokemonData={pokedexData[activePokemon]}
           setActivePokemon={setActivePokemon}
         />
       </Box>

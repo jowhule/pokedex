@@ -184,7 +184,6 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
                       ? index + 1
                       : pokemonEntry.entry_number
                   }
-                  generation={generation}
                   pokemonData={pokedexData[pokemonEntry.pokemon_species.name]}
                   inSearchList={
                     displayList[pokemonEntry.pokemon_species.name]
