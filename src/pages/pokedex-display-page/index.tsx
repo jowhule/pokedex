@@ -4,6 +4,7 @@ import {
   PokemonDataResponseType,
   PokemonDexResponseType,
   PokemonPokedexEntryType,
+  PokemonSpeciesResponseType,
 } from "../../services/apiRequestsTypes";
 import { pageContainerStyle } from "./style";
 import {
@@ -13,6 +14,7 @@ import {
 import { PokedexDisplay } from "./pokedex-display";
 import { MoreInfoSlide } from "../../components/more-info-slide";
 import { pokemonDataDefault } from "../../utils/defaults";
+import { getIdFromLink } from "../../utils/helpers";
 
 export type PokedexDisplayrops = {
   generation: string;
@@ -29,6 +31,9 @@ export const PokedexDisplayPage: React.FC<PokedexDisplayrops> = ({
 
   const [pokedexData, setPokedexData] = useState<
     Record<string, PokemonDataResponseType>
+  >({});
+  const [pokedexSpecies, setPokedexSpecies] = useState<
+    Record<string, PokemonSpeciesResponseType>
   >({});
 
   const getKalosDex = async () => {
@@ -73,20 +78,61 @@ export const PokedexDisplayPage: React.FC<PokedexDisplayrops> = ({
   useEffect(() => {
     if (pokedexEntries.length > 0) {
       const dataPromises: Promise<void | PokemonDataResponseType>[] = [];
-      const entriesHolder: Record<string, PokemonDataResponseType> = {};
+      const speciesPromises: Promise<void | PokemonSpeciesResponseType>[] = [];
+      const regionalPromises: Promise<void | PokemonDataResponseType>[] = [];
+
+      const dataHolder: Record<string, PokemonDataResponseType> = {};
+      const speciesHolder: Record<string, PokemonSpeciesResponseType> = {};
+      const regionalHolder: Record<string, PokemonDataResponseType> = {};
+
       for (const entry of pokedexEntries) {
-        entriesHolder[entry.pokemon_species.name] = pokemonDataDefault;
         const id = parseInt(entry.pokemon_species.url.split("/")[6]);
+        const speciesName = entry.pokemon_species.name;
         dataPromises.push(
           sendGenericAPIRequest<PokemonDataResponseType>(
             requestLinks.getData(id)
           ).then((data) => {
-            if (data) entriesHolder[entry.pokemon_species.name] = data;
+            if (data) dataHolder[speciesName] = data;
+          })
+        );
+
+        speciesPromises.push(
+          sendGenericAPIRequest<PokemonSpeciesResponseType>(
+            requestLinks.getSpecies(id)
+          ).then((species) => {
+            if (species) {
+              speciesHolder[speciesName] = species;
+              // check for regional forms
+              for (const form of species.varieties) {
+                const match = form.pokemon.name.match(
+                  new RegExp(
+                    `^${speciesName}-${generation.replace("original-", "")}$`
+                  )
+                );
+                if (match) {
+                  regionalPromises.push(
+                    sendGenericAPIRequest<PokemonDataResponseType>(
+                      requestLinks.getData(getIdFromLink(form.pokemon.url))
+                    ).then((regional) => {
+                      if (regional) regionalHolder[speciesName] = regional;
+                    })
+                  );
+                }
+              }
+            }
           })
         );
       }
-      Promise.allSettled(dataPromises).then(() =>
-        setPokedexData(entriesHolder)
+      Promise.allSettled(dataPromises).then(() => {
+        Promise.allSettled(regionalPromises).then(() => {
+          for (const regional of Object.keys(regionalHolder)) {
+            dataHolder[regional] = regionalHolder[regional];
+          }
+          setPokedexData(dataHolder);
+        });
+      });
+      Promise.allSettled(speciesPromises).then(() =>
+        setPokedexSpecies(speciesHolder)
       );
     }
   }, [pokedexEntries]);
