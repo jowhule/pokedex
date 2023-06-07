@@ -29,7 +29,9 @@ export const AbilityTag: React.FC<AbilityTagProps> = ({ abilityInfo }) => {
         justifyContent: "center",
       }}
     >
-      <BodyText fontSize="16px">{abilityName}</BodyText>
+      <BodyText fontSize="16px" lineHeight="100%">
+        {abilityName}
+      </BodyText>
       {abilityInfo.is_hidden && (
         <SecondaryText fontSize="12px" sx={{ marginTop: "-5px" }}>
           hidden ability

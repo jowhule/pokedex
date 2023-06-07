@@ -118,7 +118,7 @@ export const EvolutionMethod: React.FC<EvolutionMethodType> = ({
 
   return (
     <>
-      {stageInfo.stage > 0 && (
+      {stageInfo.trigger.name && (
         <Box sx={pokemonEvoMethodContainer}>
           {Object.keys(stageInfo.methods).map((method, index_m) => (
             <Box key={index_m}>

@@ -1,5 +1,5 @@
 import { keyframes } from "@emotion/react";
-import { fontBgColour } from "../../utils/colours";
+import { fontBgColour } from "../../../utils/colours";
 
 export const outterPokemonInfoSlideContainer = {
   width: "350px",

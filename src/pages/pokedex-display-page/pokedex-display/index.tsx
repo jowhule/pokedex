@@ -18,7 +18,7 @@ type PokedexDisplayProps = {
   generation: string;
   displaySearch?: boolean;
   listLoaded: boolean;
-  setActivePokemon: React.Dispatch<React.SetStateAction<number | string>>;
+  setActivePokemon: React.Dispatch<React.SetStateAction<string>>;
   pokedexData: Record<string, PokemonDataResponseType>;
 };
 

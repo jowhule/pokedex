@@ -20,38 +20,36 @@ import {
   pokemonEvoStageContainer,
   pokemonEvolutionContainer,
 } from "./style";
-import { pokemonInfoSlideContainer } from "../../more-info-slide/style";
-import { capitalise, getIdFromLink } from "../../../utils/helpers";
+import { pokemonInfoSlideContainer } from "../../../pages/pokedex-display-page/more-info-slide/style";
+import { capitalise } from "../../../utils/helpers";
 
 type EvoStages = StageInfo[][];
 
 export type StageInfo = {
-  stage: number;
   name: string;
   methods: Record<string, any>;
   trigger: NameUrlType;
-  id: number;
 };
 
 type EvolutionChainProps = {
+  pokedexData: Record<string, PokemonDataResponseType>;
   pokemonData: PokemonDataResponseType;
-  setActivePokemon?: React.Dispatch<React.SetStateAction<string | number>>;
+  setActivePokemon?: React.Dispatch<React.SetStateAction<string>>;
   setTransition?: React.Dispatch<React.SetStateAction<Record<string, string>>>;
 };
 
 export const EvolutionChain: React.FC<EvolutionChainProps> = ({
+  pokedexData,
   pokemonData,
   setActivePokemon,
   setTransition,
 }) => {
   const [evolutionStages, setEvolutionStages] = useState<EvoStages>([]);
-  const [isEeveeLine, setIsEeveeLine] = useState<boolean>(false);
 
   // recursively traverse the evolution tree and add it to per level array
   const evoTreeTraverse = useCallback(
     (root: PokemonEvoChainType, level: number, evoStages: EvoStages) => {
       if (!root.species) return;
-
       const details: PokemonEvoDetailsType =
         root.evolution_details.length !== 0
           ? root.evolution_details[0]
@@ -64,7 +62,7 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
 
         if (keyString !== "trigger" && details[keyTyped]) {
           if (typeof evolveMethods[keyString] === "object") {
-            const nameUrlDetail: NameUrlType = details[keyTyped] as NameUrlType;
+            const nameUrlDetail = details[keyTyped] as NameUrlType;
             evolveMethods[nameUrlDetail.name] = nameUrlDetail.url;
           } else {
             evolveMethods[keyString] = details[keyTyped];
@@ -73,24 +71,22 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
       });
 
       const pokemonName = root.species.name;
-      const id = parseInt(getIdFromLink(root.species.url));
 
       const currStage: StageInfo = {
-        stage: level,
         name: pokemonName,
         methods: evolveMethods,
         trigger: details.trigger,
-        id: id,
       };
 
       if (!evoStages[level]) evoStages.push([]);
-      evoStages[level].push(currStage);
+      if (pokedexData[pokemonName]) evoStages[level].push(currStage);
+
       // traverse tree
       root.evolves_to.forEach((evolveTo) => {
         evoTreeTraverse(evolveTo, level + 1, evoStages);
       });
     },
-    []
+    [pokedexData]
   );
 
   /**
@@ -102,6 +98,7 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
       setActivePokemon(name);
   };
 
+  // get evolution data
   useEffect(() => {
     if (pokemonData)
       sendGenericAPIRequest<PokemonSpeciesResponseType>(
@@ -109,16 +106,20 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
         () => setEvolutionStages([])
       ).then((data) => {
         if (data) {
-          getIdFromLink(data?.evolution_chain.url) === "67"
-            ? setIsEeveeLine(true)
-            : setIsEeveeLine(false);
-
           sendGenericAPIRequest<PokemonEvolutionResponseType>(
             `${data?.evolution_chain.url}`
           ).then((data) => {
-            const evoStagesTemp: EvoStages = [];
             if (data) {
+              const evoStagesTemp: EvoStages = [];
               evoTreeTraverse(data.chain, 0, evoStagesTemp);
+              // get rid of any unnecessary methods/trigger if there is not prev evo
+              for (let i = 1; i < evoStagesTemp.length; i++) {
+                if (evoStagesTemp[i - 1].length === 0)
+                  for (const evo of evoStagesTemp[i]) {
+                    evo.methods = {};
+                    evo.trigger = { name: "", url: "" };
+                  }
+              }
               setEvolutionStages(evoStagesTemp);
             }
           });
@@ -127,11 +128,16 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
   }, [evoTreeTraverse, pokemonData]);
 
   useEffect(() => {
-    if (evolutionStages.length > 0 && setTransition) {
-      setTimeout(() => {
+    let transitionInTimer: ReturnType<typeof setTimeout> | null = null;
+
+    if (evolutionStages.length > 0 && setTransition)
+      transitionInTimer = setTimeout(() => {
         setTransition(pokemonInfoSlideContainer);
       }, 400);
-    }
+
+    return () => {
+      if (transitionInTimer) clearTimeout(transitionInTimer);
+    };
   }, [evolutionStages, setTransition]);
 
   useEffect(() => {
@@ -143,11 +149,7 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
       {evolutionStages.length > 1 && (
         <>
           <StatTitleText fontSize="16px">Evolution</StatTitleText>
-          <Box
-            display="flex"
-            justifyContent="center"
-            sx={isEeveeLine ? { marginLeft: "-138px" } : {}}
-          >
+          <Box display="flex" justifyContent="center">
             {evolutionStages.map((stage, index_i) => (
               <Box key={index_i} sx={pokemonEvoStageContainer}>
                 {stage.map((evo, index_j) => (
@@ -157,7 +159,7 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
                       <Hoverable onClick={() => handleEvoClick(evo.name)}>
                         <Box
                           component="img"
-                          src={requestLinks.getPokemonSprite(evo.id)}
+                          src={pokedexData[evo.name].sprites.front_default}
                           alt={`${evo.name}'s sprite`}
                           sx={pokemonEvoSpriteStyle}
                         />

@@ -3,9 +3,8 @@ import { fontBgColour } from "../../../utils/colours";
 
 export const pokemonEvoStageContainer: SxProps<Theme> = {
   display: "flex",
-  flexFlow: "column wrap",
+  flexDirection: "column",
   justifyContent: "center",
-  maxHeight: "333px",
   maxWidth: "280px",
 };
 
