@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import {
+  NameUrlType,
   PokemonDataResponseType,
   PokemonDexResponseType,
   PokemonPokedexEntryType,
@@ -13,7 +14,6 @@ import {
 } from "../../services/apiRequests";
 import { PokedexDisplay } from "./pokedex-display";
 import { MoreInfoSlide } from "../../components/more-info-slide";
-import { pokemonDataDefault } from "../../utils/defaults";
 import { getIdFromLink } from "../../utils/helpers";
 
 export type PokedexDisplayrops = {
@@ -36,6 +36,7 @@ export const PokedexDisplayPage: React.FC<PokedexDisplayrops> = ({
     Record<string, PokemonSpeciesResponseType>
   >({});
 
+  // get kalos dex
   const getKalosDex = async () => {
     const kalosPromises: Promise<void | PokemonDexResponseType>[] = [
       sendGenericAPIRequest<PokemonDexResponseType>(
@@ -58,7 +59,96 @@ export const PokedexDisplayPage: React.FC<PokedexDisplayrops> = ({
     });
   };
 
-  // get all pokemon data
+  /**
+   * pushes api requests to get a pokemon's data (promises) into the the array
+   * @param dataPromises async api requests to get a pokemon's data array
+   * @param dataHolder where data goes when api request is finished
+   * @param id id of pokemon
+   * @param speciesName name of the pokemon species
+   */
+  const getPokedexDataPromises = (
+    dataPromises: Promise<void | PokemonDataResponseType>[],
+    dataHolder: Record<string, PokemonDataResponseType> = {},
+    id: number,
+    speciesName: string
+  ) => {
+    dataPromises.push(
+      sendGenericAPIRequest<PokemonDataResponseType>(
+        requestLinks.getData(id)
+      ).then((data) => {
+        if (data) dataHolder[speciesName] = data;
+      })
+    );
+  };
+
+  /**
+   * pushes api requests to get a pokemon's species (promises) into the the array
+   * @param speciesPromises async api requests to get a pokemon's species array
+   * @param speciesHolder where species goes when api request is finished
+   * @param id id of the pokemon
+   * @param speciesName name of the pokemon species
+   */
+  const getPokemonSpeciesPromises = (
+    speciesPromises: Promise<void | PokemonSpeciesResponseType>[],
+    speciesHolder: Record<string, PokemonSpeciesResponseType> = {},
+    regionalPromises: Promise<void | PokemonDataResponseType>[],
+    regionalHolder: Record<string, PokemonDataResponseType> = {},
+    id: number,
+    speciesName: string
+  ) => {
+    speciesPromises.push(
+      sendGenericAPIRequest<PokemonSpeciesResponseType>(
+        requestLinks.getSpecies(id)
+      ).then((species) => {
+        if (species) {
+          speciesHolder[speciesName] = species;
+          // check for regional forms
+          for (const form of species.varieties) {
+            getPokemonRegionalPromises(
+              regionalPromises,
+              regionalHolder,
+              form,
+              speciesName
+            );
+          }
+        }
+      })
+    );
+  };
+
+  /**
+   * pushes api requests to get data of a regional form (promises) into the
+   * the array
+   * @param regionalPromises async api requests to get a pokemon's data array
+   * @param regionalHolder where data goes when api request is finished
+   * @param id id of the pokemon
+   * @param speciesName name of the pokemon data
+   */
+  const getPokemonRegionalPromises = (
+    regionalPromises: Promise<void | PokemonDataResponseType>[],
+    regionalHolder: Record<string, PokemonDataResponseType> = {},
+    form: {
+      is_default: boolean;
+      pokemon: NameUrlType;
+    },
+    speciesName: string
+  ) => {
+    const match = form.pokemon.name.match(
+      new RegExp(`^${speciesName}-${generation.replace("original-", "")}$`)
+    );
+    if (match) {
+      // regional form found
+      regionalPromises.push(
+        sendGenericAPIRequest<PokemonDataResponseType>(
+          requestLinks.getData(getIdFromLink(form.pokemon.url))
+        ).then((regional) => {
+          if (regional) regionalHolder[speciesName] = regional;
+        })
+      );
+    }
+  };
+
+  // get all pokename in region pokedex
   useEffect(() => {
     setActivePokemon("");
     setHasLoaded(false);
@@ -88,39 +178,15 @@ export const PokedexDisplayPage: React.FC<PokedexDisplayrops> = ({
       for (const entry of pokedexEntries) {
         const id = parseInt(entry.pokemon_species.url.split("/")[6]);
         const speciesName = entry.pokemon_species.name;
-        dataPromises.push(
-          sendGenericAPIRequest<PokemonDataResponseType>(
-            requestLinks.getData(id)
-          ).then((data) => {
-            if (data) dataHolder[speciesName] = data;
-          })
-        );
 
-        speciesPromises.push(
-          sendGenericAPIRequest<PokemonSpeciesResponseType>(
-            requestLinks.getSpecies(id)
-          ).then((species) => {
-            if (species) {
-              speciesHolder[speciesName] = species;
-              // check for regional forms
-              for (const form of species.varieties) {
-                const match = form.pokemon.name.match(
-                  new RegExp(
-                    `^${speciesName}-${generation.replace("original-", "")}$`
-                  )
-                );
-                if (match) {
-                  regionalPromises.push(
-                    sendGenericAPIRequest<PokemonDataResponseType>(
-                      requestLinks.getData(getIdFromLink(form.pokemon.url))
-                    ).then((regional) => {
-                      if (regional) regionalHolder[speciesName] = regional;
-                    })
-                  );
-                }
-              }
-            }
-          })
+        getPokedexDataPromises(dataPromises, dataHolder, id, speciesName);
+        getPokemonSpeciesPromises(
+          speciesPromises,
+          speciesHolder,
+          regionalPromises,
+          regionalHolder,
+          id,
+          speciesName
         );
       }
       Promise.allSettled(dataPromises).then(() => {
@@ -135,13 +201,12 @@ export const PokedexDisplayPage: React.FC<PokedexDisplayrops> = ({
         setPokedexSpecies(speciesHolder)
       );
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pokedexEntries]);
 
   // pokemon list finished fetching from api
   useEffect(() => {
-    if (Object.keys(pokedexData).length > 0) {
-      setHasLoaded(true);
-    }
+    if (Object.keys(pokedexData).length > 0) setHasLoaded(true);
   }, [pokedexData]);
 
   return (
