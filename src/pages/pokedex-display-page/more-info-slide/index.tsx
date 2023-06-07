@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { CustomCard } from "../custom-card/CustomCard";
-import { PokemonDataResponseType } from "../../services/apiRequestsTypes";
-import { requestLinks } from "../../services/apiRequests";
+import { CustomCard } from "../../../components/custom-card/CustomCard";
+import { PokemonDataResponseType } from "../../../services/apiRequestsTypes";
+import { requestLinks } from "../../../services/apiRequests";
 import { Box, Stack } from "@mui/material";
 import {
   BodyText,
   SecondaryText,
   StatTitleText,
-} from "../../utils/styledComponents";
-import { TypeTag } from "../pokemon-information/type-tag";
+} from "../../../utils/styledComponents";
+import { TypeTag } from "../../../components/pokemon-information/type-tag";
 import {
   abilitiesContainer,
   infoSlideContainer,
@@ -20,21 +20,23 @@ import {
   pokemonSpriteStyle,
   statsContainer,
 } from "./style";
-import { AbilityTag } from "../pokemon-information/ability-tag";
-import { StatBar } from "../pokemon-information/stat-bar";
-import { EvolutionChain } from "../pokemon-information/evolution-chain";
-import { pokemonDataDefault } from "../../utils/defaults";
-import { capitalise } from "../../utils/helpers";
+import { AbilityTag } from "../../../components/pokemon-information/ability-tag";
+import { StatBar } from "../../../components/pokemon-information/stat-bar";
+import { EvolutionChain } from "../../../components/pokemon-information/evolution-chain";
+import { pokemonDataDefault } from "../../../utils/defaults";
+import { capitalise } from "../../../utils/helpers";
 
-import defaultImage from "../../assets/default_pokemon_info.png";
-import pokeballLoader from "../../assets/pokeball-icon.png";
+import defaultImage from "../../../assets/default_pokemon_info.png";
+import pokeballLoader from "../../../assets/pokeball-icon.png";
 
 type MoreInfoSlideType = {
+  pokedexData: Record<string, PokemonDataResponseType>;
   activePokemonData: PokemonDataResponseType;
-  setActivePokemon: React.Dispatch<React.SetStateAction<string | number>>;
+  setActivePokemon: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
+  pokedexData,
   activePokemonData,
   setActivePokemon,
 }) => {
@@ -127,6 +129,7 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
                 </Box>
 
                 <EvolutionChain
+                  pokedexData={pokedexData}
                   pokemonData={pokemonData}
                   setActivePokemon={setActivePokemon}
                   setTransition={setTransition}
