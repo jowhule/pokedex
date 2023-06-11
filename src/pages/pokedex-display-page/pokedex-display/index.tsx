@@ -78,8 +78,8 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
         const { name, url } = pokedexList[currPokemon].pokemon_species;
         if (name.includes(currSearchInput) && !currList[name]) {
           const pokemonTypes = [
-            pokedexData[name].types[0]?.type?.name,
-            pokedexData[name].types[1]?.type?.name,
+            pokedexData[name]?.types[0]?.type.name,
+            pokedexData[name]?.types[1]?.type.name,
           ];
           // check typing filters
           if (
@@ -127,20 +127,24 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
   }, [displayList]);
 
   /**
-   * load display list for the first time when the component mounts and pokemon
+   * reset display list when the component mounts and pokemon
    * list has loaded
    */
   useEffect(() => {
     if (listLoaded) {
-      setDisplayList({});
       setHasMoreToLoad(true);
       setDisplayLimit(POKEMON_PER_LOAD);
-      setCurrSearchInput("");
-      setPrevSearchInput("");
-      setCurrFilters([]);
-      setPrevFilters([]);
+      setDisplayList({});
     }
   }, [listLoaded]);
+
+  // reset filters and search variables when generation changes
+  useEffect(() => {
+    setPrevSearchInput("");
+    setCurrSearchInput("");
+    setPrevFilters([]);
+    setCurrFilters([]);
+  }, [generation]);
 
   return (
     <>
@@ -166,7 +170,9 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
               <CircularProgress />
             </Box>
           }
-          style={{ overflowY: "hidden" }}
+          style={{
+            overflowY: "hidden",
+          }}
         >
           <Grid
             container

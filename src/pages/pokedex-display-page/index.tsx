@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Box } from "@mui/material";
+import { Box, useMediaQuery, useTheme } from "@mui/material";
 import {
   PokemonDataResponseType,
   PokemonDexResponseType,
   PokemonPokedexEntryType,
   PokemonSpeciesResponseType,
 } from "../../services/apiRequestsTypes";
-import { pageContainerStyle } from "./style";
+import { pageContainerStyle, tabletPageContainerStyle } from "./style";
 import {
   requestLinks,
   sendGenericAPIRequest,
@@ -22,6 +22,9 @@ export type PokedexDisplayrops = {
 export const PokedexDisplayPage: React.FC<PokedexDisplayrops> = ({
   generation,
 }) => {
+  const theme = useTheme();
+  const isTablet = useMediaQuery(theme.breakpoints.down("lg"));
+
   const [hasLoaded, setHasLoaded] = useState<boolean>(false);
   const [pokedexEntries, setPokedexEntries] = useState<
     PokemonPokedexEntryType[]
@@ -168,8 +171,8 @@ export const PokedexDisplayPage: React.FC<PokedexDisplayrops> = ({
   }, [pokedexData]);
 
   return (
-    <Box sx={pageContainerStyle}>
-      <Box width="100%">
+    <Box sx={isTablet ? tabletPageContainerStyle : pageContainerStyle}>
+      <Box width="100%" maxWidth="1200px">
         <PokedexDisplay
           generation={generation}
           pokedexList={pokedexEntries}

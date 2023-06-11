@@ -69,7 +69,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
   return (
     <>
       {inSearchList && (
-        <Grid item sm={6} md={6} lg={4} xl={3} height="210px">
+        <Grid item xs={6} sm={6} md={4} lg={4} xl={3} height="210px">
           <Hoverable
             onMouseEnter={handleMouseOver}
             onMouseLeave={handleMouseLeave}

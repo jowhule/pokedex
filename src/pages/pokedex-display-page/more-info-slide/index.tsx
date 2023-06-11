@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { CustomCard } from "../../../components/custom-card/CustomCard";
 import { PokemonDataResponseType } from "../../../services/apiRequestsTypes";
 import { requestLinks } from "../../../services/apiRequests";
-import { Box, Stack } from "@mui/material";
+import { Box, Stack, useMediaQuery, useTheme } from "@mui/material";
 import {
   BodyText,
   SecondaryText,
@@ -40,6 +40,8 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
   activePokemonData,
   setActivePokemon,
 }) => {
+  const theme = useTheme();
+  const isTablet = useMediaQuery(theme.breakpoints.down("lg"));
   const [pokemonData, setPokemonData] =
     useState<PokemonDataResponseType>(pokemonDataDefault);
   const [pokemonAnimation, setPokemonAnimation] =
@@ -81,7 +83,7 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
   }, [pokemonData]);
 
   return (
-    <Box sx={outterPokemonInfoSlideContainer}>
+    <Box sx={isTablet ? { display: "none" } : outterPokemonInfoSlideContainer}>
       <CustomCard sx={transition}>
         <Box
           component="img"
