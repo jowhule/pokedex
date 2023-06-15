@@ -64,7 +64,6 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
       setPokemonData(pokemonDataDefault);
       setPokemonAnimation(defaultImage);
     }
-
     return () => {
       if (dataTimer) clearTimeout(dataTimer);
     };
