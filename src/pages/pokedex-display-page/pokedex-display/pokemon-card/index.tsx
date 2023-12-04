@@ -35,7 +35,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
 }) => {
   const [displayName, setDisplayName] = useState<string>("");
   const [isMouseOver, setIsMouseOver] = useState<boolean>(false);
-  const [hasImgLoaded, setHasImgLoaded] = useState<boolean>(false);
+  const [hasLoaded, setHasLoaded] = useState<boolean>(false);
 
   const handleMouseOver = () => {
     setIsMouseOver(true);
@@ -63,7 +63,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
 
   // check if sprite has loaded
   useEffect(() => {
-    if (pokemonData?.sprites?.front_default) setHasImgLoaded(true);
+    if (pokemonData?.sprites?.front_default) setHasLoaded(true);
   }, [pokemonData]);
 
   return (
@@ -81,26 +81,27 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
                   # {pokedexEntryNum}
                 </SecondaryText>
               </Box>
-
-              {hasImgLoaded ? (
-                <Box
-                  component="img"
-                  draggable="false"
-                  src={pokemonData?.sprites?.front_default}
-                  alt={`${displayName}'s sprite`}
-                  sx={isMouseOver ? pokemonSpriteHover : pokemonSpriteStyle}
-                />
+              {hasLoaded ? (
+                <>
+                  <Box
+                    component="img"
+                    draggable="false"
+                    src={pokemonData?.sprites?.front_default}
+                    alt={`${displayName}'s sprite`}
+                    sx={isMouseOver ? pokemonSpriteHover : pokemonSpriteStyle}
+                  />
+                  <BodyText fontWeight="bold" fontSize="18px">
+                    {displayName}
+                  </BodyText>
+                  <Box display="flex" gap="10px" marginTop="5px">
+                    {pokemonData.types.map((type) => (
+                      <TypeTag type={type.type.name} key={type.slot} />
+                    ))}
+                  </Box>
+                </>
               ) : (
                 <CircularProgress />
               )}
-              <BodyText fontWeight="bold" fontSize="18px">
-                {displayName}
-              </BodyText>
-              <Box display="flex" gap="10px" marginTop="5px">
-                {pokemonData.types.map((type) => (
-                  <TypeTag type={type.type.name} key={type.slot} />
-                ))}
-              </Box>
             </CustomCard>
           </Hoverable>
         </Grid>
