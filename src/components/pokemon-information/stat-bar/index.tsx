@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import React from "react";
 import { statColours } from "../../../utils/colours";
 import { BodyText } from "../../../utils/styledComponents";
-import { statBarContainer, statContainer } from "./style";
+import { STAT_BAR_HEIGHT, statBarContainer, statContainer } from "./style";
 
 type StatBarProps = {
   stat: string;
@@ -29,13 +29,19 @@ export const StatBar: React.FC<StatBarProps> = ({ stat, value }) => {
       <Box sx={statBarContainer}>
         <Box
           sx={{
-            position: "absolute",
             borderRadius: "10px",
-            height: "8px",
+            height: STAT_BAR_HEIGHT,
             width: `${(value / MAX_STAT_VALUE) * 100}%`,
             backgroundColor: `${statColours[stat]}`,
+            fontSize: "10px",
+            fontWeight: "bold",
+            textAlign: "right",
+            boxSizing: "border-box",
+            padding: "0 5px"
           }}
-        ></Box>
+        >
+          {value}          
+        </Box>
       </Box>
     </Box>
   );

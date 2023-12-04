@@ -1,5 +1,6 @@
 import { fontBgColour } from "../../../utils/colours";
 
+export const STAT_BAR_HEIGHT = "15px";
 export const statContainer = {
   display: "flex",
   width: "100%",
@@ -12,5 +13,5 @@ export const statBarContainer = {
   width: "250px",
   backgroundColor: `${fontBgColour}`,
   borderRadius: "10px",
-  height: "8px",
+  height: STAT_BAR_HEIGHT,
 };
