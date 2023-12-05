@@ -91,7 +91,6 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
       setPrevSearchInput(currSearchInput);
       setPrevFilters(currFilters);
     }
-
     return currList;
   }, [currFilters, currSearchInput, displayList, prevFilters, prevSearchInput]);
 

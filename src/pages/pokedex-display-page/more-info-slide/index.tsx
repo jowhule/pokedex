@@ -18,6 +18,7 @@ import {
   outterPokemonInfoSlideContainer,
   pokemonInfoSlideContainer,
   pokemonSpriteStyle,
+  statTotalContainer,
   statsContainer,
 } from "./style";
 import { AbilityTag } from "../../../components/pokemon-information/ability-tag";
@@ -138,7 +139,7 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
                     />
                   ))}
 
-                  <Box display="flex" justifyContent="right" gap="5px">
+                  <Box sx={statTotalContainer}>
                     <BodyText fontSize="15px" fontWeight="bold">
                       Total:
                     </BodyText>

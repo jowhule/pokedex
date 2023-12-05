@@ -1,6 +1,7 @@
 import { fontBgColour } from "../../../utils/colours";
 
-export const STAT_BAR_HEIGHT = "13px";
+const STAT_BAR_HEIGHT = "13px";
+const STAT_BAR_RADIUS = "50px";
 
 export const statContainer = {
   display: "flex",
@@ -13,12 +14,12 @@ export const statBarContainer = {
   position: "relative",
   width: "255px",
   backgroundColor: `${fontBgColour}`,
-  borderRadius: "10px",
+  borderRadius: STAT_BAR_RADIUS,
   height: STAT_BAR_HEIGHT,
 };
 
 export const statBar = {
-  borderRadius: "10px",
+  borderRadius: STAT_BAR_RADIUS,
   height: STAT_BAR_HEIGHT,
   boxSizing: "border-box",
 };
