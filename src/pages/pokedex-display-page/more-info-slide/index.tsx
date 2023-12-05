@@ -44,6 +44,8 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
   const isTablet = useMediaQuery(theme.breakpoints.down("lg"));
   const [pokemonData, setPokemonData] =
     useState<PokemonDataResponseType>(pokemonDataDefault);
+
+  const [totalStat, setTotalStat] = useState<number>(0);
   const [pokemonAnimation, setPokemonAnimation] =
     useState<string>(defaultImage);
   const [hasSelectedActive, setHasSelectedActive] = useState<boolean>(false);
@@ -79,8 +81,14 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
       }
       setHasSelectedActive(true);
     }
-
     // calculate stat total
+    if (pokemonData.stats) {
+      let totalStatCalc = 0;
+      for (const stat of pokemonData.stats) {
+        totalStatCalc += stat.base_stat;
+      }
+      setTotalStat(totalStatCalc);
+    }
   }, [pokemonData]);
 
   return (
@@ -129,6 +137,13 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
                       key={index}
                     />
                   ))}
+
+                  <Box display="flex" justifyContent="right" gap="5px">
+                    <BodyText fontSize="15px" fontWeight="bold">
+                      Total:
+                    </BodyText>
+                    <BodyText fontSize="15px"> {totalStat}</BodyText>
+                  </Box>
                 </Box>
 
                 <EvolutionChain

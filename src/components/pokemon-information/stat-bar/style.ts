@@ -22,3 +22,13 @@ export const statBar = {
   height: STAT_BAR_HEIGHT,
   boxSizing: "border-box",
 };
+
+export const statValue = {
+  fontSize: "10px",
+  fontWeight: "bold",
+  position: "absolute",
+  textAlign: "right",
+  width: "100%",
+  top: "-1px",
+  right: "4px",
+};
