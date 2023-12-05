@@ -79,6 +79,8 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
       }
       setHasSelectedActive(true);
     }
+
+    // calculate stat total
   }, [pokemonData]);
 
   return (

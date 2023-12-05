@@ -18,14 +18,24 @@ const statAbbrv: Record<string, string> = {
   speed: "spd",
 };
 
-const MAX_STAT_VALUE = 256;
+const MAX_STAT_VALUE = 252;
 
 export const StatBar: React.FC<StatBarProps> = ({ stat, value }) => {
   return (
     <Box sx={statContainer}>
-      <BodyText fontSize="14px" fontWeight="bold">
-        {statAbbrv[stat]}
-      </BodyText>
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        width="60px"
+        marginRight="5px"
+      >
+        <BodyText fontSize="14px" fontWeight="bold">
+          {statAbbrv[stat]}:
+        </BodyText>
+        <BodyText fontSize="14px" fontWeight="bold">
+          {value}
+        </BodyText>
+      </Box>
       <Box sx={statBarContainer}>
         <Box
           sx={{
@@ -37,11 +47,9 @@ export const StatBar: React.FC<StatBarProps> = ({ stat, value }) => {
             fontWeight: "bold",
             textAlign: "right",
             boxSizing: "border-box",
-            padding: "0 5px"
+            padding: "0 5px",
           }}
-        >
-          {value}          
-        </Box>
+        ></Box>
       </Box>
     </Box>
   );
