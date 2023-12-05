@@ -46,7 +46,6 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
   const handleNext = () => {
     const currList: Record<string, string> = { ...getCurrentList() };
     const lenCurrDisplayList = Object.keys(currList).length;
-    console.log(lenCurrDisplayList);
 
     if (listLoaded && Object.keys(currList).length < pokedexList.length) {
       const nextSearchPage: Record<string, string> = {};
