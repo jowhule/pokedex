@@ -193,3 +193,23 @@ export type PokemonEvolutionResponseType = {
   chain: PokemonEvoChainType;
   id: number;
 };
+
+export type PokemonAbilityResponseType = {
+  effect_changes: [];
+  effect_entries: {
+    effect: string;
+    language: NameUrlType;
+    short_effect: string;
+  }[];
+  flavor_text_entries: {
+    flavor_text: string;
+    language: NameUrlType;
+    version_group: NameUrlType;
+  }[];
+  generation: NameUrlType;
+  id: number;
+  is_main_series: boolean;
+  name: string;
+  names: { language: NameUrlType; name: string }[];
+  pokemon: { is_hidden: boolean; pokemon: NameUrlType; slot: number }[];
+};

@@ -3,6 +3,9 @@ import { primaryTextColour } from "./colours";
 
 export const BodyText = styled(Typography)({
   color: primaryTextColour,
+  "&:hover": {
+    cursor: "default",
+  },
 });
 
 export const StatTitleText = styled(BodyText)({
