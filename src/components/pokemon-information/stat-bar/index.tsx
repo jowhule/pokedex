@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import React from "react";
 import { statColours } from "../../../utils/colours";
 import { BodyText } from "../../../utils/styledComponents";
-import { STAT_BAR_HEIGHT, statBarContainer, statContainer } from "./style";
+import { statBarContainer, statContainer, statBar } from "./style";
 
 type StatBarProps = {
   stat: string;
@@ -18,38 +18,33 @@ const statAbbrv: Record<string, string> = {
   speed: "spd",
 };
 
-const MAX_STAT_VALUE = 252;
+const MAX_STAT_VALUE = 250;
 
 export const StatBar: React.FC<StatBarProps> = ({ stat, value }) => {
   return (
     <Box sx={statContainer}>
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        width="60px"
-        marginRight="5px"
-      >
-        <BodyText fontSize="14px" fontWeight="bold">
-          {statAbbrv[stat]}:
-        </BodyText>
-        <BodyText fontSize="14px" fontWeight="bold">
-          {value}
-        </BodyText>
-      </Box>
+      <BodyText fontSize="14px" fontWeight="bold">
+        {statAbbrv[stat]}
+      </BodyText>
       <Box sx={statBarContainer}>
         <Box
           sx={{
-            borderRadius: "10px",
-            height: STAT_BAR_HEIGHT,
+            ...statBar,
             width: `${(value / MAX_STAT_VALUE) * 100}%`,
             backgroundColor: `${statColours[stat]}`,
-            fontSize: "10px",
-            fontWeight: "bold",
-            textAlign: "right",
-            boxSizing: "border-box",
-            padding: "0 5px",
           }}
         ></Box>
+        <BodyText
+          fontSize="10px"
+          fontWeight="bold"
+          position="absolute"
+          textAlign="right"
+          width="100%"
+          top="-1px"
+          right="3px"
+        >
+          {value}
+        </BodyText>
       </Box>
     </Box>
   );
