@@ -33,7 +33,7 @@ export const AbilityTag: React.FC<AbilityTagProps> = ({ abilityInfo }) => {
         {abilityName}
       </BodyText>
       {abilityInfo.is_hidden && (
-        <SecondaryText fontSize="12px" sx={{ marginTop: "-5px" }}>
+        <SecondaryText fontSize="12px" sx={{ marginTop: "-1px" }}>
           hidden ability
         </SecondaryText>
       )}

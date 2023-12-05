@@ -44,31 +44,10 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
    * call to trigger adding more pokemon to display for infinite scroll
    */
   const handleNext = () => {
-    setDisplayLimit(displayLimit + 1);
-  };
-
-  /**
-   * returns list for loader to add onto
-   */
-  const getCurrentList = useCallback((): Record<string, string> => {
-    let currList: Record<string, string> = displayList;
-    if (prevSearchInput !== currSearchInput || prevFilters !== currFilters) {
-      currList = {};
-      setPrevSearchInput(currSearchInput);
-      setPrevFilters(currFilters);
-    }
-
-    return currList;
-  }, [currFilters, currSearchInput, displayList, prevFilters, prevSearchInput]);
-
-  /**
-   * loads at most 30 more items into display list based on search input
-   */
-  useEffect(() => {
     const currList: Record<string, string> = { ...getCurrentList() };
     const lenCurrDisplayList = Object.keys(currList).length;
 
-    if (listLoaded && Object.keys(currList).length < displayLimit) {
+    if (listLoaded && Object.keys(currList).length < pokedexList.length) {
       const nextSearchPage: Record<string, string> = {};
       let currPokemon = lenCurrDisplayList;
       let numAdded = 0;
@@ -100,15 +79,21 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
       // tell infinite scroll that there is no more pokemon to load
       if (numAdded < POKEMON_PER_LOAD) setHasMoreToLoad(false);
     }
-  }, [
-    currSearchInput,
-    displayLimit,
-    currFilters,
-    getCurrentList,
-    listLoaded,
-    pokedexData,
-    pokedexList,
-  ]);
+  };
+
+  /**
+   * returns list for loader to add onto
+   */
+  const getCurrentList = useCallback((): Record<string, string> => {
+    let currList: Record<string, string> = displayList;
+    if (prevSearchInput !== currSearchInput || prevFilters !== currFilters) {
+      currList = {};
+      setPrevSearchInput(currSearchInput);
+      setPrevFilters(currFilters);
+    }
+
+    return currList;
+  }, [currFilters, currSearchInput, displayList, prevFilters, prevSearchInput]);
 
   /**
    * trigger loading into new list based when search input changes
@@ -135,8 +120,10 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
       setHasMoreToLoad(true);
       setDisplayLimit(POKEMON_PER_LOAD);
       setDisplayList({});
+      handleNext();
     }
-  }, [listLoaded]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [listLoaded, currFilters, currSearchInput]);
 
   // reset filters and search variables when generation changes
   useEffect(() => {

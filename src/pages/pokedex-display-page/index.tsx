@@ -35,7 +35,9 @@ export const PokedexDisplayPage: React.FC<PokedexDisplayrops> = ({
     Record<string, PokemonDataResponseType>
   >({});
 
-  // get kalos dex
+  /**
+   * get kalos dex cos the pokedex is in 3 parts
+   */
   const getKalosDex = async () => {
     const kalosPromises: Promise<void | PokemonDexResponseType>[] = [
       sendGenericAPIRequest<PokemonDexResponseType>(
@@ -75,7 +77,11 @@ export const PokedexDisplayPage: React.FC<PokedexDisplayrops> = ({
       sendGenericAPIRequest<PokemonDataResponseType>(
         requestLinks.getData(id)
       ).then((data) => {
-        if (data) dataHolder[speciesName] = data;
+        if (data) {
+          dataHolder[speciesName] = data;
+        } else {
+          getPokedexDataPromises(dataPromises, dataHolder, id, speciesName);
+        }
       })
     );
   };
@@ -144,14 +150,15 @@ export const PokedexDisplayPage: React.FC<PokedexDisplayrops> = ({
     for (const entry of pokedexEntries) {
       const id = parseInt(entry.pokemon_species.url.split("/")[6]);
       const speciesName = entry.pokemon_species.name;
-
       getPokedexDataPromises(dataPromises, dataHolder, id, speciesName);
-      getRegionalFormPromises(
-        regionalPromises,
-        regionalHolder,
-        id,
-        speciesName
-      );
+      if (generation !== "national") {
+        getRegionalFormPromises(
+          regionalPromises,
+          regionalHolder,
+          id,
+          speciesName
+        );
+      }
     }
 
     Promise.allSettled(dataPromises).then(() => {
