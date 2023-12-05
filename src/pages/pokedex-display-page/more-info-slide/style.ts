@@ -68,7 +68,7 @@ export const abilitiesContainer = {
 export const statsContainer = {
   display: "flex",
   flexDirection: "column",
-  gap: "2px",
+  gap: "7px",
   justifyContent: "center",
   padding: "0 12px",
 };

@@ -1,7 +1,7 @@
 import { fontBgColour } from "../../../utils/colours";
 
-const STAT_BAR_HEIGHT = "13px";
-const STAT_BAR_RADIUS = "50px";
+const STAT_BAR_HEIGHT = "15px";
+const STAT_BAR_RADIUS = "60px";
 
 export const statContainer = {
   display: "flex",
@@ -12,7 +12,7 @@ export const statContainer = {
 
 export const statBarContainer = {
   position: "relative",
-  width: "255px",
+  width: "100%",
   backgroundColor: `${fontBgColour}`,
   borderRadius: STAT_BAR_RADIUS,
   height: STAT_BAR_HEIGHT,
@@ -25,11 +25,19 @@ export const statBar = {
 };
 
 export const statValue = {
-  fontSize: "10px",
+  fontSize: "11px",
   fontWeight: "bold",
   position: "absolute",
   textAlign: "right",
   width: "100%",
-  top: "-1px",
-  right: "4px",
+  top: "0",
+  right: "5px",
+};
+
+export const statTitle = {
+  fontSize: "11px",
+  fontWeight: "bold",
+  position: "absolute",
+  left: "5px",
+  top: "0",
 };

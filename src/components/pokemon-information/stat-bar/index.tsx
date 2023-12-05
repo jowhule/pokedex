@@ -2,7 +2,13 @@ import { Box } from "@mui/material";
 import React from "react";
 import { statColours } from "../../../utils/colours";
 import { BodyText } from "../../../utils/styledComponents";
-import { statBarContainer, statContainer, statBar, statValue } from "./style";
+import {
+  statBarContainer,
+  statContainer,
+  statBar,
+  statValue,
+  statTitle,
+} from "./style";
 
 type StatBarProps = {
   stat: string;
@@ -18,15 +24,13 @@ const statAbbrv: Record<string, string> = {
   speed: "spd",
 };
 
-const MAX_STAT_VALUE = 250;
+const MAX_STAT_VALUE = 211;
 
 export const StatBar: React.FC<StatBarProps> = ({ stat, value }) => {
   return (
     <Box sx={statContainer}>
-      <BodyText fontSize="14px" fontWeight="bold">
-        {statAbbrv[stat]}
-      </BodyText>
       <Box sx={statBarContainer}>
+        <BodyText sx={statTitle}>{statAbbrv[stat]}</BodyText>
         <Box
           sx={{
             ...statBar,
