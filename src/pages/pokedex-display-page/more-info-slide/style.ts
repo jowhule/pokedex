@@ -30,7 +30,7 @@ export const infoSlideContainer = {
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
-  width: "calc(100% + 14px)",
+  width: "calc(100% + 15px)",
   height: "100%",
   boxSizing: "border-box",
   padding: "90px 20px 50px 20px",

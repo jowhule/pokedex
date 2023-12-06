@@ -1,6 +1,6 @@
 import React from "react";
 import { Chip } from "@mui/material";
-import { typeBorderColours, typeColours } from "../../../utils/colours";
+import { TYPE_BORDER_COLOURS, TYPE_COLOURS } from "../../../utils/colours";
 
 type TypeTagProps = {
   type: string;
@@ -16,8 +16,8 @@ export const TypeTag: React.FC<TypeTagProps> = ({
   return (
     <Chip
       sx={{
-        bgcolor: `${typeColours[type]}`,
-        border: `2px solid ${typeBorderColours[type]}`,
+        bgcolor: `${TYPE_COLOURS[type]}`,
+        border: `2px solid ${TYPE_BORDER_COLOURS[type]}`,
         fontWeight: "bold",
         fontSize: "14px",
         height: "28px",
@@ -25,7 +25,9 @@ export const TypeTag: React.FC<TypeTagProps> = ({
         alignItems: "center",
         "&:hover": {
           cursor: `${clickFn && "pointer"}`,
-          bgcolor: `${clickFn ? typeBorderColours[type] : typeColours[type]}`,
+          bgcolor: `${
+            clickFn ? TYPE_BORDER_COLOURS[type] : TYPE_COLOURS[type]
+          }`,
         },
       }}
       onClick={clickFn}

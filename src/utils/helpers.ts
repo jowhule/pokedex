@@ -1,3 +1,12 @@
+export const STAT_ABBRV: Record<string, string> = {
+  hp: "hp",
+  attack: "atk",
+  defense: "def",
+  "special-attack": "spA",
+  "special-defense": "spD",
+  speed: "spd",
+};
+
 /**
  * capitalise first letter in string or each word if given extra parameter
  * @param str

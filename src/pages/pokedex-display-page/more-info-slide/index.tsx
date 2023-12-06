@@ -22,13 +22,14 @@ import {
   statsContainer,
 } from "./style";
 import { AbilityTag } from "../../../components/pokemon-information/ability-tag";
-import { StatBar } from "../../../components/pokemon-information/stat-bar";
+import { StatBar } from "../../../components/pokemon-information/base-stat-bar";
 import { EvolutionChain } from "../../../components/pokemon-information/evolution-chain";
 import { pokemonDataDefault } from "../../../utils/defaults";
 import { capitalise } from "../../../utils/helpers";
 
 import defaultImage from "../../../assets/default_pokemon_info.png";
 import pokeballLoader from "../../../assets/pokeball-icon.png";
+import { EffortValueTag } from "../../../components/pokemon-information/effort-value-tag";
 
 type MoreInfoSlideType = {
   pokedexData: Record<string, PokemonDataResponseType>;
@@ -153,6 +154,17 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
                   setActivePokemon={setActivePokemon}
                   setTransition={setTransition}
                 />
+
+                <StatTitleText fontSize="16px">EV Yield</StatTitleText>
+                <Box display="flex" justifyContent="center" gap="10px">
+                  {pokemonData.stats.map((statInfo, index) => (
+                    <EffortValueTag
+                      stat={statInfo.stat.name}
+                      value={statInfo.effort}
+                      key={index}
+                    />
+                  ))}
+                </Box>
               </Stack>
             ) : (
               <SecondaryText fontWeight="bold">

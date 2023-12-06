@@ -2,7 +2,7 @@ export const primaryTextColour = "#0c214a";
 export const secondaryColour = "#E8EBF1";
 export const fontBgColour = "#F0F3F8";
 
-export const typeColours: Record<string, string> = {
+export const TYPE_COLOURS: Record<string, string> = {
   normal: "#c9c9bd",
   fire: "#ff6849",
   fighting: "#c97668",
@@ -23,7 +23,7 @@ export const typeColours: Record<string, string> = {
   fairy: "#ffbdff",
 };
 
-export const typeBorderColours: Record<string, string> = {
+export const TYPE_BORDER_COLOURS: Record<string, string> = {
   normal: "#ababa2",
   fire: "#e25c41",
   fighting: "#ab6558",
@@ -44,7 +44,7 @@ export const typeBorderColours: Record<string, string> = {
   fairy: "#e2a7e2",
 };
 
-export const statColours: Record<string, string> = {
+export const STAT_COLOURS: Record<string, string> = {
   hp: "#ff5959",
   attack: "#f5ac78",
   defense: "#eed43f",
