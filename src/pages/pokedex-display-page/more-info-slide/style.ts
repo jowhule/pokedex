@@ -30,7 +30,7 @@ export const infoSlideContainer = {
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
-  width: "calc(100% + 14px)",
+  width: "calc(100% + 15px)",
   height: "100%",
   boxSizing: "border-box",
   padding: "90px 20px 50px 20px",
@@ -68,9 +68,19 @@ export const abilitiesContainer = {
 export const statsContainer = {
   display: "flex",
   flexDirection: "column",
-  gap: "2px",
+  gap: "7px",
   justifyContent: "center",
   padding: "0 12px",
+};
+
+export const statTotalContainer = {
+  display: "flex",
+  justifyContent: "space-between",
+  bgcolor: "#f0f3f8",
+  borderRadius: "5px",
+  p: "2px 15px",
+  m: "5px auto",
+  width: "80%",
 };
 
 const spinAnimate = keyframes`

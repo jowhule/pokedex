@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import { Box, Dialog, useTheme } from "@mui/material";
 import { BodyText, Hoverable } from "../../../../utils/styledComponents";
-import { typeColours } from "../../../../utils/colours";
+import { TYPE_COLOURS } from "../../../../utils/colours";
 import { TypeTag } from "../../../../components/pokemon-information/type-tag";
 
 type TypeFilterProps = {
@@ -45,7 +45,7 @@ export const TypeFilter: React.FC<TypeFilterProps> = ({
   };
 
   useEffect(() => {
-    setAvailableTypes(Object.keys(typeColours));
+    setAvailableTypes(Object.keys(TYPE_COLOURS));
   }, [generation]);
 
   return (
