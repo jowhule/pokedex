@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { secondaryColour } from "../../utils/colours";
+import { primaryTextColour, secondaryColour } from "../../utils/colours";
 import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded";
 import { Hoverable } from "../../utils/styledComponents";
 
@@ -50,6 +50,7 @@ export const MoveToTop: React.FC = () => {
               width: "50px",
               height: "50px",
               marginTop: "2px",
+              color: primaryTextColour,
             }}
           />
         </Hoverable>

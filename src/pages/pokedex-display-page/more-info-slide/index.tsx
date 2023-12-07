@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { CustomCard } from "../../../components/custom-card/CustomCard";
 import { PokemonDataResponseType } from "../../../services/apiRequestsTypes";
 import { requestLinks } from "../../../services/apiRequests";
 import { Box, Stack, useMediaQuery, useTheme } from "@mui/material";
+import KeyboardDoubleArrowDownRoundedIcon from "@mui/icons-material/KeyboardDoubleArrowDownRounded";
 import {
   BodyText,
   SecondaryText,
@@ -11,6 +12,9 @@ import {
 import { TypeTag } from "../../../components/pokemon-information/type-tag";
 import {
   abilitiesContainer,
+  hideScrollableStyle,
+  indicateScrollContainer,
+  indicateScrollableStyle,
   infoSlideContainer,
   infoSlideLoaderStyle,
   infoSlideScrollContainer,
@@ -46,6 +50,9 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
   const isTablet = useMediaQuery(theme.breakpoints.down("lg"));
   const [pokemonData, setPokemonData] =
     useState<PokemonDataResponseType>(pokemonDataDefault);
+
+  const infoRef = useRef<HTMLDivElement>(null);
+  const [showScrollable, setShowScrollable] = useState<boolean>(true);
 
   const [totalStat, setTotalStat] = useState<number>(0);
   const [pokemonAnimation, setPokemonAnimation] =
@@ -93,6 +100,25 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
     }
   }, [pokemonData]);
 
+  // add can scroll indicator
+  useEffect(() => {
+    if (transition !== pokemonInfoSlideContainer) return;
+    const ref: HTMLDivElement | null = infoRef?.current;
+    if (ref && ref.offsetHeight !== ref.scrollHeight) {
+      setShowScrollable(true);
+      // add listener to disappear when scroll
+      ref.addEventListener("scroll", () => setShowScrollable(false));
+      return () => {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        infoRef.current?.removeEventListener("scroll", () =>
+          setShowScrollable(false)
+        );
+      };
+    } else {
+      setShowScrollable(false);
+    }
+  }, [transition]);
+
   return (
     <Box sx={isTablet ? { display: "none" } : outterPokemonInfoSlideContainer}>
       <CustomCard sx={transition}>
@@ -103,9 +129,21 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
           sx={pokemonSpriteStyle}
         />
         <Box sx={infoSlideScrollContainer}>
-          <Box sx={infoSlideContainer}>
+          <Box sx={infoSlideContainer} ref={infoRef}>
             {hasSelectedActive ? (
-              <Stack width="100%">
+              <Stack width="100%" display="flex" alignItems="center">
+                <Box
+                  sx={
+                    showScrollable
+                      ? indicateScrollContainer
+                      : hideScrollableStyle
+                  }
+                >
+                  <KeyboardDoubleArrowDownRoundedIcon
+                    sx={indicateScrollableStyle}
+                  />
+                </Box>
+
                 <SecondaryText
                   fontSize="12px"
                   fontWeight="bold"

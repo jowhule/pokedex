@@ -6,7 +6,7 @@ import {
   PokemonDataResponseType,
   PokemonPokedexEntryType,
 } from "../../../services/apiRequestsTypes";
-import { loadMoreContainer } from "./style";
+import { loadMoreContainer, pokemonGridStyle } from "./style";
 import { Searchbar } from "./searchbar";
 
 import { TypeFilter } from "./type-filter";
@@ -160,14 +160,7 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
             overflowY: "hidden",
           }}
         >
-          <Grid
-            container
-            columns={12}
-            spacing="25px"
-            marginTop="40px"
-            overflow="visible"
-            paddingRight="8px"
-          >
+          <Grid container columns={12} spacing="25px" sx={pokemonGridStyle}>
             {listLoaded &&
               pokedexList.map((pokemonEntry, index) => (
                 <PokemonCard

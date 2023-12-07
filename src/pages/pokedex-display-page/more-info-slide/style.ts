@@ -1,21 +1,25 @@
 import { keyframes } from "@emotion/react";
-import { fontBgColour } from "../../../utils/colours";
+import { fontBgColour, primaryTextColour } from "../../../utils/colours";
+
+export const MORE_INFO_SLIDE_WIDTH = "350px";
 
 export const outterPokemonInfoSlideContainer = {
-  width: "350px",
+  width: MORE_INFO_SLIDE_WIDTH,
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
 };
 
 export const pokemonInfoSlideContainer = {
-  width: "350px",
+  width: MORE_INFO_SLIDE_WIDTH,
   height: "78vh",
   position: "fixed",
-  bottom: "-10px",
-  transition: "transform 0.3s ease-out",
+  bottom: "0px",
+  transition: "transform 0.5s ease-out",
   display: "flex",
   justifyContent: "center",
+  borderBottomLeftRadius: "0 !important",
+  borderBottomRightRadius: "0 !important",
 };
 
 export const infoSlideScrollContainer = {
@@ -29,7 +33,6 @@ export const infoSlideScrollContainer = {
 export const infoSlideContainer = {
   display: "flex",
   flexDirection: "column",
-  alignItems: "center",
   width: "calc(100% + 15px)",
   height: "100%",
   boxSizing: "border-box",
@@ -42,7 +45,7 @@ export const infoSlideContainer = {
 
 export const noActivePokemonCardStyle = {
   ...pokemonInfoSlideContainer,
-  transform: "translateX(500px)",
+  transform: "translateX(40vw)",
 };
 
 export const pokemonSpriteStyle = {
@@ -71,6 +74,7 @@ export const statsContainer = {
   gap: "7px",
   justifyContent: "center",
   padding: "0 12px",
+  width: "100%",
 };
 
 export const statTotalContainer = {
@@ -94,4 +98,36 @@ export const infoSlideLoaderStyle = {
   width: "70px",
   top: "50vh",
   zIndex: "-1",
+};
+
+const bobAnimate = keyframes`
+  0% { transform: translate(0,  0px); }
+  50%  { transform: translate(0, 10px); }
+  100%   { transform: translate(0, 0px); }    
+`;
+
+export const indicateScrollableStyle = {
+  width: "40px",
+  height: "40px",
+  m: "0 auto",
+  "@media (min-height: 1025px)": {
+    display: "none",
+  },
+  animation: `${bobAnimate} 2s ease-in-out infinite`,
+  color: primaryTextColour,
+  paddingBottom: "5px",
+  transition: "opacity 2s ease",
+};
+
+export const indicateScrollContainer = {
+  width: MORE_INFO_SLIDE_WIDTH,
+  background: "linear-gradient(to bottom, transparent, white)",
+  bottom: "0px",
+  position: "fixed",
+};
+
+export const hideScrollableStyle = {
+  ...indicateScrollContainer,
+  transition: "opacity 0.5s ease",
+  opacity: "0",
 };

@@ -3,3 +3,9 @@ export const loadMoreContainer = {
   justifyContent: "center",
   marginBottom: "50px",
 };
+
+export const pokemonGridStyle = {
+  marginTop: "40px",
+  overflow: "visible",
+  paddingRight: "8px",
+};
