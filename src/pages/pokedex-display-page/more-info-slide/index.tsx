@@ -192,18 +192,6 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
                       alignItems="center"
                       m="0 auto"
                     >
-                      <Box
-                        sx={
-                          showScrollable
-                            ? indicateScrollContainer
-                            : hideScrollableStyle
-                        }
-                      >
-                        <KeyboardDoubleArrowDownRoundedIcon
-                          sx={indicateScrollableStyle}
-                        />
-                      </Box>
-
                       <SecondaryText
                         fontSize="12px"
                         fontWeight="bold"
