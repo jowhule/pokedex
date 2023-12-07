@@ -1,5 +1,9 @@
 import { keyframes } from "@emotion/react";
-import { fontBgColour, primaryTextColour } from "../../../utils/colours";
+import {
+  fontBgColour,
+  primaryTextColour,
+  secondaryColour,
+} from "../../../utils/colours";
 
 export const MORE_INFO_SLIDE_WIDTH = "350px";
 
@@ -33,7 +37,7 @@ export const infoSlideScrollContainer = {
 export const infoSlideContainer = {
   display: "flex",
   flexDirection: "column",
-  width: "calc(100% + 15px)",
+  width: "calc(100% + 10px)",
   height: "100%",
   boxSizing: "border-box",
   padding: "90px 20px 50px 20px",
@@ -48,9 +52,80 @@ export const noActivePokemonCardStyle = {
   transform: "translateX(40vw)",
 };
 
+// style for mobile version
+export const mobileOutterPokemonInfoSlideContainer = {
+  width: "100vw",
+  height: "100vh",
+  position: "fixed",
+  left: "0",
+  bottom: "0",
+  zIndex: "3",
+  paddingTop: "22vh",
+  boxSizing: "border-box",
+  display: "flex",
+  justifyContent: "center",
+  transition: "all 0.7s ease",
+};
+
+export const mobilePokemonInfoSlideContainer = {
+  width: "100vw",
+  height: "78vh",
+  transition: "transform 0.5s ease-out",
+  display: "flex",
+  justifyContent: "center",
+  borderBottomLeftRadius: "0 !important",
+  borderBottomRightRadius: "0 !important",
+};
+
+export const mobileNoActivePokemonCardStyle = {
+  ...mobilePokemonInfoSlideContainer,
+  transform: "translateY(100vh)",
+};
+
+export const mobileInfoSlideScrollContainer = {
+  display: "flex",
+  width: "100%",
+  height: "100%",
+  overflow: "hidden",
+  position: "relative",
+  paddingTop: "15px",
+};
+
+export const mobileInfoSlideContainer = {
+  display: "flex",
+  flexDirection: "column",
+  minWidth: "calc(100vw + 10px)",
+  height: "100%vh",
+  boxSizing: "border-box",
+  padding: "90px 20px 50px 20px",
+  textAlign: "center",
+  overflow: "scroll",
+  overflowX: "hidden",
+};
+
+export const mobileInfoCloseButtonStyle = {
+  position: "fixed",
+  top: "15px",
+  right: "20px",
+  backgroundColor: "white",
+  boxShadow: `5px 5px ${secondaryColour}`,
+  height: "50px",
+  width: "50px",
+  borderRadius: "15px",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  zIndex: "1",
+  "&:active": {
+    boxShadow: `2px 2px ${secondaryColour}`,
+    transform: "translateX(3px) translateY(3px)",
+  },
+  transition: "opacity 0.7s ease",
+};
+
 export const pokemonSpriteStyle = {
   position: "absolute",
-  bottom: "100%",
+  bottom: "72vh",
   imageRendering: "pixelated",
   overflowClipMargin: "content-box",
   transform: "scale(3)",
