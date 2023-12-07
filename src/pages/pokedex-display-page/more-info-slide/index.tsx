@@ -71,6 +71,9 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
 
   const [hasClosedMobile, setHasClosedMobile] = useState<boolean>(true);
 
+  /**
+   * handle close button for more info slide in tablet mode
+   */
   const handleCloseClick = () => {
     setTransition(mobileNoActivePokemonCardStyle);
     setHasClosedMobile(true);
@@ -88,10 +91,16 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
         isTablet ? mobileNoActivePokemonCardStyle : noActivePokemonCardStyle
       );
       setHasClosedMobile(false);
+
       // get all pokemon data
       dataTimer = setTimeout(() => {
         setPokemonData(activePokemonData);
         if (isTablet) document.body.style.overflow = "hidden";
+        if (infoRef.current)
+          infoRef.current.scrollTo({
+            top: 0,
+            behavior: "smooth",
+          });
       }, 300);
     } else {
       // set default state
@@ -144,6 +153,13 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
       setShowScrollable(false);
     }
   }, [transition]);
+
+  // add animation for blank info slide to slide up when changing resolution
+  useEffect(() => {
+    if (!isTablet && !hasSelectedActive) {
+      setTransition(pokemonInfoSlideContainer);
+    }
+  }, [hasSelectedActive, isTablet]);
 
   return (
     <>
