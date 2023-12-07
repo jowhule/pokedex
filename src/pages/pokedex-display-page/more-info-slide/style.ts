@@ -13,7 +13,7 @@ export const pokemonInfoSlideContainer = {
   height: "78vh",
   position: "fixed",
   bottom: "-10px",
-  transition: "transform 0.3s ease-out",
+  transition: "transform 0.5s ease-out",
   display: "flex",
   justifyContent: "center",
 };
@@ -29,7 +29,6 @@ export const infoSlideScrollContainer = {
 export const infoSlideContainer = {
   display: "flex",
   flexDirection: "column",
-  alignItems: "center",
   width: "calc(100% + 15px)",
   height: "100%",
   boxSizing: "border-box",
@@ -42,7 +41,7 @@ export const infoSlideContainer = {
 
 export const noActivePokemonCardStyle = {
   ...pokemonInfoSlideContainer,
-  transform: "translateX(500px)",
+  transform: "translateX(40vw)",
 };
 
 export const pokemonSpriteStyle = {
@@ -71,6 +70,7 @@ export const statsContainer = {
   gap: "7px",
   justifyContent: "center",
   padding: "0 12px",
+  width: "100%",
 };
 
 export const statTotalContainer = {
@@ -94,4 +94,16 @@ export const infoSlideLoaderStyle = {
   width: "70px",
   top: "50vh",
   zIndex: "-1",
+};
+
+export const indicateScrollableStyle = {
+  width: "50px",
+  height: "50px",
+  opacity: "0.5",
+  m: "0 auto",
+  position: "fixed",
+  "@media (min-height: 970px)": {
+    display: "none",
+  },
+  bottom: 0,
 };

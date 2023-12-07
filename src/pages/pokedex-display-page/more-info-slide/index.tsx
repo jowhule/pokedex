@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { CustomCard } from "../../../components/custom-card/CustomCard";
 import { PokemonDataResponseType } from "../../../services/apiRequestsTypes";
 import { requestLinks } from "../../../services/apiRequests";
 import { Box, Stack, useMediaQuery, useTheme } from "@mui/material";
+import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import {
   BodyText,
   SecondaryText,
@@ -11,6 +12,7 @@ import {
 import { TypeTag } from "../../../components/pokemon-information/type-tag";
 import {
   abilitiesContainer,
+  indicateScrollableStyle,
   infoSlideContainer,
   infoSlideLoaderStyle,
   infoSlideScrollContainer,
@@ -46,6 +48,9 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
   const isTablet = useMediaQuery(theme.breakpoints.down("lg"));
   const [pokemonData, setPokemonData] =
     useState<PokemonDataResponseType>(pokemonDataDefault);
+
+  const infoRef: React.MutableRefObject<any> = useRef(null);
+  const [showScrollable, setShowScrollable] = useState<boolean>(true);
 
   const [totalStat, setTotalStat] = useState<number>(0);
   const [pokemonAnimation, setPokemonAnimation] =
@@ -93,6 +98,28 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
     }
   }, [pokemonData]);
 
+  // add can scroll indicator
+  useEffect(() => {
+    if (activePokemonData) {
+      console.log("setting curr active " + activePokemonData.name);
+    }
+    if (
+      infoRef.current &&
+      infoRef.current.offsetHeight !== infoRef.current.scrollHeight
+    ) {
+      console.log(infoRef.current.offsetHeight);
+      console.log(infoRef.current.scrollHeight);
+
+      setShowScrollable(true);
+    } else {
+      console.log(infoRef.current.offsetHeight);
+      console.log(infoRef.current.scrollHeight);
+      setShowScrollable(false);
+    }
+  }, [activePokemonData]); // might change it to change in resolution
+
+  // add animation and disappear when scroll
+
   return (
     <Box sx={isTablet ? { display: "none" } : outterPokemonInfoSlideContainer}>
       <CustomCard sx={transition}>
@@ -103,9 +130,15 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
           sx={pokemonSpriteStyle}
         />
         <Box sx={infoSlideScrollContainer}>
-          <Box sx={infoSlideContainer}>
+          <Box sx={infoSlideContainer} ref={infoRef}>
             {hasSelectedActive ? (
-              <Stack width="100%">
+              <Stack width="100%" display="flex" alignItems="center">
+                {showScrollable ? (
+                  <KeyboardArrowDownRoundedIcon sx={indicateScrollableStyle} />
+                ) : (
+                  <></>
+                )}
+
                 <SecondaryText
                   fontSize="12px"
                   fontWeight="bold"
