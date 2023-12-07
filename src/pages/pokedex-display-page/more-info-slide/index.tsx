@@ -100,23 +100,16 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
 
   // add can scroll indicator
   useEffect(() => {
-    if (activePokemonData) {
-      console.log("setting curr active " + activePokemonData.name);
-    }
+    if (transition !== pokemonInfoSlideContainer) return;
     if (
       infoRef.current &&
       infoRef.current.offsetHeight !== infoRef.current.scrollHeight
     ) {
-      console.log(infoRef.current.offsetHeight);
-      console.log(infoRef.current.scrollHeight);
-
       setShowScrollable(true);
     } else {
-      console.log(infoRef.current.offsetHeight);
-      console.log(infoRef.current.scrollHeight);
       setShowScrollable(false);
     }
-  }, [activePokemonData]); // might change it to change in resolution
+  }, [transition]);
 
   // add animation and disappear when scroll
 
