@@ -1,15 +1,17 @@
 import { keyframes } from "@emotion/react";
-import { fontBgColour } from "../../../utils/colours";
+import { fontBgColour, primaryTextColour } from "../../../utils/colours";
+
+export const MORE_INFO_SLIDE_WIDTH = "350px";
 
 export const outterPokemonInfoSlideContainer = {
-  width: "350px",
+  width: MORE_INFO_SLIDE_WIDTH,
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
 };
 
 export const pokemonInfoSlideContainer = {
-  width: "350px",
+  width: MORE_INFO_SLIDE_WIDTH,
   height: "78vh",
   position: "fixed",
   bottom: "0px",
@@ -98,14 +100,27 @@ export const infoSlideLoaderStyle = {
   zIndex: "-1",
 };
 
+const bobAnimate = keyframes`
+  0% { transform: translate(0,  0px); }
+  50%  { transform: translate(0, 10px); }
+  100%   { transform: translate(0, 0px); }    
+`;
+
 export const indicateScrollableStyle = {
-  width: "50px",
-  height: "50px",
-  opacity: "0.5",
+  width: "40px",
+  height: "40px",
   m: "0 auto",
-  position: "fixed",
-  "@media (min-height: 970px)": {
+  "@media (min-height: 1025px)": {
     display: "none",
   },
-  bottom: 0,
+  animation: `${bobAnimate} 2s ease-in-out infinite`,
+  color: primaryTextColour,
+  paddingBottom: "5px",
+};
+
+export const indicateScrollContainer = {
+  width: MORE_INFO_SLIDE_WIDTH,
+  background: "linear-gradient(to bottom, transparent, white)",
+  bottom: "0px",
+  position: "fixed",
 };

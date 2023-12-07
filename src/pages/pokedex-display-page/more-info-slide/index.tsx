@@ -3,7 +3,7 @@ import { CustomCard } from "../../../components/custom-card/CustomCard";
 import { PokemonDataResponseType } from "../../../services/apiRequestsTypes";
 import { requestLinks } from "../../../services/apiRequests";
 import { Box, Stack, useMediaQuery, useTheme } from "@mui/material";
-import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
+import KeyboardDoubleArrowDownRoundedIcon from "@mui/icons-material/KeyboardDoubleArrowDownRounded";
 import {
   BodyText,
   SecondaryText,
@@ -12,6 +12,7 @@ import {
 import { TypeTag } from "../../../components/pokemon-information/type-tag";
 import {
   abilitiesContainer,
+  indicateScrollContainer,
   indicateScrollableStyle,
   infoSlideContainer,
   infoSlideLoaderStyle,
@@ -127,7 +128,11 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
             {hasSelectedActive ? (
               <Stack width="100%" display="flex" alignItems="center">
                 {showScrollable ? (
-                  <KeyboardArrowDownRoundedIcon sx={indicateScrollableStyle} />
+                  <Box sx={indicateScrollContainer}>
+                    <KeyboardDoubleArrowDownRoundedIcon
+                      sx={indicateScrollableStyle}
+                    />
+                  </Box>
                 ) : (
                   <></>
                 )}
