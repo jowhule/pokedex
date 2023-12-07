@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { primaryTextColour, secondaryColour } from "../../utils/colours";
+import { primaryTextColour } from "../../utils/colours";
 import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded";
 import { Hoverable } from "../../utils/styledComponents";
+import { moveToTopContainer } from "./style";
 
 export const MoveToTop: React.FC = () => {
   const [scrollPosition, setScrollPosition] = useState<number>(0);
 
   const handleScroll = () => {
-    const position = window.pageYOffset;
+    const position = window.scrollY;
     setScrollPosition(position);
   };
 
@@ -29,22 +30,7 @@ export const MoveToTop: React.FC = () => {
   return (
     <>
       {scrollPosition > 1080 && (
-        <Hoverable
-          onClick={handleMoveToTopClick}
-          sx={{
-            position: "fixed",
-            bottom: "20px",
-            right: "20px",
-            backgroundColor: "white",
-            boxShadow: `5px 5px 10px ${secondaryColour}`,
-            height: "60px",
-            width: "60px",
-            borderRadius: "15px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
+        <Hoverable onClick={handleMoveToTopClick} sx={moveToTopContainer}>
           <KeyboardArrowUpRoundedIcon
             sx={{
               width: "50px",
