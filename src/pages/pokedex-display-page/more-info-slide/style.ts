@@ -116,6 +116,7 @@ export const indicateScrollableStyle = {
   animation: `${bobAnimate} 2s ease-in-out infinite`,
   color: primaryTextColour,
   paddingBottom: "5px",
+  transition: "opacity 2s ease",
 };
 
 export const indicateScrollContainer = {
@@ -123,4 +124,10 @@ export const indicateScrollContainer = {
   background: "linear-gradient(to bottom, transparent, white)",
   bottom: "0px",
   position: "fixed",
+};
+
+export const hideScrollableStyle = {
+  ...indicateScrollContainer,
+  transition: "opacity 0.5s ease",
+  opacity: "0",
 };

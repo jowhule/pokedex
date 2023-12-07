@@ -12,6 +12,7 @@ import {
 import { TypeTag } from "../../../components/pokemon-information/type-tag";
 import {
   abilitiesContainer,
+  hideScrollableStyle,
   indicateScrollContainer,
   indicateScrollableStyle,
   infoSlideContainer,
@@ -50,7 +51,7 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
   const [pokemonData, setPokemonData] =
     useState<PokemonDataResponseType>(pokemonDataDefault);
 
-  const infoRef: React.MutableRefObject<any> = useRef(null);
+  const infoRef = useRef<HTMLDivElement>(null);
   const [showScrollable, setShowScrollable] = useState<boolean>(true);
 
   const [totalStat, setTotalStat] = useState<number>(0);
@@ -102,17 +103,21 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
   // add can scroll indicator
   useEffect(() => {
     if (transition !== pokemonInfoSlideContainer) return;
-    if (
-      infoRef.current &&
-      infoRef.current.offsetHeight !== infoRef.current.scrollHeight
-    ) {
+    const ref: HTMLDivElement | null = infoRef?.current;
+    if (ref && ref.offsetHeight !== ref.scrollHeight) {
       setShowScrollable(true);
+      // add listener to disappear when scroll
+      ref.addEventListener("scroll", () => setShowScrollable(false));
+      return () => {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        infoRef.current?.removeEventListener("scroll", () =>
+          setShowScrollable(false)
+        );
+      };
     } else {
       setShowScrollable(false);
     }
   }, [transition]);
-
-  // add animation and disappear when scroll
 
   return (
     <Box sx={isTablet ? { display: "none" } : outterPokemonInfoSlideContainer}>
@@ -127,15 +132,17 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
           <Box sx={infoSlideContainer} ref={infoRef}>
             {hasSelectedActive ? (
               <Stack width="100%" display="flex" alignItems="center">
-                {showScrollable ? (
-                  <Box sx={indicateScrollContainer}>
-                    <KeyboardDoubleArrowDownRoundedIcon
-                      sx={indicateScrollableStyle}
-                    />
-                  </Box>
-                ) : (
-                  <></>
-                )}
+                <Box
+                  sx={
+                    showScrollable
+                      ? indicateScrollContainer
+                      : hideScrollableStyle
+                  }
+                >
+                  <KeyboardDoubleArrowDownRoundedIcon
+                    sx={indicateScrollableStyle}
+                  />
+                </Box>
 
                 <SecondaryText
                   fontSize="12px"
