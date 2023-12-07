@@ -11,7 +11,7 @@ import {
   PokemonSpeciesResponseType,
 } from "../../../services/apiRequestsTypes";
 import { pokemonEvoDetailsDefault } from "../../../utils/defaults";
-import { Box, Tooltip } from "@mui/material";
+import { Box, Tooltip, useMediaQuery, useTheme } from "@mui/material";
 import { PokemonDataResponseType } from "../../../services/apiRequestsTypes";
 import { Hoverable, StatTitleText } from "../../../utils/styledComponents";
 import { EvolutionMethod } from "./evolution-method";
@@ -20,7 +20,10 @@ import {
   pokemonEvoStageContainer,
   pokemonEvolutionContainer,
 } from "./style";
-import { pokemonInfoSlideContainer } from "../../../pages/pokedex-display-page/more-info-slide/style";
+import {
+  mobilePokemonInfoSlideContainer,
+  pokemonInfoSlideContainer,
+} from "../../../pages/pokedex-display-page/more-info-slide/style";
 import { capitalise } from "../../../utils/helpers";
 
 type EvoStages = StageInfo[][];
@@ -45,6 +48,8 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
   setTransition,
 }) => {
   const [evolutionStages, setEvolutionStages] = useState<EvoStages>([]);
+  const theme = useTheme();
+  const isTablet = useMediaQuery(theme.breakpoints.down("lg"));
 
   // recursively traverse the evolution tree and add it to per level array
   const evoTreeTraverse = useCallback(
@@ -132,13 +137,15 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
 
     if (evolutionStages.length > 0 && setTransition)
       transitionInTimer = setTimeout(() => {
-        setTransition(pokemonInfoSlideContainer);
+        setTransition(
+          isTablet ? mobilePokemonInfoSlideContainer : pokemonInfoSlideContainer
+        );
       }, 400);
 
     return () => {
       if (transitionInTimer) clearTimeout(transitionInTimer);
     };
-  }, [evolutionStages, setTransition]);
+  }, [evolutionStages, isTablet, setTransition]);
 
   useEffect(() => {
     setEvolutionStages([]);

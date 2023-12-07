@@ -4,8 +4,10 @@ import { PokemonDataResponseType } from "../../../services/apiRequestsTypes";
 import { requestLinks } from "../../../services/apiRequests";
 import { Box, Stack, useMediaQuery, useTheme } from "@mui/material";
 import KeyboardDoubleArrowDownRoundedIcon from "@mui/icons-material/KeyboardDoubleArrowDownRounded";
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import {
   BodyText,
+  Hoverable,
   SecondaryText,
   StatTitleText,
 } from "../../../utils/styledComponents";
@@ -18,12 +20,17 @@ import {
   infoSlideContainer,
   infoSlideLoaderStyle,
   infoSlideScrollContainer,
+  mobileOutterPokemonInfoSlideContainer,
+  mobileNoActivePokemonCardStyle,
   noActivePokemonCardStyle,
   outterPokemonInfoSlideContainer,
   pokemonInfoSlideContainer,
   pokemonSpriteStyle,
   statTotalContainer,
   statsContainer,
+  mobileInfoSlideContainer,
+  mobileInfoSlideScrollContainer,
+  mobileInfoCloseButtonStyle,
 } from "./style";
 import { AbilityTag } from "../../../components/pokemon-information/ability-tag";
 import { StatBar } from "../../../components/pokemon-information/base-stat-bar";
@@ -34,6 +41,7 @@ import { capitalise } from "../../../utils/helpers";
 import defaultImage from "../../../assets/default_pokemon_info.png";
 import pokeballLoader from "../../../assets/pokeball-icon.png";
 import { EffortValueTag } from "../../../components/pokemon-information/effort-value-tag";
+import { TYPE_COLOURS, primaryTextColour } from "../../../utils/colours";
 
 type MoreInfoSlideType = {
   pokedexData: Record<string, PokemonDataResponseType>;
@@ -50,10 +58,6 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
   const isTablet = useMediaQuery(theme.breakpoints.down("lg"));
   const [pokemonData, setPokemonData] =
     useState<PokemonDataResponseType>(pokemonDataDefault);
-
-  const infoRef = useRef<HTMLDivElement>(null);
-  const [showScrollable, setShowScrollable] = useState<boolean>(true);
-
   const [totalStat, setTotalStat] = useState<number>(0);
   const [pokemonAnimation, setPokemonAnimation] =
     useState<string>(defaultImage);
@@ -62,13 +66,33 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
     pokemonInfoSlideContainer
   );
 
+  const infoRef = useRef<HTMLDivElement>(null);
+  const [showScrollable, setShowScrollable] = useState<boolean>(true);
+
+  const [hasClosedMobile, setHasClosedMobile] = useState<boolean>(true);
+
+  const handleCloseClick = () => {
+    setTransition(mobileNoActivePokemonCardStyle);
+    setHasClosedMobile(true);
+    setTimeout(() => {
+      setActivePokemon("");
+      document.body.style.overflow = "auto";
+    }, 400);
+  };
+
   useEffect(() => {
     let dataTimer: ReturnType<typeof setTimeout> | null = null;
     // trigger translate
     if (activePokemonData) {
-      setTransition(noActivePokemonCardStyle);
+      setTransition(
+        isTablet ? mobileNoActivePokemonCardStyle : noActivePokemonCardStyle
+      );
+      setHasClosedMobile(false);
       // get all pokemon data
-      dataTimer = setTimeout(() => setPokemonData(activePokemonData), 300);
+      dataTimer = setTimeout(() => {
+        setPokemonData(activePokemonData);
+        if (isTablet) document.body.style.overflow = "hidden";
+      }, 300);
     } else {
       // set default state
       setHasSelectedActive(false);
@@ -78,11 +102,13 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
     return () => {
       if (dataTimer) clearTimeout(dataTimer);
     };
-  }, [activePokemonData]);
+  }, [activePokemonData, isTablet]);
 
+  /**
+   * prepare active pokemon sprite and its stat total
+   */
   useEffect(() => {
     if (pokemonData.name) {
-      // get animation sprite
       if (pokemonData.id > 650) {
         setPokemonAnimation(pokemonData.sprites.front_default);
       } else {
@@ -90,7 +116,7 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
       }
       setHasSelectedActive(true);
     }
-    // calculate stat total
+
     if (pokemonData.stats) {
       let totalStatCalc = 0;
       for (const stat of pokemonData.stats) {
@@ -120,105 +146,253 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
   }, [transition]);
 
   return (
-    <Box sx={isTablet ? { display: "none" } : outterPokemonInfoSlideContainer}>
-      <CustomCard sx={transition}>
-        <Box
-          component="img"
-          src={pokemonAnimation}
-          alt={`${activePokemonData?.species.name ?? "Default"}'s Sprite`}
-          sx={pokemonSpriteStyle}
-        />
-        <Box sx={infoSlideScrollContainer}>
-          <Box sx={infoSlideContainer} ref={infoRef}>
-            {hasSelectedActive ? (
-              <Stack width="100%" display="flex" alignItems="center">
+    <>
+      {isTablet ? (
+        <>
+          {hasSelectedActive ? (
+            <Box
+              sx={{
+                ...mobileOutterPokemonInfoSlideContainer,
+                bgcolor: hasClosedMobile
+                  ? "transparent"
+                  : `${TYPE_COLOURS[pokemonData?.types[0].type.name]}99`,
+              }}
+            >
+              <Hoverable
+                onClick={handleCloseClick}
+                sx={{
+                  ...mobileInfoCloseButtonStyle,
+                  opacity: hasClosedMobile ? "0" : "1",
+                }}
+              >
+                <CloseRoundedIcon
+                  sx={{
+                    width: "50px",
+                    height: "50px",
+                    marginTop: "2px",
+                    color: primaryTextColour,
+                  }}
+                />
+              </Hoverable>
+              <CustomCard sx={transition}>
                 <Box
-                  sx={
-                    showScrollable
-                      ? indicateScrollContainer
-                      : hideScrollableStyle
-                  }
-                >
-                  <KeyboardDoubleArrowDownRoundedIcon
-                    sx={indicateScrollableStyle}
-                  />
-                </Box>
+                  component="img"
+                  src={pokemonAnimation}
+                  alt={`${
+                    activePokemonData?.species.name ?? "Default"
+                  }'s Sprite`}
+                  sx={pokemonSpriteStyle}
+                />
+                <Box sx={mobileInfoSlideScrollContainer}>
+                  <Box sx={mobileInfoSlideContainer} ref={infoRef}>
+                    <Stack
+                      maxWidth="450px"
+                      width="100%"
+                      display="flex"
+                      alignItems="center"
+                      m="0 auto"
+                    >
+                      <Box
+                        sx={
+                          showScrollable
+                            ? indicateScrollContainer
+                            : hideScrollableStyle
+                        }
+                      >
+                        <KeyboardDoubleArrowDownRoundedIcon
+                          sx={indicateScrollableStyle}
+                        />
+                      </Box>
 
-                <SecondaryText
-                  fontSize="12px"
-                  fontWeight="bold"
-                  marginBottom="-5px"
-                >
-                  N# {pokemonData.id}
-                </SecondaryText>
-                <BodyText fontWeight="bold" fontSize="24px">
-                  {capitalise(pokemonData.species.name)}
-                </BodyText>
+                      <SecondaryText
+                        fontSize="12px"
+                        fontWeight="bold"
+                        marginBottom="-5px"
+                      >
+                        N# {pokemonData.id}
+                      </SecondaryText>
+                      <BodyText fontWeight="bold" fontSize="24px">
+                        {capitalise(pokemonData?.species.name)}
+                      </BodyText>
 
-                <Box display="flex" gap="10px" m="10px" justifyContent="center">
-                  {pokemonData.types.map((type, index) => (
-                    <TypeTag type={type.type.name} key={index} />
-                  ))}
-                </Box>
+                      <Box
+                        display="flex"
+                        gap="10px"
+                        m="10px"
+                        justifyContent="center"
+                      >
+                        {pokemonData?.types.map((type, index) => (
+                          <TypeTag type={type.type.name} key={index} />
+                        ))}
+                      </Box>
 
-                <StatTitleText fontSize="16px">Abilities</StatTitleText>
-                <Box sx={abilitiesContainer}>
-                  {pokemonData.abilities.map((ability, index) => (
-                    <AbilityTag abilityInfo={ability} key={index} />
-                  ))}
-                </Box>
+                      <StatTitleText fontSize="16px">Abilities</StatTitleText>
+                      <Box sx={abilitiesContainer}>
+                        {pokemonData.abilities.map((ability, index) => (
+                          <AbilityTag abilityInfo={ability} key={index} />
+                        ))}
+                      </Box>
 
-                <StatTitleText fontSize="16px">Base Stats</StatTitleText>
-                <Box sx={statsContainer}>
-                  {pokemonData.stats.map((statInfo, index) => (
-                    <StatBar
-                      stat={statInfo.stat.name}
-                      value={statInfo.base_stat}
-                      key={index}
-                    />
-                  ))}
+                      <StatTitleText fontSize="16px">Base Stats</StatTitleText>
+                      <Box sx={statsContainer}>
+                        {pokemonData.stats.map((statInfo, index) => (
+                          <StatBar
+                            stat={statInfo.stat.name}
+                            value={statInfo.base_stat}
+                            key={index}
+                          />
+                        ))}
 
-                  <Box sx={statTotalContainer}>
-                    <BodyText fontSize="15px" fontWeight="bold">
-                      Total:
-                    </BodyText>
-                    <BodyText fontSize="15px"> {totalStat}</BodyText>
+                        <Box sx={statTotalContainer}>
+                          <BodyText fontSize="15px" fontWeight="bold">
+                            Total:
+                          </BodyText>
+                          <BodyText fontSize="15px"> {totalStat}</BodyText>
+                        </Box>
+                      </Box>
+
+                      <EvolutionChain
+                        pokedexData={pokedexData}
+                        pokemonData={pokemonData}
+                        setActivePokemon={setActivePokemon}
+                        setTransition={setTransition}
+                      />
+
+                      <StatTitleText fontSize="16px">EV Yield</StatTitleText>
+                      <Box display="flex" justifyContent="center" gap="10px">
+                        {pokemonData.stats.map((statInfo, index) => (
+                          <EffortValueTag
+                            stat={statInfo.stat.name}
+                            value={statInfo.effort}
+                            key={index}
+                          />
+                        ))}
+                      </Box>
+                    </Stack>
                   </Box>
                 </Box>
-
-                <EvolutionChain
-                  pokedexData={pokedexData}
-                  pokemonData={pokemonData}
-                  setActivePokemon={setActivePokemon}
-                  setTransition={setTransition}
+              </CustomCard>
+              {hasClosedMobile ? (
+                <></>
+              ) : (
+                <Box
+                  component="img"
+                  src={pokeballLoader}
+                  alt="Loading"
+                  sx={infoSlideLoaderStyle}
                 />
+              )}
+            </Box>
+          ) : (
+            <></>
+          )}
+        </>
+      ) : (
+        <Box sx={outterPokemonInfoSlideContainer}>
+          <CustomCard sx={transition}>
+            <Box
+              component="img"
+              src={pokemonAnimation}
+              alt={`${activePokemonData?.species.name ?? "Default"}'s Sprite`}
+              sx={pokemonSpriteStyle}
+            />
+            <Box sx={infoSlideScrollContainer}>
+              <Box sx={infoSlideContainer} ref={infoRef}>
+                {hasSelectedActive ? (
+                  <Stack width="100%" display="flex" alignItems="center">
+                    <Box
+                      sx={
+                        showScrollable
+                          ? indicateScrollContainer
+                          : hideScrollableStyle
+                      }
+                    >
+                      <KeyboardDoubleArrowDownRoundedIcon
+                        sx={indicateScrollableStyle}
+                      />
+                    </Box>
 
-                <StatTitleText fontSize="16px">EV Yield</StatTitleText>
-                <Box display="flex" justifyContent="center" gap="10px">
-                  {pokemonData.stats.map((statInfo, index) => (
-                    <EffortValueTag
-                      stat={statInfo.stat.name}
-                      value={statInfo.effort}
-                      key={index}
+                    <SecondaryText
+                      fontSize="12px"
+                      fontWeight="bold"
+                      marginBottom="-5px"
+                    >
+                      N# {pokemonData.id}
+                    </SecondaryText>
+                    <BodyText fontWeight="bold" fontSize="24px">
+                      {capitalise(pokemonData.species.name)}
+                    </BodyText>
+
+                    <Box
+                      display="flex"
+                      gap="10px"
+                      m="10px"
+                      justifyContent="center"
+                    >
+                      {pokemonData.types.map((type, index) => (
+                        <TypeTag type={type.type.name} key={index} />
+                      ))}
+                    </Box>
+
+                    <StatTitleText fontSize="16px">Abilities</StatTitleText>
+                    <Box sx={abilitiesContainer}>
+                      {pokemonData.abilities.map((ability, index) => (
+                        <AbilityTag abilityInfo={ability} key={index} />
+                      ))}
+                    </Box>
+
+                    <StatTitleText fontSize="16px">Base Stats</StatTitleText>
+                    <Box sx={statsContainer}>
+                      {pokemonData.stats.map((statInfo, index) => (
+                        <StatBar
+                          stat={statInfo.stat.name}
+                          value={statInfo.base_stat}
+                          key={index}
+                        />
+                      ))}
+
+                      <Box sx={statTotalContainer}>
+                        <BodyText fontSize="15px" fontWeight="bold">
+                          Total:
+                        </BodyText>
+                        <BodyText fontSize="15px"> {totalStat}</BodyText>
+                      </Box>
+                    </Box>
+
+                    <EvolutionChain
+                      pokedexData={pokedexData}
+                      pokemonData={pokemonData}
+                      setActivePokemon={setActivePokemon}
+                      setTransition={setTransition}
                     />
-                  ))}
-                </Box>
-              </Stack>
-            ) : (
-              <SecondaryText fontWeight="bold">
-                Please select a Pokemon.
-              </SecondaryText>
-            )}
-          </Box>
-        </Box>
-      </CustomCard>
 
-      <Box
-        component="img"
-        src={pokeballLoader}
-        alt="Loading"
-        sx={infoSlideLoaderStyle}
-      />
-    </Box>
+                    <StatTitleText fontSize="16px">EV Yield</StatTitleText>
+                    <Box display="flex" justifyContent="center" gap="10px">
+                      {pokemonData.stats.map((statInfo, index) => (
+                        <EffortValueTag
+                          stat={statInfo.stat.name}
+                          value={statInfo.effort}
+                          key={index}
+                        />
+                      ))}
+                    </Box>
+                  </Stack>
+                ) : (
+                  <SecondaryText fontWeight="bold">
+                    Please select a Pokemon.
+                  </SecondaryText>
+                )}
+              </Box>
+            </Box>
+          </CustomCard>
+          <Box
+            component="img"
+            src={pokeballLoader}
+            alt="Loading"
+            sx={infoSlideLoaderStyle}
+          />
+        </Box>
+      )}
+    </>
   );
 };
