@@ -125,7 +125,7 @@ export const mobileInfoCloseButtonStyle = {
 
 export const pokemonSpriteStyle = {
   position: "absolute",
-  bottom: "72vh",
+  bottom: "78vh",
   imageRendering: "pixelated",
   overflowClipMargin: "content-box",
   transform: "scale(3)",
