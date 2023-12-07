@@ -12,10 +12,12 @@ export const pokemonInfoSlideContainer = {
   width: "350px",
   height: "78vh",
   position: "fixed",
-  bottom: "-10px",
+  bottom: "0px",
   transition: "transform 0.5s ease-out",
   display: "flex",
   justifyContent: "center",
+  borderBottomLeftRadius: "0 !important",
+  borderBottomRightRadius: "0 !important",
 };
 
 export const infoSlideScrollContainer = {
