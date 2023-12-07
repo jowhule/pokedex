@@ -64,7 +64,7 @@ export const mobileOutterPokemonInfoSlideContainer = {
   boxSizing: "border-box",
   display: "flex",
   justifyContent: "center",
-  transition: "all 0.7s ease",
+  transition: "background-color 0.7s ease",
 };
 
 export const mobilePokemonInfoSlideContainer = {

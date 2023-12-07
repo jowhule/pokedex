@@ -13,4 +13,7 @@ export const moveToTopContainer = {
   alignItems: "center",
   justifyContent: "center",
   zIndex: "1",
+  "&:hover": {
+    opacity: "0.8",
+  },
 };
