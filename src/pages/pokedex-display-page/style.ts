@@ -13,6 +13,6 @@ export const tabletPageContainerStyle: SxProps<Theme> = {
   display: "flex",
   boxSizing: "border-box",
   width: "100%",
-  p: "0 30px",
+  p: "0 15px",
   justifyContent: "center",
 };
