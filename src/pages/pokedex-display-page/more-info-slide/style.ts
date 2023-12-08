@@ -206,3 +206,22 @@ export const hideScrollableStyle = {
   transition: "opacity 0.5s ease",
   opacity: "0",
 };
+
+export const expandPokemonButtonStyle = {
+  width: "40px",
+  height: "40px",
+  position: "absolute",
+  right: "10px",
+  top: "10px",
+  boxShadow: "3px 3px #e8ebf1",
+  color: primaryTextColour,
+  bgcolor: fontBgColour,
+  "&:active": {
+    transform: "translateY(2px) translateX(2px)",
+    transition: "all 0.3s ease",
+    boxShadow: "1px 1px #e8ebf1",
+  },
+  "&:hover": {
+    bgcolor: "#bec1c4",
+  },
+};

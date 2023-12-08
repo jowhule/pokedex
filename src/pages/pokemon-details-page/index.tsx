@@ -12,16 +12,17 @@ import {
   requestLinks,
   sendGenericAPIRequest,
 } from "../../services/apiRequests";
-import { Box, Typography } from "@mui/material";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import { BodyText } from "../../utils/styledComponents";
 
 export const PokemonDetailsPage: React.FC = () => {
   const { pokeName } = useParams();
   const navigate = useNavigate();
 
+  const [hasLoaded, setHasLoaded] = useState<boolean>(false);
+
   const [pokemonData, setPokemonData] =
     useState<PokemonDataResponseType>(pokemonDataDefault);
-
   const [speciesData, setSpeciesData] = useState<PokemonSpeciesResponseType>(
     pokemonSpeciesDefault
   );
@@ -61,15 +62,20 @@ export const PokemonDetailsPage: React.FC = () => {
           setFlavorText(flavor.flavor_text);
         }
       }
+      setHasLoaded(true);
     }
   }, [speciesData]);
 
   return (
     <>
-      <Box>
-        <Typography>{pokeName}</Typography>
-        <BodyText>{flavorText}</BodyText>
-      </Box>
+      {hasLoaded ? (
+        <Box>
+          <Typography>{pokeName}</Typography>
+          <BodyText>{flavorText}</BodyText>
+        </Box>
+      ) : (
+        <CircularProgress />
+      )}
     </>
   );
 };

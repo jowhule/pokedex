@@ -2,9 +2,17 @@ import React, { useEffect, useRef, useState } from "react";
 import { CustomCard } from "../../../components/custom-card/CustomCard";
 import { PokemonDataResponseType } from "../../../services/apiRequestsTypes";
 import { requestLinks } from "../../../services/apiRequests";
-import { Box, Stack, useMediaQuery, useTheme } from "@mui/material";
+import {
+  Box,
+  Fab,
+  Stack,
+  Tooltip,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import KeyboardDoubleArrowDownRoundedIcon from "@mui/icons-material/KeyboardDoubleArrowDownRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+import OpenInFullRoundedIcon from "@mui/icons-material/OpenInFullRounded";
 import {
   BodyText,
   Hoverable,
@@ -31,6 +39,7 @@ import {
   mobileInfoSlideContainer,
   mobileInfoSlideScrollContainer,
   mobileInfoCloseButtonStyle,
+  expandPokemonButtonStyle,
 } from "./style";
 import { AbilityTag } from "../../../components/pokemon-information/ability-tag";
 import { StatBar } from "../../../components/pokemon-information/base-stat-bar";
@@ -42,6 +51,7 @@ import defaultImage from "../../../assets/default_pokemon_info.png";
 import pokeballLoader from "../../../assets/pokeball-icon.png";
 import { EffortValueTag } from "../../../components/pokemon-information/effort-value-tag";
 import { TYPE_COLOURS, primaryTextColour } from "../../../utils/colours";
+import { useNavigate } from "react-router-dom";
 
 type MoreInfoSlideType = {
   pokedexData: Record<string, PokemonDataResponseType>;
@@ -56,6 +66,8 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
 }) => {
   const theme = useTheme();
   const isTablet = useMediaQuery(theme.breakpoints.down("lg"));
+  const navigate = useNavigate();
+
   const [pokemonData, setPokemonData] =
     useState<PokemonDataResponseType>(pokemonDataDefault);
   const [totalStat, setTotalStat] = useState<number>(0);
@@ -83,6 +95,10 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
     }, 400);
   };
 
+  const handleMoreClick = () => {
+    navigate(`/pokemon/${activePokemonData.name}`);
+  };
+
   useEffect(() => {
     let dataTimer: ReturnType<typeof setTimeout> | null = null;
     // trigger translate
@@ -101,7 +117,7 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
             top: 0,
             behavior: "smooth",
           });
-      }, 300);
+      }, 200);
     } else {
       // set default state
       setHasSelectedActive(false);
@@ -199,6 +215,20 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
                   }'s Sprite`}
                   sx={pokemonSpriteStyle}
                 />
+                <Tooltip title="More">
+                  <Fab
+                    sx={{
+                      ...expandPokemonButtonStyle,
+                      top: "calc(22vh + 15px)",
+                      right: "15px",
+                      width: "50px",
+                      height: "50px",
+                    }}
+                    onClick={handleMoreClick}
+                  >
+                    <OpenInFullRoundedIcon />
+                  </Fab>
+                </Tooltip>
                 <Box sx={mobileInfoSlideScrollContainer}>
                   <Box sx={mobileInfoSlideContainer} ref={infoRef}>
                     <Stack
@@ -300,6 +330,15 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
               alt={`${activePokemonData?.species.name ?? "Default"}'s Sprite`}
               sx={pokemonSpriteStyle}
             />
+            {hasSelectedActive ? (
+              <Tooltip title="More">
+                <Fab sx={expandPokemonButtonStyle} onClick={handleMoreClick}>
+                  <OpenInFullRoundedIcon />
+                </Fab>
+              </Tooltip>
+            ) : (
+              <></>
+            )}
             <Box sx={infoSlideScrollContainer}>
               <Box sx={infoSlideContainer} ref={infoRef}>
                 {hasSelectedActive ? (
