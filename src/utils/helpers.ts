@@ -1,3 +1,5 @@
+import { sendGenericAPIRequest } from "../services/apiRequests";
+
 export const STAT_ABBRV: Record<string, string> = {
   hp: "hp",
   attack: "atk",
@@ -48,4 +50,28 @@ export const removeDash = (str: string): string => {
 
 export const getIdFromLink = (str: string): string => {
   return str.split("/").at(-2) ?? "";
+};
+
+/**
+ * pushes api requests to get data into the array
+ * @param dataPromises async api requests to get a data array
+ * @param dataHolder where data goes when api request is finished
+ * @param url url of data request
+ * @param key the key to the datapromises object
+ */
+export const getDataPromises = <T>(
+  dataPromises: Promise<void | T>[],
+  dataHolder: Record<string | number, T> = {},
+  url: string,
+  key: number | string
+) => {
+  dataPromises.push(
+    sendGenericAPIRequest<T>(url).then((data) => {
+      if (data) {
+        dataHolder[key] = data;
+      } else {
+        getDataPromises(dataPromises, dataHolder, url, key);
+      }
+    })
+  );
 };

@@ -21,7 +21,7 @@ import {
   Tabs,
   Typography,
 } from "@mui/material";
-import { getIdFromLink } from "../../utils/helpers";
+import { getDataPromises, getIdFromLink } from "../../utils/helpers";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -73,26 +73,6 @@ export const PokemonDetailsPage: React.FC = () => {
 
   const handleChangeIndex = (index: number) => {
     setActive(index);
-  };
-
-  /**
-   * pushes api requests to get a pokemon's data (promises) into the array
-   */
-  const getDataPromises = <T,>(
-    dataPromises: Promise<void | T>[],
-    dataHolder: Record<string | number, T> = {},
-    url: string,
-    index: number
-  ) => {
-    dataPromises.push(
-      sendGenericAPIRequest<T>(url).then((data) => {
-        if (data) {
-          dataHolder[index] = data;
-        } else {
-          getDataPromises(dataPromises, dataHolder, url, index);
-        }
-      })
-    );
   };
 
   // get initial pokemon data
