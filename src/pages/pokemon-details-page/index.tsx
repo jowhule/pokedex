@@ -6,28 +6,94 @@ import {
 } from "../../utils/defaults";
 import {
   PokemonDataResponseType,
+  PokemonFormResponseType,
   PokemonSpeciesResponseType,
 } from "../../services/apiRequestsTypes";
 import {
   requestLinks,
   sendGenericAPIRequest,
 } from "../../services/apiRequests";
-import { Box, CircularProgress, Typography } from "@mui/material";
-import { BodyText } from "../../utils/styledComponents";
+import {
+  AppBar,
+  Box,
+  CircularProgress,
+  Tab,
+  Tabs,
+  Typography,
+} from "@mui/material";
+import { getIdFromLink } from "../../utils/helpers";
+
+interface TabPanelProps {
+  children?: React.ReactNode;
+  dir?: string;
+  index: number;
+  value: number;
+}
+
+const TabPanel = (props: TabPanelProps) => {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`full-width-tabpanel-${index}`}
+      aria-labelledby={`full-width-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+};
 
 export const PokemonDetailsPage: React.FC = () => {
   const { pokeName } = useParams();
   const navigate = useNavigate();
 
+  const [active, setActive] = useState<number>(0);
   const [hasLoaded, setHasLoaded] = useState<boolean>(false);
 
-  const [pokemonData, setPokemonData] =
+  const [currPokemonData, setCurrPokemonData] =
     useState<PokemonDataResponseType>(pokemonDataDefault);
-  const [speciesData, setSpeciesData] = useState<PokemonSpeciesResponseType>(
-    pokemonSpeciesDefault
-  );
+  const [pokemonSpecies, setPokemonSpecies] =
+    useState<PokemonSpeciesResponseType>(pokemonSpeciesDefault);
 
-  const [flavorText, setFlavorText] = useState<string>("");
+  const [varietiesData, setVarietiesData] = useState<PokemonDataResponseType[]>(
+    []
+  );
+  const [formsData, setFormsData] = useState<PokemonFormResponseType[]>([]);
+
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setActive(newValue);
+  };
+
+  const handleChangeIndex = (index: number) => {
+    setActive(index);
+  };
+
+  /**
+   * pushes api requests to get a pokemon's data (promises) into the array
+   */
+  const getDataPromises = <T,>(
+    dataPromises: Promise<void | T>[],
+    dataHolder: Record<string | number, T> = {},
+    url: string,
+    index: number
+  ) => {
+    dataPromises.push(
+      sendGenericAPIRequest<T>(url).then((data) => {
+        if (data) {
+          dataHolder[index] = data;
+        } else {
+          getDataPromises(dataPromises, dataHolder, url, index);
+        }
+      })
+    );
+  };
 
   // get initial pokemon data
   useEffect(() => {
@@ -36,7 +102,7 @@ export const PokemonDetailsPage: React.FC = () => {
         requestLinks.getData(pokeName)
       ).then((data) => {
         if (data) {
-          setPokemonData(data);
+          setCurrPokemonData(data);
         } else {
           navigate("/404");
         }
@@ -45,33 +111,80 @@ export const PokemonDetailsPage: React.FC = () => {
 
   // get species data after initial pokemon data received
   useEffect(() => {
-    if (pokemonData.id) {
+    if (currPokemonData.id) {
       sendGenericAPIRequest<PokemonSpeciesResponseType>(
-        pokemonData.species.url
+        currPokemonData.species.url
       ).then((data) => {
-        if (data) setSpeciesData(data);
+        if (data) setPokemonSpecies(data);
       });
     }
-  }, [pokemonData]);
+  }, [currPokemonData]);
 
-  // get all of data
+  // get data of possible varieties
   useEffect(() => {
-    if (speciesData?.id) {
-      for (const flavor of speciesData.flavor_text_entries) {
-        if (flavor.language.name === "en") {
-          setFlavorText(flavor.flavor_text);
-        }
+    if (pokemonSpecies.id) {
+      if (pokemonSpecies.varieties.length === 1) {
+        setVarietiesData([currPokemonData]);
+      } else {
+        const varietiesDataPromises: Promise<void | PokemonDataResponseType>[] =
+          [];
+        const dataHolder: Record<number, PokemonDataResponseType> = {};
+
+        const formsDataPromises: Promise<void | PokemonFormResponseType>[] = [];
+        const formHolder: Record<number, PokemonFormResponseType> = {};
+
+        pokemonSpecies.varieties.forEach((vari, i) => {
+          if (vari.pokemon.name === pokeName) {
+            dataHolder[i] = currPokemonData;
+          } else {
+            getDataPromises(
+              varietiesDataPromises,
+              dataHolder,
+              vari.pokemon.url,
+              i
+            );
+          }
+          getDataPromises(
+            formsDataPromises,
+            formHolder,
+            requestLinks.getForm(parseInt(getIdFromLink(vari.pokemon.url))),
+            i
+          );
+        });
+
+        Promise.allSettled(varietiesDataPromises).then(() =>
+          setVarietiesData(Object.values(dataHolder))
+        );
       }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pokemonSpecies]);
+
+  // after varities have been received
+  useEffect(() => {
+    if (varietiesData.length > 0) {
       setHasLoaded(true);
     }
-  }, [speciesData]);
+  }, [varietiesData]);
 
   return (
     <>
       {hasLoaded ? (
-        <Box>
+        <Box maxWidth="1200px" m="0 auto">
           <Typography>{pokeName}</Typography>
-          <BodyText>{flavorText}</BodyText>
+
+          <AppBar position="static">
+            <Tabs
+              value={active}
+              onChange={handleChange}
+              textColor="inherit"
+              variant="fullWidth"
+            >
+              {varietiesData.map((data, i) => (
+                <Tab label={data.name} key={i} />
+              ))}
+            </Tabs>
+          </AppBar>
         </Box>
       ) : (
         <CircularProgress />

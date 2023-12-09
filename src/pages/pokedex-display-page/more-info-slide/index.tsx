@@ -133,12 +133,8 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
    * prepare active pokemon sprite and its stat total
    */
   useEffect(() => {
-    if (pokemonData.name) {
-      if (pokemonData.id > 650) {
-        setPokemonAnimation(pokemonData.sprites.front_default);
-      } else {
-        setPokemonAnimation(requestLinks.getAnimatedSprite(pokemonData.id));
-      }
+    if (pokemonData.id) {
+      setPokemonAnimation(requestLinks.getSprite(pokemonData.id));
       setHasSelectedActive(true);
     }
 

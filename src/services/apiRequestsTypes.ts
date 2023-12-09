@@ -69,6 +69,8 @@ type PokemonStatType = {
   stat: NameUrlType;
 };
 
+type LanguageNameArrayType = { language: NameUrlType; name: string }[];
+
 export type PokemonTypeType = {
   slot: number;
   type: NameUrlType;
@@ -107,6 +109,11 @@ export type PokemonEvoChainType = {
   species: NameUrlType;
 };
 
+export type PokemonVarietiesType = {
+  is_default: boolean;
+  pokemon: NameUrlType;
+};
+
 /* -------------------------------- response -------------------------------- */
 
 export type PokemonNameResponseType = NameUrlType;
@@ -123,7 +130,7 @@ export type PokemonDexResponseType = {
   id: number;
   is_main_series: boolean;
   name: string;
-  names: { language: NameUrlType; name: string }[];
+  names: LanguageNameArrayType;
   pokemon_entries: PokemonPokedexEntryType[];
   region: null | NameUrlType;
   version_groups: NameUrlType[];
@@ -176,7 +183,7 @@ export type PokemonSpeciesResponseType = {
   is_legendary: boolean;
   is_mythical: boolean;
   name: string;
-  names: { language: NameUrlType; name: string }[];
+  names: LanguageNameArrayType;
   order: number;
   pal_park_encounters: {
     area: NameUrlType;
@@ -185,7 +192,7 @@ export type PokemonSpeciesResponseType = {
   }[];
   pokedex_numbers: { entry_number: number; pokedex: NameUrlType }[];
   shape: NameUrlType;
-  varieties: { is_default: boolean; pokemon: NameUrlType }[];
+  varieties: PokemonVarietiesType[];
 };
 
 export type PokemonEvolutionResponseType = {
@@ -210,6 +217,23 @@ export type PokemonAbilityResponseType = {
   id: number;
   is_main_series: boolean;
   name: string;
-  names: { language: NameUrlType; name: string }[];
+  names: LanguageNameArrayType;
   pokemon: { is_hidden: boolean; pokemon: NameUrlType; slot: number }[];
+};
+
+export type PokemonFormResponseType = {
+  form_name: string;
+  form_names: LanguageNameArrayType;
+  form_order: number;
+  id: number;
+  is_battle_only: boolean;
+  is_default: boolean;
+  is_mega: boolean;
+  name: string;
+  names: LanguageNameArrayType;
+  order: number;
+  pokemon: NameUrlType;
+  sprites: PokemonSpriteType;
+  types: PokemonTypeType[];
+  version_group: NameUrlType;
 };

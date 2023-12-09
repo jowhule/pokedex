@@ -3,27 +3,22 @@ import axios from "axios";
 const API = "https://pokeapi.co/api/v2/";
 
 export const requestLinks = {
-  getData: (nameId: number | string): string => {
-    return API + `pokemon/${nameId}`;
+  getData: (nameId: number | string): string => API + `pokemon/${nameId}`,
+  getSpecies: (nameId: string | number): string =>
+    API + `pokemon-species/${nameId}`,
+  getPokedex: (pokedexName: string): string => API + `pokedex/${pokedexName}`,
+  getForm: (formId: number): string => API + `pokemon-form/${formId}`,
+  getSprite: (id: number): string => {
+    if (id > 650) {
+      return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
+    } else {
+      return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/${id}.gif`;
+    }
   },
-  getSpecies: (nameId: string | number): string => {
-    return API + `pokemon-species/${nameId}`;
-  },
-  getPokedex: (pokedexName: string): string => {
-    return API + `pokedex/${pokedexName}`;
-  },
-  getAnimatedSprite: (id: number): string => {
-    return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/${id}.gif`;
-  },
-  getPokemonSprite: (id: number): string => {
-    return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
-  },
-  getItemSprite: (name: string): string => {
-    return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${name}.png`;
-  },
-  getTMType: (type: string): string => {
-    return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/tm-${type}.png`;
-  },
+  getItemSprite: (name: string): string =>
+    `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${name}.png`,
+  getTMType: (type: string): string =>
+    `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/tm-${type}.png`,
 };
 
 // using pokemon api, only get request
