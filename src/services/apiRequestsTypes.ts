@@ -69,7 +69,7 @@ type PokemonStatType = {
   stat: NameUrlType;
 };
 
-type LanguageNameArrayType = { language: NameUrlType; name: string }[];
+export type LanguageNameArrayType = { language: NameUrlType; name: string }[];
 
 export type PokemonTypeType = {
   slot: number;

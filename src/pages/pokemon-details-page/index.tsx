@@ -20,8 +20,13 @@ import {
   Tab,
   Tabs,
   Typography,
+  useTheme,
 } from "@mui/material";
-import { getDataPromises, getIdFromLink } from "../../utils/helpers";
+import {
+  capitaliseDash,
+  getDataPromises,
+  getIdFromLink,
+} from "../../utils/helpers";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -53,6 +58,7 @@ const TabPanel = (props: TabPanelProps) => {
 export const PokemonDetailsPage: React.FC = () => {
   const { pokeName } = useParams();
   const navigate = useNavigate();
+  const theme = useTheme();
 
   const [active, setActive] = useState<number>(0);
   const [hasLoaded, setHasLoaded] = useState<boolean>(false);
@@ -67,12 +73,10 @@ export const PokemonDetailsPage: React.FC = () => {
   );
   const [formsData, setFormsData] = useState<PokemonFormResponseType[]>([]);
 
+  const [formNames, setFormNames] = useState<string[]>([]);
+
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setActive(newValue);
-  };
-
-  const handleChangeIndex = (index: number) => {
-    setActive(index);
   };
 
   // get initial pokemon data
@@ -100,7 +104,7 @@ export const PokemonDetailsPage: React.FC = () => {
     }
   }, [currPokemonData]);
 
-  // get data of possible varieties
+  // get data of possible varieties and their pokemon forms
   useEffect(() => {
     if (pokemonSpecies.id) {
       if (pokemonSpecies.varieties.length === 1) {
@@ -109,9 +113,6 @@ export const PokemonDetailsPage: React.FC = () => {
         const varietiesDataPromises: Promise<void | PokemonDataResponseType>[] =
           [];
         const dataHolder: Record<number, PokemonDataResponseType> = {};
-
-        const formsDataPromises: Promise<void | PokemonFormResponseType>[] = [];
-        const formHolder: Record<number, PokemonFormResponseType> = {};
 
         pokemonSpecies.varieties.forEach((vari, i) => {
           if (vari.pokemon.name === pokeName) {
@@ -124,12 +125,6 @@ export const PokemonDetailsPage: React.FC = () => {
               i
             );
           }
-          getDataPromises(
-            formsDataPromises,
-            formHolder,
-            requestLinks.getForm(parseInt(getIdFromLink(vari.pokemon.url))),
-            i
-          );
         });
 
         Promise.allSettled(varietiesDataPromises).then(() =>
@@ -140,12 +135,46 @@ export const PokemonDetailsPage: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pokemonSpecies]);
 
-  // after varities have been received
   useEffect(() => {
     if (varietiesData.length > 0) {
-      setHasLoaded(true);
+      const formsDataPromises: Promise<void | PokemonFormResponseType>[] = [];
+      const formHolder: Record<number, PokemonFormResponseType> = {};
+      varietiesData.forEach((data, i) => {
+        getDataPromises(formsDataPromises, formHolder, data.forms[0].url, i);
+      });
+      Promise.allSettled(formsDataPromises).then(() => {
+        setFormsData(Object.values(formHolder));
+      });
     }
   }, [varietiesData]);
+
+  // get proper form name
+  useEffect(() => {
+    const names: string[] = [];
+    if (pokeName === "pikachu") {
+      setFormNames(["Pikachu"]);
+      return;
+    }
+    for (const data of formsData) {
+      let nameFound: boolean = false;
+      for (const name of data.form_names) {
+        if (name.language.name === "en") {
+          names.push(name.name);
+          nameFound = true;
+        }
+      }
+      if (!nameFound) names.push(capitaliseDash(data.name));
+    }
+
+    setFormNames(names);
+  }, [formsData]);
+
+  // after varities have been received
+  useEffect(() => {
+    if (formNames.length > 0) {
+      setHasLoaded(true);
+    }
+  }, [formNames]);
 
   return (
     <>
@@ -153,18 +182,32 @@ export const PokemonDetailsPage: React.FC = () => {
         <Box maxWidth="1200px" m="0 auto">
           <Typography>{pokeName}</Typography>
 
-          <AppBar position="static">
-            <Tabs
-              value={active}
-              onChange={handleChange}
-              textColor="inherit"
-              variant="fullWidth"
-            >
-              {varietiesData.map((data, i) => (
-                <Tab label={data.name} key={i} />
-              ))}
-            </Tabs>
-          </AppBar>
+          {formNames.length > 1 ? (
+            <AppBar position="static">
+              <Tabs
+                value={active}
+                onChange={handleChange}
+                textColor="inherit"
+                variant="fullWidth"
+              >
+                {formNames.map((name, i) => (
+                  <Tab label={name} key={i} />
+                ))}
+              </Tabs>
+            </AppBar>
+          ) : (
+            <></>
+          )}
+
+          {varietiesData.map((pokemon, i) => (
+            <TabPanel value={active} index={i} key={i} dir={theme.direction}>
+              <Box
+                component="img"
+                alt={`${formNames[i]}'s sprite`}
+                src={requestLinks.getSprite(pokemon.id)}
+              ></Box>
+            </TabPanel>
+          ))}
         </Box>
       ) : (
         <CircularProgress />
