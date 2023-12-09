@@ -40,7 +40,8 @@ export const infoSlideContainer = {
   width: "calc(100% + 10px)",
   height: "100%",
   boxSizing: "border-box",
-  padding: "90px 20px 50px 20px",
+  padding: "0 20px 50px 20px",
+  marginTop: "90px",
   textAlign: "center",
   overflow: "scroll",
   overflowX: "hidden",
@@ -97,7 +98,8 @@ export const mobileInfoSlideContainer = {
   minWidth: "calc(100vw + 10px)",
   height: "100%vh",
   boxSizing: "border-box",
-  padding: "90px 20px 50px 20px",
+  padding: "0 20px 50px 20px",
+  marginTop: "90px",
   textAlign: "center",
   overflow: "scroll",
   overflowX: "hidden",
@@ -212,10 +214,11 @@ export const expandPokemonButtonStyle = {
   height: "40px",
   position: "absolute",
   right: "10px",
-  top: "10px",
+  top: "7px",
   boxShadow: "3px 3px #e8ebf1",
   color: primaryTextColour,
   bgcolor: fontBgColour,
+  borderRadius: "12px",
   "&:active": {
     transform: "translateY(2px) translateX(2px)",
     transition: "all 0.3s ease",
@@ -224,4 +227,14 @@ export const expandPokemonButtonStyle = {
   "&:hover": {
     bgcolor: "#bec1c4",
   },
+};
+
+export const mobileExpandPokemonButtonStyle = {
+  top: "calc(22vh + 15px)",
+  right: "15px",
+  width: "50px",
+  height: "50px",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
 };

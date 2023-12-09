@@ -40,6 +40,7 @@ import {
   mobileInfoSlideScrollContainer,
   mobileInfoCloseButtonStyle,
   expandPokemonButtonStyle,
+  mobileExpandPokemonButtonStyle,
 } from "./style";
 import { AbilityTag } from "../../../components/pokemon-information/ability-tag";
 import { StatBar } from "../../../components/pokemon-information/base-stat-bar";
@@ -91,7 +92,6 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
     setHasClosedMobile(true);
     setTimeout(() => {
       setActivePokemon("");
-      document.body.style.overflow = "auto";
     }, 400);
   };
 
@@ -174,6 +174,10 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
   useEffect(() => {
     if (!isTablet && !hasSelectedActive) {
       setTransition(pokemonInfoSlideContainer);
+    } else if (isTablet && hasSelectedActive) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
     }
   }, [hasSelectedActive, isTablet]);
 
@@ -219,14 +223,13 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
                   <Fab
                     sx={{
                       ...expandPokemonButtonStyle,
-                      top: "calc(22vh + 15px)",
-                      right: "15px",
-                      width: "50px",
-                      height: "50px",
+                      ...mobileExpandPokemonButtonStyle,
                     }}
                     onClick={handleMoreClick}
                   >
-                    <OpenInFullRoundedIcon />
+                    <OpenInFullRoundedIcon
+                      sx={{ width: "30px", height: "30px" }}
+                    />
                   </Fab>
                 </Tooltip>
                 <Box sx={mobileInfoSlideScrollContainer}>
