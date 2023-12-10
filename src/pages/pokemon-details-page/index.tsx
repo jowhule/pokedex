@@ -14,7 +14,6 @@ import {
   sendGenericAPIRequest,
 } from "../../services/apiRequests";
 import {
-  AppBar,
   Box,
   CircularProgress,
   Tab,
@@ -22,11 +21,9 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import {
-  capitaliseDash,
-  getDataPromises,
-  getIdFromLink,
-} from "../../utils/helpers";
+import { capitaliseDash, getDataPromises } from "../../utils/helpers";
+import { pokemonTypesContainer } from "../pokedex-display-page/pokedex-display/pokemon-card/style";
+import { TypeTag } from "../../components/pokemon-information/type-tag";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -112,20 +109,31 @@ export const PokemonDetailsPage: React.FC = () => {
       } else {
         const varietiesDataPromises: Promise<void | PokemonDataResponseType>[] =
           [];
-        const dataHolder: Record<number, PokemonDataResponseType> = {};
-
-        pokemonSpecies.varieties.forEach((vari, i) => {
-          if (vari.pokemon.name === pokeName) {
-            dataHolder[i] = currPokemonData;
+        const dataHolder: Record<string, PokemonDataResponseType> = {};
+        let i = 0;
+        for (const vari of pokemonSpecies.varieties) {
+          const name: string = vari.pokemon.name;
+          // exceptions
+          if (
+            (pokeName === "zygarde-50" && (i === 2 || i === 4)) ||
+            (pokeName === "pikachu" && i !== 0 && i !== 16) ||
+            (pokeName === "eevee" && i === 1)
+          ) {
+            i += 1;
+            continue;
+          }
+          if (name === pokeName) {
+            dataHolder[name] = currPokemonData;
           } else {
             getDataPromises(
               varietiesDataPromises,
               dataHolder,
               vari.pokemon.url,
-              i
+              name
             );
           }
-        });
+          i += 1;
+        }
 
         Promise.allSettled(varietiesDataPromises).then(() =>
           setVarietiesData(Object.values(dataHolder))
@@ -135,6 +143,7 @@ export const PokemonDetailsPage: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pokemonSpecies]);
 
+  // get the names of the varieties
   useEffect(() => {
     if (varietiesData.length > 0) {
       const formsDataPromises: Promise<void | PokemonFormResponseType>[] = [];
@@ -151,11 +160,12 @@ export const PokemonDetailsPage: React.FC = () => {
   // get proper form name
   useEffect(() => {
     const names: string[] = [];
-    if (pokeName === "pikachu") {
-      setFormNames(["Pikachu"]);
-      return;
-    }
+
     for (const data of formsData) {
+      if (data.name === pokeName) {
+        names.push("Base");
+        continue;
+      }
       let nameFound: boolean = false;
       for (const name of data.form_names) {
         if (name.language.name === "en") {
@@ -167,7 +177,7 @@ export const PokemonDetailsPage: React.FC = () => {
     }
 
     setFormNames(names);
-  }, [formsData]);
+  }, [formsData, pokeName]);
 
   // after varities have been received
   useEffect(() => {
@@ -183,18 +193,13 @@ export const PokemonDetailsPage: React.FC = () => {
           <Typography>{pokeName}</Typography>
 
           {formNames.length > 1 ? (
-            <AppBar position="static">
-              <Tabs
-                value={active}
-                onChange={handleChange}
-                textColor="inherit"
-                variant="fullWidth"
-              >
+            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+              <Tabs value={active} onChange={handleChange} textColor="inherit">
                 {formNames.map((name, i) => (
                   <Tab label={name} key={i} />
                 ))}
               </Tabs>
-            </AppBar>
+            </Box>
           ) : (
             <></>
           )}
@@ -204,8 +209,18 @@ export const PokemonDetailsPage: React.FC = () => {
               <Box
                 component="img"
                 alt={`${formNames[i]}'s sprite`}
-                src={requestLinks.getSprite(pokemon.id)}
+                src={pokemon.sprites.front_default ?? ""}
+                sx={{
+                  imageRendering: "pixelated",
+                  width: "100%",
+                  maxWidth: "400px",
+                }}
               ></Box>
+              <Box sx={pokemonTypesContainer}>
+                {pokemon.types.map((type, index) => (
+                  <TypeTag type={type.type.name} key={index} />
+                ))}
+              </Box>
             </TabPanel>
           ))}
         </Box>

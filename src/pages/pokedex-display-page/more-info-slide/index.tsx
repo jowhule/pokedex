@@ -53,6 +53,7 @@ import pokeballLoader from "../../../assets/pokeball-icon.png";
 import { EffortValueTag } from "../../../components/pokemon-information/effort-value-tag";
 import { TYPE_COLOURS, primaryTextColour } from "../../../utils/colours";
 import { useNavigate } from "react-router-dom";
+import { pokemonTypesContainer } from "../pokedex-display/pokemon-card/style";
 
 type MoreInfoSlideType = {
   pokedexData: Record<string, PokemonDataResponseType>;
@@ -365,12 +366,7 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
                       {capitalise(pokemonData.species.name)}
                     </BodyText>
 
-                    <Box
-                      display="flex"
-                      gap="10px"
-                      m="10px"
-                      justifyContent="center"
-                    >
+                    <Box sx={pokemonTypesContainer}>
                       {pokemonData.types.map((type, index) => (
                         <TypeTag type={type.type.name} key={index} />
                       ))}
