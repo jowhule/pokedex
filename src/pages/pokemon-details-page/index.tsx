@@ -158,6 +158,7 @@ export const PokemonDetailsPage: React.FC = () => {
       varietiesData.forEach((data, i) => {
         getDataPromises(formsDataPromises, formHolder, data.forms[0].url, i);
       });
+
       Promise.allSettled(formsDataPromises).then(() => {
         setFormsData(Object.values(formHolder));
       });
@@ -211,46 +212,51 @@ export const PokemonDetailsPage: React.FC = () => {
             <></>
           )}
 
-          {varietiesData.map((pokemon, i) => (
-            <TabPanel value={active} index={i} key={i} dir={theme.direction}>
-              <Box bgcolor="white" p="20px 40px" borderRadius="20px">
-                <Box
-                  component="img"
-                  alt={`${formNames[i]}'s sprite`}
-                  src={pokemon.sprites.front_default ?? ""}
-                  sx={{
-                    imageRendering: "pixelated",
-                    width: "100%",
-                    maxWidth: "400px",
-                  }}
-                ></Box>
+          {varietiesData.map((pokemon, i) => {
+            // preload sprites
+            const img = new Image();
+            img.src = pokemon.sprites.front_default;
+            return (
+              <TabPanel value={active} index={i} key={i} dir={theme.direction}>
+                <Box bgcolor="white" p="20px 40px" borderRadius="20px">
+                  <Box
+                    component="img"
+                    alt={`${formNames[i]}'s sprite`}
+                    src={pokemon.sprites.front_default ?? ""}
+                    sx={{
+                      imageRendering: "pixelated",
+                      width: "100%",
+                      maxWidth: "400px",
+                    }}
+                  ></Box>
 
-                <Box sx={pokemonTypesContainer}>
-                  {pokemon.types.map((type, index) => (
-                    <TypeTag type={type.type.name} key={index} />
-                  ))}
-                </Box>
+                  <Box sx={pokemonTypesContainer}>
+                    {pokemon.types.map((type, index) => (
+                      <TypeTag type={type.type.name} key={index} />
+                    ))}
+                  </Box>
 
-                <StatTitleText fontSize="16px">Abilities</StatTitleText>
-                <Box sx={abilitiesContainer}>
-                  {pokemon.abilities.map((ability, index) => (
-                    <AbilityTag abilityInfo={ability} key={index} />
-                  ))}
-                </Box>
+                  <StatTitleText fontSize="16px">Abilities</StatTitleText>
+                  <Box sx={abilitiesContainer}>
+                    {pokemon.abilities.map((ability, index) => (
+                      <AbilityTag abilityInfo={ability} key={index} />
+                    ))}
+                  </Box>
 
-                <StatTitleText fontSize="16px">Base Stats</StatTitleText>
-                <Box sx={statsContainer}>
-                  {pokemon.stats.map((statInfo, index) => (
-                    <StatBar
-                      stat={statInfo.stat.name}
-                      value={statInfo.base_stat}
-                      key={index}
-                    />
-                  ))}
+                  <StatTitleText fontSize="16px">Base Stats</StatTitleText>
+                  <Box sx={statsContainer}>
+                    {pokemon.stats.map((statInfo, index) => (
+                      <StatBar
+                        stat={statInfo.stat.name}
+                        value={statInfo.base_stat}
+                        key={index}
+                      />
+                    ))}
+                  </Box>
                 </Box>
-              </Box>
-            </TabPanel>
-          ))}
+              </TabPanel>
+            );
+          })}
         </Box>
       ) : (
         <CircularProgress />
