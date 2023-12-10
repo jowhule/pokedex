@@ -24,6 +24,13 @@ import {
 import { capitaliseDash, getDataPromises } from "../../utils/helpers";
 import { pokemonTypesContainer } from "../pokedex-display-page/pokedex-display/pokemon-card/style";
 import { TypeTag } from "../../components/pokemon-information/type-tag";
+import { StatTitleText } from "../../utils/styledComponents";
+import { AbilityTag } from "../../components/pokemon-information/ability-tag";
+import {
+  abilitiesContainer,
+  statsContainer,
+} from "../pokedex-display-page/more-info-slide/style";
+import { StatBar } from "../../components/pokemon-information/base-stat-bar";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -206,20 +213,41 @@ export const PokemonDetailsPage: React.FC = () => {
 
           {varietiesData.map((pokemon, i) => (
             <TabPanel value={active} index={i} key={i} dir={theme.direction}>
-              <Box
-                component="img"
-                alt={`${formNames[i]}'s sprite`}
-                src={pokemon.sprites.front_default ?? ""}
-                sx={{
-                  imageRendering: "pixelated",
-                  width: "100%",
-                  maxWidth: "400px",
-                }}
-              ></Box>
-              <Box sx={pokemonTypesContainer}>
-                {pokemon.types.map((type, index) => (
-                  <TypeTag type={type.type.name} key={index} />
-                ))}
+              <Box bgcolor="white" p="20px 40px" borderRadius="20px">
+                <Box
+                  component="img"
+                  alt={`${formNames[i]}'s sprite`}
+                  src={pokemon.sprites.front_default ?? ""}
+                  sx={{
+                    imageRendering: "pixelated",
+                    width: "100%",
+                    maxWidth: "400px",
+                  }}
+                ></Box>
+
+                <Box sx={pokemonTypesContainer}>
+                  {pokemon.types.map((type, index) => (
+                    <TypeTag type={type.type.name} key={index} />
+                  ))}
+                </Box>
+
+                <StatTitleText fontSize="16px">Abilities</StatTitleText>
+                <Box sx={abilitiesContainer}>
+                  {pokemon.abilities.map((ability, index) => (
+                    <AbilityTag abilityInfo={ability} key={index} />
+                  ))}
+                </Box>
+
+                <StatTitleText fontSize="16px">Base Stats</StatTitleText>
+                <Box sx={statsContainer}>
+                  {pokemon.stats.map((statInfo, index) => (
+                    <StatBar
+                      stat={statInfo.stat.name}
+                      value={statInfo.base_stat}
+                      key={index}
+                    />
+                  ))}
+                </Box>
               </Box>
             </TabPanel>
           ))}
