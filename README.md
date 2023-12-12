@@ -12,6 +12,5 @@ Inspired by [David](https://github.com/davidhckh)
 
 - add page to save pokemon in (team)
 - a route to each pokemon to display all stats
-- make mobile compatible
 - do a pokemon guessing game
 
