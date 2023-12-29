@@ -2,9 +2,37 @@ import {
   PokemonDataResponseType,
   PokemonEvoChainType,
   PokemonEvoDetailsType,
+  PokemonFormResponseType,
   PokemonSpeciesResponseType,
 } from "../services/apiRequestsTypes";
 
+const pokemonSpritesDefault = {
+  back_default: "",
+  back_female: null,
+  back_shiny: "",
+  back_shiny_female: null,
+  front_default: "",
+  front_female: null,
+  front_shiny: "",
+  front_shiny_female: "",
+  other: {
+    dream_world: {
+      front_default: "",
+      front_female: "",
+    },
+    home: {
+      front_default: "",
+      front_female: "",
+      front_shiny: "",
+      front_shiny_female: "",
+    },
+    "official-artwork": {
+      front_default: "",
+      front_shiny: "",
+    },
+  },
+  versions: {},
+};
 export const pokemonDataDefault: PokemonDataResponseType = {
   abilities: [],
   base_experience: 0,
@@ -23,33 +51,7 @@ export const pokemonDataDefault: PokemonDataResponseType = {
     name: "",
     url: "",
   },
-  sprites: {
-    back_default: "",
-    back_female: null,
-    back_shiny: "",
-    back_shiny_female: null,
-    front_default: "",
-    front_female: null,
-    front_shiny: "",
-    front_shiny_female: "",
-    other: {
-      dream_world: {
-        front_default: "",
-        front_female: "",
-      },
-      home: {
-        front_default: "",
-        front_female: "",
-        front_shiny: "",
-        front_shiny_female: "",
-      },
-      "official-artwork": {
-        front_default: "",
-        front_shiny: "",
-      },
-    },
-    versions: {},
-  },
+  sprites: pokemonSpritesDefault,
   stats: [],
   types: [],
   weight: 0,
@@ -114,4 +116,21 @@ export const pokemonEvoDetailsDefault: PokemonEvoDetailsType = {
     url: "",
   },
   turn_upside_down: false,
+};
+
+export const pokemonFormDefault: PokemonFormResponseType = {
+  form_name: "",
+  form_names: [],
+  form_order: -1,
+  id: -1,
+  is_battle_only: false,
+  is_default: false,
+  is_mega: false,
+  name: "",
+  names: [],
+  order: -1,
+  pokemon: { name: "", url: "" },
+  sprites: pokemonSpritesDefault,
+  types: [],
+  version_group: { name: "", url: "" },
 };

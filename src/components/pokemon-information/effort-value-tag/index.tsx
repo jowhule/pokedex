@@ -25,7 +25,9 @@ export const EffortValueTag: React.FC<EVTagProps> = ({ stat, value }) => {
       >
         {STAT_ABBRV[stat]}
       </BodyText>
-      <BodyText fontSize="12px">{value}</BodyText>
+      <BodyText fontSize="12px" textAlign="center">
+        {value}
+      </BodyText>
     </Box>
   );
 };

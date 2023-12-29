@@ -82,7 +82,6 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
 
   const infoRef = useRef<HTMLDivElement>(null);
   const [showScrollable, setShowScrollable] = useState<boolean>(true);
-
   const [hasClosedMobile, setHasClosedMobile] = useState<boolean>(true);
 
   /**
@@ -172,6 +171,7 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
     if (!isTablet && !hasSelectedActive) {
       setTransition(pokemonInfoSlideContainer);
     } else if (isTablet && hasSelectedActive) {
+      // hide scroll on tablet
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "auto";
@@ -182,13 +182,13 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
     <>
       {isTablet ? (
         <>
-          {hasSelectedActive ? (
+          {hasSelectedActive && (
             <Box
               sx={{
                 ...mobileOutterPokemonInfoSlideContainer,
                 bgcolor: hasClosedMobile
                   ? "transparent"
-                  : `${TYPE_COLOURS[pokemonData?.types[0].type.name]}99`,
+                  : `${TYPE_COLOURS[pokemonData?.types[0]?.type.name]}99`,
               }}
             >
               <Hoverable
@@ -317,8 +317,6 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
                 />
               )}
             </Box>
-          ) : (
-            <></>
           )}
         </>
       ) : (
@@ -330,15 +328,15 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
               alt={`${activePokemonData?.species.name ?? "Default"}'s Sprite`}
               sx={pokemonSpriteStyle}
             />
-            {hasSelectedActive ? (
-              <Tooltip title="More">
-                <Fab sx={expandPokemonButtonStyle} onClick={handleMoreClick}>
-                  <OpenInFullRoundedIcon />
-                </Fab>
-              </Tooltip>
-            ) : (
-              <></>
-            )}
+            <>
+              {hasSelectedActive && (
+                <Tooltip title="More">
+                  <Fab sx={expandPokemonButtonStyle} onClick={handleMoreClick}>
+                    <OpenInFullRoundedIcon />
+                  </Fab>
+                </Tooltip>
+              )}
+            </>
             <Box sx={infoSlideScrollContainer}>
               <Box sx={infoSlideContainer} ref={infoRef}>
                 {hasSelectedActive ? (

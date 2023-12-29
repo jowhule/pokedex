@@ -35,7 +35,7 @@ export type StageInfo = {
 };
 
 type EvolutionChainProps = {
-  pokedexData: Record<string, PokemonDataResponseType>;
+  pokedexData?: Record<string, PokemonDataResponseType>;
   pokemonData: PokemonDataResponseType;
   setActivePokemon?: React.Dispatch<React.SetStateAction<string>>;
   setTransition?: React.Dispatch<React.SetStateAction<Record<string, string>>>;
@@ -84,7 +84,8 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
       };
 
       if (!evoStages[level]) evoStages.push([]);
-      if (pokedexData[pokemonName]) evoStages[level].push(currStage);
+      if (pokedexData && pokedexData[pokemonName])
+        evoStages[level].push(currStage);
 
       // traverse tree
       root.evolves_to.forEach((evolveTo) => {
@@ -166,7 +167,10 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
                       <Hoverable onClick={() => handleEvoClick(evo.name)}>
                         <Box
                           component="img"
-                          src={pokedexData[evo.name].sprites.front_default}
+                          src={
+                            pokedexData &&
+                            pokedexData[evo.name].sprites.front_default
+                          }
                           alt={`${evo.name}'s sprite`}
                           sx={pokemonEvoSpriteStyle}
                         />

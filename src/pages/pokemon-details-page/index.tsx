@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   pokemonDataDefault,
+  pokemonFormDefault,
   pokemonSpeciesDefault,
 } from "../../utils/defaults";
 import {
@@ -15,22 +16,30 @@ import {
 } from "../../services/apiRequests";
 import {
   Box,
+  Button,
   CircularProgress,
+  Stack,
   Tab,
   Tabs,
   Typography,
   useTheme,
 } from "@mui/material";
-import { capitaliseDash, getDataPromises } from "../../utils/helpers";
+import {
+  capitalise,
+  capitaliseDash,
+  getDataPromises,
+} from "../../utils/helpers";
 import { pokemonTypesContainer } from "../pokedex-display-page/pokedex-display/pokemon-card/style";
 import { TypeTag } from "../../components/pokemon-information/type-tag";
-import { StatTitleText } from "../../utils/styledComponents";
+import { BodyText, StatTitleText } from "../../utils/styledComponents";
 import { AbilityTag } from "../../components/pokemon-information/ability-tag";
 import {
   abilitiesContainer,
   statsContainer,
 } from "../pokedex-display-page/more-info-slide/style";
 import { StatBar } from "../../components/pokemon-information/base-stat-bar";
+import { primaryTextColour } from "../../utils/colours";
+import { EffortValueTag } from "../../components/pokemon-information/effort-value-tag";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -50,11 +59,7 @@ const TabPanel = (props: TabPanelProps) => {
       aria-labelledby={`full-width-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
+      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
     </div>
   );
 };
@@ -76,11 +81,22 @@ export const PokemonDetailsPage: React.FC = () => {
     []
   );
   const [formsData, setFormsData] = useState<PokemonFormResponseType[]>([]);
+  const [gigaForm, setGigaForm] =
+    useState<PokemonFormResponseType>(pokemonFormDefault);
 
   const [formNames, setFormNames] = useState<string[]>([]);
+  const [showGigaForm, setShowGigaForm] = useState<boolean>(false);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setActive(newValue);
+  };
+
+  const hangleGigaChange = () => {
+    setShowGigaForm(!showGigaForm);
+  };
+
+  const insertDecimal = (num: number) => {
+    return (num / 10).toFixed(1);
   };
 
   // get initial pokemon data
@@ -160,20 +176,28 @@ export const PokemonDetailsPage: React.FC = () => {
       });
 
       Promise.allSettled(formsDataPromises).then(() => {
-        setFormsData(Object.values(formHolder));
+        const forms: PokemonFormResponseType[] = [];
+        Object.keys(formHolder).forEach((key) => {
+          if (formHolder[parseInt(key)].form_name === "gmax") {
+            setGigaForm(formHolder[parseInt(key)]);
+          } else {
+            forms.push(formHolder[parseInt(key)]);
+          }
+        });
+        setFormsData(forms);
       });
     }
   }, [varietiesData]);
+
+  useEffect(() => {
+    setShowGigaForm(false);
+  }, [active]);
 
   // get proper form name
   useEffect(() => {
     const names: string[] = [];
 
     for (const data of formsData) {
-      if (data.name === pokeName) {
-        names.push("Base");
-        continue;
-      }
       let nameFound: boolean = false;
       for (const name of data.form_names) {
         if (name.language.name === "en") {
@@ -185,6 +209,7 @@ export const PokemonDetailsPage: React.FC = () => {
     }
 
     setFormNames(names);
+    console.log(formsData);
   }, [formsData, pokeName]);
 
   // after varities have been received
@@ -198,49 +223,124 @@ export const PokemonDetailsPage: React.FC = () => {
     <>
       {hasLoaded ? (
         <Box maxWidth="1200px" m="0 auto">
-          <Typography>{pokeName}</Typography>
-
-          {formNames.length > 1 ? (
-            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-              <Tabs value={active} onChange={handleChange} textColor="inherit">
-                {formNames.map((name, i) => (
-                  <Tab label={name} key={i} />
-                ))}
-              </Tabs>
-            </Box>
-          ) : (
-            <></>
-          )}
-
+          <>
+            {formNames.length > 1 && (
+              <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                <Tabs
+                  value={active}
+                  onChange={handleChange}
+                  textColor="inherit"
+                >
+                  {formNames.map((name, i) => (
+                    <Tab label={name} key={i} />
+                  ))}
+                </Tabs>
+              </Box>
+            )}
+          </>
           {varietiesData.map((pokemon, i) => {
             // preload sprites
             const img = new Image();
             img.src = pokemon.sprites.front_default;
+            let gigaImg = null;
+            if (pokemon.is_default && gigaForm.id > 0) {
+              gigaImg = new Image();
+              gigaImg.src = gigaForm.sprites.front_default;
+            }
             return (
               <TabPanel value={active} index={i} key={i} dir={theme.direction}>
                 <Box bgcolor="white" p="20px 40px" borderRadius="20px">
                   <Box
-                    component="img"
-                    alt={`${formNames[i]}'s sprite`}
-                    src={pokemon.sprites.front_default ?? ""}
-                    sx={{
-                      imageRendering: "pixelated",
-                      width: "100%",
-                      maxWidth: "400px",
-                    }}
-                  ></Box>
+                    display="flex"
+                    gap="30px"
+                    width="100%"
+                    maxWidth="1000px"
+                    m="0 auto"
+                  >
+                    <Box flex="1">
+                      <Box
+                        component="img"
+                        alt={`${formNames[i]}'s sprite`}
+                        src={
+                          showGigaForm
+                            ? gigaForm.sprites.front_default
+                            : pokemon.sprites.front_default
+                        }
+                        sx={{
+                          imageRendering: "pixelated",
+                          width: "100%",
+                        }}
+                      ></Box>
+                      {pokemon.is_default && gigaImg && (
+                        <Button
+                          onClick={hangleGigaChange}
+                          sx={{
+                            width: "140px",
+                            bgcolor: "grey",
+                            p: "10px 50px",
+                          }}
+                        >
+                          {showGigaForm ? "Revert" : "Gigatamax"}
+                        </Button>
+                      )}
+                    </Box>
+                    <Box
+                      display="flex"
+                      flex="1"
+                      flexDirection="column"
+                      m="30px auto"
+                    >
+                      <Typography
+                        textAlign="center"
+                        fontWeight="bold"
+                        color={primaryTextColour}
+                        fontSize="22px"
+                      >
+                        {capitalise(pokemon?.species.name)}
+                      </Typography>
+                      <Box sx={{ ...pokemonTypesContainer, marginBottom: "0" }}>
+                        {pokemon.types.map((type, index) => (
+                          <TypeTag type={type.type.name} key={index} />
+                        ))}
+                      </Box>
 
-                  <Box sx={pokemonTypesContainer}>
-                    {pokemon.types.map((type, index) => (
-                      <TypeTag type={type.type.name} key={index} />
-                    ))}
-                  </Box>
+                      <StatTitleText fontSize="16px">Abilities</StatTitleText>
+                      <Box sx={abilitiesContainer}>
+                        {pokemon.abilities.map((ability, index) => (
+                          <AbilityTag abilityInfo={ability} key={index} />
+                        ))}
+                      </Box>
 
-                  <StatTitleText fontSize="16px">Abilities</StatTitleText>
-                  <Box sx={abilitiesContainer}>
-                    {pokemon.abilities.map((ability, index) => (
-                      <AbilityTag abilityInfo={ability} key={index} />
-                    ))}
+                      <Box display="flex" gap="15px">
+                        <Stack flex="1">
+                          <StatTitleText fontSize="16px">Height</StatTitleText>
+                          <Box sx={abilitiesContainer}>
+                            <BodyText>
+                              {insertDecimal(pokemon.height)} m
+                            </BodyText>
+                          </Box>
+                        </Stack>
+                        <Stack flex="1">
+                          <StatTitleText fontSize="16px">Weight</StatTitleText>
+                          <Box sx={abilitiesContainer}>
+                            <BodyText>
+                              {insertDecimal(pokemon.weight)} kg
+                            </BodyText>
+                          </Box>
+                        </Stack>
+                      </Box>
+
+                      <StatTitleText fontSize="16px">EV Yield</StatTitleText>
+                      <Box display="flex" justifyContent="center" gap="10px">
+                        {pokemon.stats.map((statInfo, index) => (
+                          <EffortValueTag
+                            stat={statInfo.stat.name}
+                            value={statInfo.effort}
+                            key={index}
+                          />
+                        ))}
+                      </Box>
+                    </Box>
                   </Box>
 
                   <StatTitleText fontSize="16px">Base Stats</StatTitleText>

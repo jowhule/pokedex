@@ -22,6 +22,7 @@ export const statBar = {
   borderRadius: STAT_BAR_RADIUS,
   height: STAT_BAR_HEIGHT,
   boxSizing: "border-box",
+  transition: "width 0.8s ease-in",
 };
 
 export const statValue = {
