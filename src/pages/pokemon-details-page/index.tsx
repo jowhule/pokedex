@@ -26,10 +26,15 @@ import {
   capitalise,
   capitaliseDash,
   getDataPromises,
+  removeDash,
 } from "../../utils/helpers";
 import { pokemonTypesContainer } from "../pokedex-display-page/pokedex-display/pokemon-card/style";
 import { TypeTag } from "../../components/pokemon-information/type-tag";
-import { BodyText, StatTitleText } from "../../utils/styledComponents";
+import {
+  BodyText,
+  Hoverable,
+  StatTitleText,
+} from "../../utils/styledComponents";
 import { AbilityTag } from "../../components/pokemon-information/ability-tag";
 import {
   abilitiesContainer,
@@ -239,9 +244,9 @@ export const PokemonDetailsPage: React.FC = () => {
             height="45px"
             position="relative"
           >
-            <Box sx={{ display: "flex", gap: "5px" }}>
+            <Box sx={{ display: "flex", gap: "8px" }}>
               {formNames.map((name, i) => (
-                <Box
+                <Hoverable
                   key={i}
                   sx={
                     i === active
@@ -250,10 +255,13 @@ export const PokemonDetailsPage: React.FC = () => {
                   }
                   onClick={() => handleChange(i)}
                 >
-                  <BodyText fontWeight={i === active ? "bold" : ""}>
+                  <BodyText
+                    fontWeight={i === active ? "bold" : ""}
+                    sx={{ "&:hover": { cursor: "pointer" } }}
+                  >
                     {name}
                   </BodyText>
-                </Box>
+                </Hoverable>
               ))}
             </Box>
           </Box>
@@ -377,6 +385,13 @@ export const PokemonDetailsPage: React.FC = () => {
               );
             })}
           </Box>
+          <Stack>
+            {activePokemonData.moves.map((move) => (
+              <BodyText>
+                {capitalise(removeDash(move.move.name), true)}
+              </BodyText>
+            ))}
+          </Stack>
         </Box>
       ) : (
         <CircularProgress />

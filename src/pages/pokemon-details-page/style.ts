@@ -41,6 +41,7 @@ export const detailsTabPanelStyle = {
   display: "flex",
   alignItems: "center",
 };
+
 export const activeDetailsPanelStyle = {
   bgcolor: "white",
   p: "0 20px",
