@@ -14,24 +14,43 @@ import { STAT_ABBRV } from "../../../utils/helpers";
 type StatBarProps = {
   stat: string;
   value: number;
+  large?: boolean;
 };
 
 const MAX_STAT_VALUE = 211;
 
-export const StatBar: React.FC<StatBarProps> = ({ stat, value }) => {
+export const StatBar: React.FC<StatBarProps> = ({ stat, value, large }) => {
   return (
-    <Box sx={statContainer}>
-      <Box sx={statBarContainer}>
-        <BodyText sx={statTitle}>{STAT_ABBRV[stat]}</BodyText>
-        <Box
-          sx={{
-            ...statBar,
-            width: `${(value / MAX_STAT_VALUE) * 100}%`,
-            backgroundColor: `${STAT_COLOURS[stat]}`,
-          }}
-        ></Box>
-        <BodyText sx={statValue}>{value}</BodyText>
-      </Box>
-    </Box>
+    <>
+      {large ? (
+        <Box sx={statContainer}>
+          <Box sx={statBarContainer}>
+            <BodyText sx={statTitle}>{STAT_ABBRV[stat]}</BodyText>
+            <Box
+              sx={{
+                ...statBar,
+                width: `${(value / MAX_STAT_VALUE) * 100}%`,
+                backgroundColor: `${STAT_COLOURS[stat]}`,
+              }}
+            ></Box>
+            <BodyText sx={statValue}>{value}</BodyText>
+          </Box>
+        </Box>
+      ) : (
+        <Box sx={statContainer}>
+          <Box sx={statBarContainer}>
+            <BodyText sx={statTitle}>{STAT_ABBRV[stat]}</BodyText>
+            <Box
+              sx={{
+                ...statBar,
+                width: `${(value / MAX_STAT_VALUE) * 100}%`,
+                backgroundColor: `${STAT_COLOURS[stat]}`,
+              }}
+            ></Box>
+            <BodyText sx={statValue}>{value}</BodyText>
+          </Box>
+        </Box>
+      )}
+    </>
   );
 };
