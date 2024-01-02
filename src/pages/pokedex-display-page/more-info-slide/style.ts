@@ -144,25 +144,6 @@ export const abilitiesContainer = {
   padding: "15px 0",
 };
 
-export const statsContainer = {
-  display: "flex",
-  flexDirection: "column",
-  gap: "7px",
-  justifyContent: "center",
-  padding: "0 12px",
-  width: "100%",
-};
-
-export const statTotalContainer = {
-  display: "flex",
-  justifyContent: "space-between",
-  bgcolor: "#f0f3f8",
-  borderRadius: "5px",
-  p: "2px 15px",
-  m: "5px auto",
-  width: "80%",
-};
-
 const spinAnimate = keyframes`
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }

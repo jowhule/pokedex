@@ -15,8 +15,7 @@ export const detailsTabPanelStyle = {
   borderRadius: "15px 15px 0 0",
   boxShadow: "5px 0px #b6b9be",
   transform: "translateY(0px)",
-  transition:
-    "background-color 0.5s ease, transform 0.5s ease, height 0.5s ease",
+  transition: "transform 0.5s ease, height 0.5s ease",
   display: "flex",
   alignItems: "center",
 };
@@ -28,8 +27,7 @@ export const activeDetailsPanelStyle = {
   borderRadius: "15px 15px 0 0",
   boxShadow: `5px 0px ${secondaryColour}`,
   transform: "translateY(5px)",
-  transition:
-    "background-color 0.5s ease, transform 0.5s ease, height 0.5s ease",
+  transition: "transform 0.5s ease, height 0.5s ease",
   display: "flex",
   alignItems: "center",
 };

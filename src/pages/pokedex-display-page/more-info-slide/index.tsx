@@ -34,8 +34,6 @@ import {
   outterPokemonInfoSlideContainer,
   pokemonInfoSlideContainer,
   pokemonSpriteStyle,
-  statTotalContainer,
-  statsContainer,
   mobileInfoSlideContainer,
   mobileInfoSlideScrollContainer,
   mobileInfoCloseButtonStyle,
@@ -43,7 +41,7 @@ import {
   mobileExpandPokemonButtonStyle,
 } from "./style";
 import { AbilityTag } from "../../../components/pokemon-information/ability-tag";
-import { StatBar } from "../../../components/pokemon-information/base-stat-bar";
+import { StatBars } from "../../../components/pokemon-information/stat-bars";
 import { EvolutionChain } from "../../../components/pokemon-information/evolution-chain";
 import { pokemonDataDefault } from "../../../utils/defaults";
 import { capitalise } from "../../../utils/helpers";
@@ -72,7 +70,6 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
 
   const [pokemonData, setPokemonData] =
     useState<PokemonDataResponseType>(pokemonDataDefault);
-  const [totalStat, setTotalStat] = useState<number>(0);
   const [pokemonAnimation, setPokemonAnimation] =
     useState<string>(defaultImage);
   const [hasSelectedActive, setHasSelectedActive] = useState<boolean>(false);
@@ -136,14 +133,6 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
     if (pokemonData.id) {
       setPokemonAnimation(requestLinks.getSprite(pokemonData.id));
       setHasSelectedActive(true);
-    }
-
-    if (pokemonData.stats) {
-      let totalStatCalc = 0;
-      for (const stat of pokemonData.stats) {
-        totalStatCalc += stat.base_stat;
-      }
-      setTotalStat(totalStatCalc);
     }
   }, [pokemonData]);
 
@@ -267,23 +256,7 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
                         ))}
                       </Box>
 
-                      <StatTitleText fontSize="16px">Base Stats</StatTitleText>
-                      <Box sx={statsContainer}>
-                        {pokemonData.stats.map((statInfo, index) => (
-                          <StatBar
-                            stat={statInfo.stat.name}
-                            value={statInfo.base_stat}
-                            key={index}
-                          />
-                        ))}
-
-                        <Box sx={statTotalContainer}>
-                          <BodyText fontSize="15px" fontWeight="bold">
-                            Total:
-                          </BodyText>
-                          <BodyText fontSize="15px"> {totalStat}</BodyText>
-                        </Box>
-                      </Box>
+                      <StatBars statsData={pokemonData.stats} />
 
                       <EvolutionChain
                         pokedexData={pokedexData}
@@ -377,23 +350,7 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
                       ))}
                     </Box>
 
-                    <StatTitleText fontSize="16px">Base Stats</StatTitleText>
-                    <Box sx={statsContainer}>
-                      {pokemonData.stats.map((statInfo, index) => (
-                        <StatBar
-                          stat={statInfo.stat.name}
-                          value={statInfo.base_stat}
-                          key={index}
-                        />
-                      ))}
-
-                      <Box sx={statTotalContainer}>
-                        <BodyText fontSize="15px" fontWeight="bold">
-                          Total:
-                        </BodyText>
-                        <BodyText fontSize="15px"> {totalStat}</BodyText>
-                      </Box>
-                    </Box>
+                    <StatBars statsData={pokemonData.stats} />
 
                     <EvolutionChain
                       pokedexData={pokedexData}

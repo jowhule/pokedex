@@ -31,11 +31,8 @@ import { pokemonTypesContainer } from "../pokedex-display-page/pokedex-display/p
 import { TypeTag } from "../../components/pokemon-information/type-tag";
 import { BodyText, StatTitleText } from "../../utils/styledComponents";
 import { AbilityTag } from "../../components/pokemon-information/ability-tag";
-import {
-  abilitiesContainer,
-  statsContainer,
-} from "../pokedex-display-page/more-info-slide/style";
-import { StatBar } from "../../components/pokemon-information/base-stat-bar";
+import { abilitiesContainer } from "../pokedex-display-page/more-info-slide/style";
+import { StatBars } from "../../components/pokemon-information/stat-bars";
 import { primaryTextColour } from "../../utils/colours";
 import { EffortValueTag } from "../../components/pokemon-information/effort-value-tag";
 import {
@@ -288,16 +285,7 @@ export const PokemonDetailsPage: React.FC = () => {
               </Box>
             </Box>
 
-            <StatTitleText fontSize="16px">Base Stats</StatTitleText>
-            <Box sx={statsContainer}>
-              {activePokemonData.stats.map((statInfo, index) => (
-                <StatBar
-                  stat={statInfo.stat.name}
-                  value={statInfo.base_stat}
-                  key={index}
-                />
-              ))}
-            </Box>
+            <StatBars statsData={activePokemonData.stats} />
           </Box>
           <Stack>
             {activePokemonData.moves.map((move) => (

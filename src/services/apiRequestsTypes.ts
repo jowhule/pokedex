@@ -63,7 +63,7 @@ type PokemonSpriteType = {
   versions: Record<any, any>;
 };
 
-type PokemonStatType = {
+export type PokemonStatType = {
   base_stat: number;
   effort: number;
   stat: NameUrlType;
