@@ -63,37 +63,35 @@ export const StatBars: React.FC<StatBarProps> = ({ statsData, detailed }) => {
       {detailed ? (
         <List sx={statsContainer}>
           {statsData.map((statInfo, index) => (
-            <>
-              <ListItem key={index} sx={largeStatContainer}>
-                <BodyText minWidth="45px" sx={largeStatText}>
-                  {FULL_STATNAME[statInfo.stat.name]}
-                </BodyText>
-                <BodyText minWidth="35px" sx={largeStatText}>
-                  {statInfo.base_stat}
-                </BodyText>
-                <Box flex="15" marginLeft="10px" sx={statBarContainer}>
-                  <Box
-                    sx={{
-                      ...statBar,
-                      width: `${(statInfo.base_stat / MAX_STAT_VALUE) * 100}%`,
-                      backgroundColor: `${STAT_COLOURS[statInfo.stat.name]}`,
-                    }}
-                  />
-                </Box>
-                <BodyText
-                  minWidth="35px"
-                  sx={{ ...largeStatText, opacity: "0.8" }}
-                >
-                  {minStat(statInfo.stat.name, statInfo.base_stat)}
-                </BodyText>
-                <BodyText
-                  minWidth="35px"
-                  sx={{ ...largeStatText, opacity: "0.8" }}
-                >
-                  {maxStat(statInfo.stat.name, statInfo.base_stat)}
-                </BodyText>
-              </ListItem>
-            </>
+            <ListItem key={index} sx={largeStatContainer}>
+              <BodyText minWidth="45px" sx={largeStatText}>
+                {FULL_STATNAME[statInfo.stat.name]}
+              </BodyText>
+              <BodyText minWidth="35px" sx={largeStatText}>
+                {statInfo.base_stat}
+              </BodyText>
+              <Box flex="15" marginLeft="10px" sx={statBarContainer}>
+                <Box
+                  sx={{
+                    ...statBar,
+                    width: `${(statInfo.base_stat / MAX_STAT_VALUE) * 100}%`,
+                    backgroundColor: `${STAT_COLOURS[statInfo.stat.name]}`,
+                  }}
+                />
+              </Box>
+              <BodyText
+                minWidth="35px"
+                sx={{ ...largeStatText, opacity: "0.8" }}
+              >
+                {minStat(statInfo.stat.name, statInfo.base_stat)}
+              </BodyText>
+              <BodyText
+                minWidth="35px"
+                sx={{ ...largeStatText, opacity: "0.8" }}
+              >
+                {maxStat(statInfo.stat.name, statInfo.base_stat)}
+              </BodyText>
+            </ListItem>
           ))}
         </List>
       ) : (

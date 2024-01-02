@@ -112,7 +112,7 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
             top: 0,
             behavior: "smooth",
           });
-      }, 200);
+      }, 400);
     } else {
       // set default state
       setHasSelectedActive(false);

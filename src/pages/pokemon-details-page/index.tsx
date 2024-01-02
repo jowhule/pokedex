@@ -31,6 +31,7 @@ import { StatBars } from "../../components/pokemon-information/stat-bars";
 import {
   detailsInfoContainer,
   detailsMainInfoContainer,
+  generaTextStyle,
   infoPokemonNameStyle,
   mobileDetailsMainInfoContainer,
   pokemonDetailsBgWrapper,
@@ -41,6 +42,8 @@ import { Abilities } from "../../components/pokemon-information/abilities";
 import { abilitiesContainerStyle } from "../../components/pokemon-information/abilities/style";
 import { Types } from "../../components/pokemon-information/types";
 import { EffortValues } from "../../components/pokemon-information/effort-values";
+// import { EvolutionChain } from "../../components/pokemon-information/evolution-chain";
+import { CustomCard } from "../../components/custom-card/CustomCard";
 
 export const PokemonDetailsPage: React.FC = () => {
   const { pokeName } = useParams();
@@ -68,8 +71,26 @@ export const PokemonDetailsPage: React.FC = () => {
     return (num / 10).toFixed(1);
   };
 
+  const pokemonGenera = (species: PokemonSpeciesResponseType): string => {
+    for (const gen of species.genera) {
+      if (gen?.language?.name === "en") return gen.genus;
+    }
+    return "";
+  };
+
+  const pokemonFlavorText = (species: PokemonSpeciesResponseType): string => {
+    const texts = species.flavor_text_entries;
+    for (let i = texts.length; i >= 0; i--) {
+      if (texts[i]?.language?.name === "en")
+        return texts[i].flavor_text.replace("", " ");
+    }
+    return "";
+  };
+
+  useEffect(() => {}, []);
   // get initial pokemon data
   useEffect(() => {
+    setHasLoaded(false);
     if (pokeName)
       sendGenericAPIRequest<PokemonDataResponseType>(
         requestLinks.getData(pokeName),
@@ -103,13 +124,13 @@ export const PokemonDetailsPage: React.FC = () => {
         const dataHolder: Record<string, PokemonDataResponseType> = {};
         let i = 0;
         for (const vari of pokemonSpecies.varieties) {
-          const name: string = vari.pokemon.name;
+          const name: string = vari.pokemon?.name;
           // exceptions
           if (
             (pokeName === "zygarde-50" && (i === 2 || i === 4)) ||
             (pokeName === "pikachu" && i !== 0 && i !== 16) ||
             (pokeName === "eevee" && i === 1) ||
-            vari.pokemon.name.endsWith("-totem")
+            name.includes("-totem")
           ) {
             i += 1;
             continue;
@@ -169,7 +190,7 @@ export const PokemonDetailsPage: React.FC = () => {
 
       let nameFound: boolean = false;
       for (const name of data.form_names) {
-        if (name.language.name === "en") {
+        if (name.language?.name === "en") {
           names.push(name.name);
           nameFound = true;
         }
@@ -202,7 +223,7 @@ export const PokemonDetailsPage: React.FC = () => {
             setActive={setActive}
           />
 
-          <Box sx={pokemonDetailsBgWrapper}>
+          <CustomCard sx={pokemonDetailsBgWrapper}>
             <Box
               sx={
                 isMobile
@@ -218,11 +239,34 @@ export const PokemonDetailsPage: React.FC = () => {
               />
 
               <Box sx={detailsInfoContainer}>
-                <Typography sx={infoPokemonNameStyle}>
-                  {capitalise(activePokemonData?.species.name)}
-                </Typography>
+                <Box
+                  display="flex"
+                  width="100%"
+                  justifyContent="center"
+                  alignItems="center"
+                  gap="10px"
+                >
+                  <Typography sx={infoPokemonNameStyle}>
+                    {capitalise(activePokemonData?.species.name)}
+                  </Typography>
+                  <BodyText
+                    fontWeight="bold"
+                    textAlign="center"
+                    sx={{ opacity: "0.6" }}
+                  >
+                    # {currPokemonData.id}
+                  </BodyText>
+                </Box>
 
                 <Types typesData={activePokemonData?.types} />
+
+                <BodyText sx={generaTextStyle}>
+                  {pokemonGenera(pokemonSpecies)}
+                </BodyText>
+
+                <BodyText textAlign="center">
+                  {pokemonFlavorText(pokemonSpecies)}
+                </BodyText>
 
                 <Abilities abilitiesData={activePokemonData?.abilities} />
 
@@ -256,7 +300,10 @@ export const PokemonDetailsPage: React.FC = () => {
               statsData={activePokemonData.stats}
               detailed={!isMobile}
             />
-          </Box>
+          </CustomCard>
+          {/* <CustomCard sx={{ maxWidth: "700px", m: "0 auto" }}>
+            <EvolutionChain pokemonData={currPokemonData} />
+          </CustomCard> */}
         </Box>
       ) : (
         <CircularProgress />

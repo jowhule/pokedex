@@ -32,6 +32,7 @@ export const capitalise = (str: string, all?: boolean): string => {
  * @returns {str}
  */
 export const capitaliseDash = (str: string): string => {
+  if (!str) return "";
   const split = str.split("-");
   const capitaliseAll = split.map(
     (word) => word[0].toUpperCase() + word.slice(1)

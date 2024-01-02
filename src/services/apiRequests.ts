@@ -1,4 +1,6 @@
-import axios from "axios";
+import Axios from "axios";
+import { setupCache } from "axios-cache-interceptor";
+const axios = setupCache(Axios);
 
 const API = "https://pokeapi.co/api/v2/";
 
@@ -14,6 +16,9 @@ export const requestLinks = {
     } else {
       return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/${id}.gif`;
     }
+  },
+  getStillSprite: (id: number): string => {
+    return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
   },
   getItemSprite: (name: string): string =>
     `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${name}.png`,
