@@ -98,7 +98,6 @@ export const PokedexDisplayPage: React.FC<PokedexDisplayrops> = ({
 
   // get all pokename in region pokedex
   useEffect(() => {
-    setActivePokemon("");
     setHasLoaded(false);
 
     if (generation === "kalos") {
