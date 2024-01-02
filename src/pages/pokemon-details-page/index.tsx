@@ -306,7 +306,9 @@ export const PokemonDetailsPage: React.FC = () => {
           </CustomCard>
         </Box>
       ) : (
-        <CircularProgress />
+        <Box display="flex" justifyContent="center" width="100%">
+          <CircularProgress />
+        </Box>
       )}
     </>
   );
