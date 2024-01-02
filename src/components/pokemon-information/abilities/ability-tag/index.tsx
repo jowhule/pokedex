@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import {
   PokemonAbilityResponseType,
   PokemonAbilityType,
-} from "../../../services/apiRequestsTypes";
+} from "../../../../services/apiRequestsTypes";
 import { Box, Tooltip } from "@mui/material";
-import { BodyText, SecondaryText } from "../../../utils/styledComponents";
-import { capitalise, removeDash } from "../../../utils/helpers";
-import { sendGenericAPIRequest } from "../../../services/apiRequests";
+import { BodyText, SecondaryText } from "../../../../utils/styledComponents";
+import { capitalise, removeDash } from "../../../../utils/helpers";
+import { sendGenericAPIRequest } from "../../../../services/apiRequests";
 
 type AbilityTagProps = {
   abilityInfo: PokemonAbilityType;

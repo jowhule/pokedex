@@ -21,7 +21,6 @@ import {
 } from "../../../utils/styledComponents";
 import { TypeTag } from "../../../components/pokemon-information/type-tag";
 import {
-  abilitiesContainer,
   hideScrollableStyle,
   indicateScrollContainer,
   indicateScrollableStyle,
@@ -40,7 +39,6 @@ import {
   expandPokemonButtonStyle,
   mobileExpandPokemonButtonStyle,
 } from "./style";
-import { AbilityTag } from "../../../components/pokemon-information/ability-tag";
 import { StatBars } from "../../../components/pokemon-information/stat-bars";
 import { EvolutionChain } from "../../../components/pokemon-information/evolution-chain";
 import { pokemonDataDefault } from "../../../utils/defaults";
@@ -52,6 +50,7 @@ import { EffortValueTag } from "../../../components/pokemon-information/effort-v
 import { TYPE_COLOURS, primaryTextColour } from "../../../utils/colours";
 import { useNavigate } from "react-router-dom";
 import { pokemonTypesContainer } from "../pokedex-display/pokemon-card/style";
+import { Abilities } from "../../../components/pokemon-information/abilities";
 
 type MoreInfoSlideType = {
   pokedexData: Record<string, PokemonDataResponseType>;
@@ -249,12 +248,7 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
                         ))}
                       </Box>
 
-                      <StatTitleText fontSize="16px">Abilities</StatTitleText>
-                      <Box sx={abilitiesContainer}>
-                        {pokemonData.abilities.map((ability, index) => (
-                          <AbilityTag abilityInfo={ability} key={index} />
-                        ))}
-                      </Box>
+                      <Abilities abilitiesData={pokemonData.abilities} />
 
                       <StatBars statsData={pokemonData.stats} />
 
@@ -343,12 +337,7 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
                       ))}
                     </Box>
 
-                    <StatTitleText fontSize="16px">Abilities</StatTitleText>
-                    <Box sx={abilitiesContainer}>
-                      {pokemonData.abilities.map((ability, index) => (
-                        <AbilityTag abilityInfo={ability} key={index} />
-                      ))}
-                    </Box>
+                    <Abilities abilitiesData={pokemonData.abilities} />
 
                     <StatBars statsData={pokemonData.stats} />
 

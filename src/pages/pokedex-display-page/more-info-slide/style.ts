@@ -133,17 +133,6 @@ export const pokemonSpriteStyle = {
   zIndex: "1",
 };
 
-export const abilitiesContainer = {
-  display: "flex",
-  flexFlow: "row wrap",
-  alignItems: "center",
-  justifyContent: "center",
-  bgcolor: `${fontBgColour}`,
-  borderRadius: "15px",
-  width: "100%",
-  padding: "15px 0",
-};
-
 const spinAnimate = keyframes`
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }

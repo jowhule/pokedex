@@ -30,8 +30,6 @@ import {
 import { pokemonTypesContainer } from "../pokedex-display-page/pokedex-display/pokemon-card/style";
 import { TypeTag } from "../../components/pokemon-information/type-tag";
 import { BodyText, StatTitleText } from "../../utils/styledComponents";
-import { AbilityTag } from "../../components/pokemon-information/ability-tag";
-import { abilitiesContainer } from "../pokedex-display-page/more-info-slide/style";
 import { StatBars } from "../../components/pokemon-information/stat-bars";
 import { primaryTextColour } from "../../utils/colours";
 import { EffortValueTag } from "../../components/pokemon-information/effort-value-tag";
@@ -42,6 +40,8 @@ import {
   pokemonDetailsSpriteStyle,
 } from "./style";
 import { TabsPanel } from "./tabs-panel";
+import { Abilities } from "../../components/pokemon-information/abilities";
+import { abilitiesContainerStyle } from "../../components/pokemon-information/abilities/style";
 
 export const PokemonDetailsPage: React.FC = () => {
   const { pokeName } = useParams();
@@ -246,17 +246,12 @@ export const PokemonDetailsPage: React.FC = () => {
                   ))}
                 </Box>
 
-                <StatTitleText fontSize="16px">Abilities</StatTitleText>
-                <Box sx={abilitiesContainer}>
-                  {activePokemonData.abilities.map((ability, index) => (
-                    <AbilityTag abilityInfo={ability} key={index} />
-                  ))}
-                </Box>
+                <Abilities abilitiesData={activePokemonData?.abilities} />
 
                 <Box display="flex" gap="15px">
                   <Stack flex="1">
                     <StatTitleText fontSize="16px">Height</StatTitleText>
-                    <Box sx={abilitiesContainer}>
+                    <Box sx={abilitiesContainerStyle}>
                       <BodyText>
                         {insertDecimal(activePokemonData.height)} m
                       </BodyText>
@@ -264,7 +259,7 @@ export const PokemonDetailsPage: React.FC = () => {
                   </Stack>
                   <Stack flex="1">
                     <StatTitleText fontSize="16px">Weight</StatTitleText>
-                    <Box sx={abilitiesContainer}>
+                    <Box sx={abilitiesContainerStyle}>
                       <BodyText>
                         {insertDecimal(activePokemonData.weight)} kg
                       </BodyText>
