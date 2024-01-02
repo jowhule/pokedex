@@ -42,7 +42,7 @@ import { Abilities } from "../../components/pokemon-information/abilities";
 import { abilitiesContainerStyle } from "../../components/pokemon-information/abilities/style";
 import { Types } from "../../components/pokemon-information/types";
 import { EffortValues } from "../../components/pokemon-information/effort-values";
-import { EvolutionChain } from "../../components/pokemon-information/evolution-chain";
+// import { EvolutionChain } from "../../components/pokemon-information/evolution-chain";
 import { CustomCard } from "../../components/custom-card/CustomCard";
 
 export const PokemonDetailsPage: React.FC = () => {
@@ -301,9 +301,9 @@ export const PokemonDetailsPage: React.FC = () => {
               detailed={!isMobile}
             />
           </CustomCard>
-          <CustomCard sx={{ maxWidth: "700px", m: "0 auto" }}>
+          {/* <CustomCard sx={{ maxWidth: "700px", m: "0 auto" }}>
             <EvolutionChain pokemonData={currPokemonData} />
-          </CustomCard>
+          </CustomCard> */}
         </Box>
       ) : (
         <CircularProgress />
