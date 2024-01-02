@@ -30,7 +30,6 @@ import {
 import { BodyText, StatTitleText } from "../../utils/styledComponents";
 import { StatBars } from "../../components/pokemon-information/stat-bars";
 import { primaryTextColour } from "../../utils/colours";
-import { EffortValueTag } from "../../components/pokemon-information/effort-value-tag";
 import {
   detailsMainInfoContainer,
   gigantamaxButtonStyle,
@@ -41,6 +40,7 @@ import { TabsPanel } from "./tabs-panel";
 import { Abilities } from "../../components/pokemon-information/abilities";
 import { abilitiesContainerStyle } from "../../components/pokemon-information/abilities/style";
 import { Types } from "../../components/pokemon-information/types";
+import { EffortValues } from "../../components/pokemon-information/effort-values";
 
 export const PokemonDetailsPage: React.FC = () => {
   const { pokeName } = useParams();
@@ -265,16 +265,7 @@ export const PokemonDetailsPage: React.FC = () => {
                   </Stack>
                 </Box>
 
-                <StatTitleText fontSize="16px">EV Yield</StatTitleText>
-                <Box display="flex" justifyContent="center" gap="10px">
-                  {activePokemonData.stats.map((statInfo, index) => (
-                    <EffortValueTag
-                      stat={statInfo.stat.name}
-                      value={statInfo.effort}
-                      key={index}
-                    />
-                  ))}
-                </Box>
+                <EffortValues statsData={activePokemonData?.stats} />
               </Box>
             </Box>
 

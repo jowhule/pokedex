@@ -17,7 +17,6 @@ import {
   BodyText,
   Hoverable,
   SecondaryText,
-  StatTitleText,
 } from "../../../utils/styledComponents";
 import {
   hideScrollableStyle,
@@ -45,11 +44,11 @@ import { capitalise } from "../../../utils/helpers";
 
 import defaultImage from "../../../assets/default_pokemon_info.png";
 import pokeballLoader from "../../../assets/pokeball-icon.png";
-import { EffortValueTag } from "../../../components/pokemon-information/effort-value-tag";
 import { TYPE_COLOURS, primaryTextColour } from "../../../utils/colours";
 import { useNavigate } from "react-router-dom";
 import { Abilities } from "../../../components/pokemon-information/abilities";
 import { Types } from "../../../components/pokemon-information/types";
+import { EffortValues } from "../../../components/pokemon-information/effort-values";
 
 type MoreInfoSlideType = {
   pokedexData: Record<string, PokemonDataResponseType>;
@@ -247,16 +246,7 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
                         setTransition={setTransition}
                       />
 
-                      <StatTitleText fontSize="16px">EV Yield</StatTitleText>
-                      <Box display="flex" justifyContent="center" gap="10px">
-                        {pokemonData.stats.map((statInfo, index) => (
-                          <EffortValueTag
-                            stat={statInfo.stat.name}
-                            value={statInfo.effort}
-                            key={index}
-                          />
-                        ))}
-                      </Box>
+                      <EffortValues statsData={pokemonData?.stats} />
                     </Stack>
                   </Box>
                 </Box>
@@ -332,16 +322,7 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
                       setTransition={setTransition}
                     />
 
-                    <StatTitleText fontSize="16px">EV Yield</StatTitleText>
-                    <Box display="flex" justifyContent="center" gap="10px">
-                      {pokemonData.stats.map((statInfo, index) => (
-                        <EffortValueTag
-                          stat={statInfo.stat.name}
-                          value={statInfo.effort}
-                          key={index}
-                        />
-                      ))}
-                    </Box>
+                    <EffortValues statsData={pokemonData?.stats} />
                   </Stack>
                 ) : (
                   <SecondaryText fontWeight="bold">
