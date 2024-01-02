@@ -18,9 +18,3 @@ export const pokemonDetailsSpriteStyle = {
   height: "100%",
   m: "auto",
 };
-
-export const gigantamaxButtonStyle = {
-  width: "120px",
-  bgcolor: "grey",
-  position: "absolute",
-};

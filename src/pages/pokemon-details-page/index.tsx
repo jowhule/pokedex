@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   pokemonDataDefault,
-  pokemonFormDefault,
   pokemonSpeciesDefault,
 } from "../../utils/defaults";
 import {
@@ -14,13 +13,7 @@ import {
   requestLinks,
   sendGenericAPIRequest,
 } from "../../services/apiRequests";
-import {
-  Box,
-  Button,
-  CircularProgress,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Box, CircularProgress, Stack, Typography } from "@mui/material";
 import {
   capitalise,
   capitaliseDash,
@@ -32,7 +25,6 @@ import { StatBars } from "../../components/pokemon-information/stat-bars";
 import { primaryTextColour } from "../../utils/colours";
 import {
   detailsMainInfoContainer,
-  gigantamaxButtonStyle,
   pokemonDetailsBgWrapper,
   pokemonDetailsSpriteStyle,
 } from "./style";
@@ -60,15 +52,8 @@ export const PokemonDetailsPage: React.FC = () => {
     []
   );
   const [formsData, setFormsData] = useState<PokemonFormResponseType[]>([]);
-  const [gigaForm, setGigaForm] =
-    useState<PokemonFormResponseType>(pokemonFormDefault);
 
   const [formNames, setFormNames] = useState<string[]>([]);
-  const [showGigaForm, setShowGigaForm] = useState<boolean>(false);
-
-  const hangleGigaChange = () => {
-    setShowGigaForm(!showGigaForm);
-  };
 
   const insertDecimal = (num: number) => {
     return (num / 10).toFixed(1);
@@ -154,13 +139,7 @@ export const PokemonDetailsPage: React.FC = () => {
       Promise.allSettled(formsDataPromises).then(() => {
         const forms: PokemonFormResponseType[] = [];
         Object.keys(formHolder).forEach((key) => {
-          if (formHolder[parseInt(key)].form_name === "gmax") {
-            setGigaForm(formHolder[parseInt(key)]);
-            const gigaImg = new Image();
-            gigaImg.src = gigaForm.sprites.front_default;
-          } else {
-            forms.push(formHolder[parseInt(key)]);
-          }
+          forms.push(formHolder[parseInt(key)]);
         });
         setFormsData(forms);
       });
@@ -169,7 +148,6 @@ export const PokemonDetailsPage: React.FC = () => {
   }, [varietiesData]);
 
   useEffect(() => {
-    setShowGigaForm(false);
     setActivePokemonData(varietiesData[active]);
   }, [active, varietiesData]);
 
@@ -217,20 +195,9 @@ export const PokemonDetailsPage: React.FC = () => {
                 flex="1"
                 component="img"
                 alt={`${activePokemonData.name}'s sprite`}
-                src={
-                  showGigaForm
-                    ? gigaForm.sprites.front_default
-                    : activePokemonData.sprites.front_default
-                }
+                src={activePokemonData.sprites.front_default}
                 sx={pokemonDetailsSpriteStyle}
               />
-              {activePokemonData.is_default && gigaForm.id > 0 && (
-                <>
-                  <Button onClick={hangleGigaChange} sx={gigantamaxButtonStyle}>
-                    {showGigaForm ? "Revert" : "Dynamax"}
-                  </Button>
-                </>
-              )}
 
               <Box display="flex" flex="1" flexDirection="column" m="30px auto">
                 <Typography
