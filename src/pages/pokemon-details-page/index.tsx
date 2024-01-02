@@ -18,7 +18,6 @@ import {
   capitalise,
   capitaliseDash,
   getDataPromises,
-  removeDash,
 } from "../../utils/helpers";
 import { BodyText, StatTitleText } from "../../utils/styledComponents";
 import { StatBars } from "../../components/pokemon-information/stat-bars";
@@ -241,13 +240,6 @@ export const PokemonDetailsPage: React.FC = () => {
 
             <StatBars statsData={activePokemonData.stats} detailed />
           </Box>
-          <Stack>
-            {activePokemonData.moves.map((move) => (
-              <BodyText>
-                {capitalise(removeDash(move.move.name), true)}
-              </BodyText>
-            ))}
-          </Stack>
         </Box>
       ) : (
         <CircularProgress />
