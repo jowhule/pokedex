@@ -1,17 +1,15 @@
 import { secondaryColour } from "../../../utils/colours";
 
 export const detailsTabsContainer = {
-  width: "100%",
+  width: "calc(100% - 5px)",
   boxSizing: "border-box",
-  height: "45px",
-  position: "relative",
-  marginBottom: "-5px",
+  minHeight: "45px",
 };
 
 export const detailsTabPanelStyle = {
   bgcolor: `${secondaryColour}`,
-  p: "0 20px",
-  height: "40px",
+  p: "5px 20px",
+  minHeight: "40px",
   borderRadius: "15px 15px 0 0",
   boxShadow: "5px 0px #b6b9be",
   transform: "translateY(0px)",
@@ -23,7 +21,7 @@ export const detailsTabPanelStyle = {
 export const activeDetailsPanelStyle = {
   bgcolor: "white",
   p: "0 20px",
-  height: "35px",
+  minHeight: "35px",
   borderRadius: "15px 15px 0 0",
   boxShadow: `5px 0px ${secondaryColour}`,
   transform: "translateY(5px)",

@@ -13,7 +13,14 @@ import {
   requestLinks,
   sendGenericAPIRequest,
 } from "../../services/apiRequests";
-import { Box, CircularProgress, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  Stack,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import {
   capitalise,
   capitaliseDash,
@@ -21,9 +28,11 @@ import {
 } from "../../utils/helpers";
 import { BodyText, StatTitleText } from "../../utils/styledComponents";
 import { StatBars } from "../../components/pokemon-information/stat-bars";
-import { primaryTextColour } from "../../utils/colours";
 import {
+  detailsInfoContainer,
   detailsMainInfoContainer,
+  infoPokemonNameStyle,
+  mobileDetailsMainInfoContainer,
   pokemonDetailsBgWrapper,
   pokemonDetailsSpriteStyle,
 } from "./style";
@@ -36,6 +45,8 @@ import { EffortValues } from "../../components/pokemon-information/effort-values
 export const PokemonDetailsPage: React.FC = () => {
   const { pokeName } = useParams();
   const navigate = useNavigate();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [active, setActive] = useState<number>(0);
   const [activePokemonData, setActivePokemonData] =
@@ -51,7 +62,6 @@ export const PokemonDetailsPage: React.FC = () => {
     []
   );
   const [formsData, setFormsData] = useState<PokemonFormResponseType[]>([]);
-
   const [formNames, setFormNames] = useState<string[]>([]);
 
   const insertDecimal = (num: number) => {
@@ -62,12 +72,11 @@ export const PokemonDetailsPage: React.FC = () => {
   useEffect(() => {
     if (pokeName)
       sendGenericAPIRequest<PokemonDataResponseType>(
-        requestLinks.getData(pokeName)
+        requestLinks.getData(pokeName),
+        () => navigate("/404")
       ).then((data) => {
         if (data) {
           setCurrPokemonData(data);
-        } else {
-          navigate("/404");
         }
       });
   }, [navigate, pokeName]);
@@ -181,7 +190,12 @@ export const PokemonDetailsPage: React.FC = () => {
   return (
     <>
       {hasLoaded ? (
-        <Box maxWidth="1200px" m="0 auto" p="0 30px" boxSizing="border-box">
+        <Box
+          maxWidth="1200px"
+          m="0 auto"
+          p={isMobile ? "0 15px" : "0 30px"}
+          boxSizing="border-box"
+        >
           <TabsPanel
             formNames={formNames}
             active={active}
@@ -189,22 +203,22 @@ export const PokemonDetailsPage: React.FC = () => {
           />
 
           <Box sx={pokemonDetailsBgWrapper}>
-            <Box sx={detailsMainInfoContainer}>
+            <Box
+              sx={
+                isMobile
+                  ? mobileDetailsMainInfoContainer
+                  : detailsMainInfoContainer
+              }
+            >
               <Box
-                flex="1"
                 component="img"
                 alt={`${activePokemonData.name}'s sprite`}
                 src={activePokemonData.sprites.front_default}
                 sx={pokemonDetailsSpriteStyle}
               />
 
-              <Box display="flex" flex="1" flexDirection="column" m="30px auto">
-                <Typography
-                  textAlign="center"
-                  fontWeight="bold"
-                  color={primaryTextColour}
-                  fontSize="22px"
-                >
+              <Box sx={detailsInfoContainer}>
+                <Typography sx={infoPokemonNameStyle}>
                   {capitalise(activePokemonData?.species.name)}
                 </Typography>
 
@@ -238,7 +252,10 @@ export const PokemonDetailsPage: React.FC = () => {
               </Box>
             </Box>
 
-            <StatBars statsData={activePokemonData.stats} detailed />
+            <StatBars
+              statsData={activePokemonData.stats}
+              detailed={!isMobile}
+            />
           </Box>
         </Box>
       ) : (

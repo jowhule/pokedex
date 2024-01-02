@@ -1,7 +1,10 @@
+import { primaryTextColour } from "../../utils/colours";
+
 export const pokemonDetailsBgWrapper = {
   bgcolor: "white",
   p: "20px 40px",
-  borderRadius: "0 20px 20px 20px",
+  borderRadius: "0 0 20px 20px",
+  position: "relative",
 };
 
 export const detailsMainInfoContainer = {
@@ -12,9 +15,33 @@ export const detailsMainInfoContainer = {
   m: "0 auto",
 };
 
+export const mobileDetailsMainInfoContainer = {
+  display: "flex",
+  width: "100%",
+  maxWidth: "1000px",
+  m: "0 auto",
+  flexDirection: "column",
+};
+
 export const pokemonDetailsSpriteStyle = {
   imageRendering: "pixelated",
   width: "100%",
   height: "100%",
   m: "auto",
+  flex: "1",
+};
+
+export const detailsInfoContainer = {
+  display: "flex",
+  flex: "1",
+  flexDirection: "column",
+  m: "30px auto,",
+  justifyContent: "center",
+};
+
+export const infoPokemonNameStyle = {
+  textAlign: "center",
+  fontWeight: "bold",
+  color: primaryTextColour,
+  fontSize: "22px",
 };
