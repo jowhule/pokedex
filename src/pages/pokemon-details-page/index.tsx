@@ -41,6 +41,7 @@ import { Abilities } from "../../components/pokemon-information/abilities";
 import { abilitiesContainerStyle } from "../../components/pokemon-information/abilities/style";
 import { Types } from "../../components/pokemon-information/types";
 import { EffortValues } from "../../components/pokemon-information/effort-values";
+import { EvolutionChain } from "../../components/pokemon-information/evolution-chain";
 
 export const PokemonDetailsPage: React.FC = () => {
   const { pokeName } = useParams();
@@ -66,6 +67,13 @@ export const PokemonDetailsPage: React.FC = () => {
 
   const insertDecimal = (num: number) => {
     return (num / 10).toFixed(1);
+  };
+
+  const pokemonGenera = (species: PokemonSpeciesResponseType): string => {
+    for (const gen of species.genera) {
+      if (gen.language.name === "en") return gen.genus;
+    }
+    return "";
   };
 
   // get initial pokemon data
@@ -109,7 +117,7 @@ export const PokemonDetailsPage: React.FC = () => {
             (pokeName === "zygarde-50" && (i === 2 || i === 4)) ||
             (pokeName === "pikachu" && i !== 0 && i !== 16) ||
             (pokeName === "eevee" && i === 1) ||
-            vari.pokemon.name.endsWith("-totem")
+            vari.pokemon.name.includes("-totem")
           ) {
             i += 1;
             continue;
@@ -218,11 +226,27 @@ export const PokemonDetailsPage: React.FC = () => {
               />
 
               <Box sx={detailsInfoContainer}>
+                <BodyText
+                  fontWeight="bold"
+                  textAlign="center"
+                  sx={{ opacity: "0.6" }}
+                >
+                  # {currPokemonData.id}
+                </BodyText>
+
                 <Typography sx={infoPokemonNameStyle}>
                   {capitalise(activePokemonData?.species.name)}
                 </Typography>
+                <BodyText>{pokemonGenera(pokemonSpecies)}</BodyText>
 
                 <Types typesData={activePokemonData?.types} />
+
+                <BodyText textAlign="center">
+                  {pokemonSpecies.flavor_text_entries[0].flavor_text.replace(
+                    "",
+                    " "
+                  )}
+                </BodyText>
 
                 <Abilities abilitiesData={activePokemonData?.abilities} />
 
@@ -257,6 +281,7 @@ export const PokemonDetailsPage: React.FC = () => {
               detailed={!isMobile}
             />
           </Box>
+          <EvolutionChain pokemonData={currPokemonData} />
         </Box>
       ) : (
         <CircularProgress />

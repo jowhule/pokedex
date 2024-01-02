@@ -1,4 +1,6 @@
-import axios from "axios";
+import Axios from "axios";
+import { setupCache } from "axios-cache-interceptor";
+const axios = setupCache(Axios);
 
 const API = "https://pokeapi.co/api/v2/";
 

@@ -5,6 +5,7 @@ export const pokemonDetailsBgWrapper = {
   p: "20px 40px",
   borderRadius: "0 0 20px 20px",
   position: "relative",
+  top: "-5px",
 };
 
 export const detailsMainInfoContainer = {
