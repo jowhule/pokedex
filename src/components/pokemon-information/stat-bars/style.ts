@@ -52,6 +52,11 @@ export const statTitle = {
   top: "0",
 };
 
+export const largeStatTitle = {
+  fontSize: "11px",
+  fontWeight: "bold",
+};
+
 export const statTotalContainer = {
   display: "flex",
   justifyContent: "space-between",

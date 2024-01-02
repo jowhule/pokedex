@@ -1,6 +1,6 @@
 import React from "react";
 import { Chip } from "@mui/material";
-import { TYPE_BORDER_COLOURS, TYPE_COLOURS } from "../../../utils/colours";
+import { TYPE_BORDER_COLOURS, TYPE_COLOURS } from "../../../../utils/colours";
 
 type TypeTagProps = {
   type: string;

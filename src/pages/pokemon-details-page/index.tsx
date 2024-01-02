@@ -27,8 +27,6 @@ import {
   getDataPromises,
   removeDash,
 } from "../../utils/helpers";
-import { pokemonTypesContainer } from "../pokedex-display-page/pokedex-display/pokemon-card/style";
-import { TypeTag } from "../../components/pokemon-information/type-tag";
 import { BodyText, StatTitleText } from "../../utils/styledComponents";
 import { StatBars } from "../../components/pokemon-information/stat-bars";
 import { primaryTextColour } from "../../utils/colours";
@@ -42,6 +40,7 @@ import {
 import { TabsPanel } from "./tabs-panel";
 import { Abilities } from "../../components/pokemon-information/abilities";
 import { abilitiesContainerStyle } from "../../components/pokemon-information/abilities/style";
+import { Types } from "../../components/pokemon-information/types";
 
 export const PokemonDetailsPage: React.FC = () => {
   const { pokeName } = useParams();
@@ -226,9 +225,11 @@ export const PokemonDetailsPage: React.FC = () => {
                 sx={pokemonDetailsSpriteStyle}
               />
               {activePokemonData.is_default && gigaForm.id > 0 && (
-                <Button onClick={hangleGigaChange} sx={gigantamaxButtonStyle}>
-                  {showGigaForm ? "Revert" : "Dynamax"}
-                </Button>
+                <>
+                  <Button onClick={hangleGigaChange} sx={gigantamaxButtonStyle}>
+                    {showGigaForm ? "Revert" : "Dynamax"}
+                  </Button>
+                </>
               )}
 
               <Box display="flex" flex="1" flexDirection="column" m="30px auto">
@@ -240,11 +241,8 @@ export const PokemonDetailsPage: React.FC = () => {
                 >
                   {capitalise(activePokemonData?.species.name)}
                 </Typography>
-                <Box sx={{ ...pokemonTypesContainer, marginBottom: "0" }}>
-                  {activePokemonData.types.map((type, index) => (
-                    <TypeTag type={type.type.name} key={index} />
-                  ))}
-                </Box>
+
+                <Types typesData={activePokemonData?.types} />
 
                 <Abilities abilitiesData={activePokemonData?.abilities} />
 

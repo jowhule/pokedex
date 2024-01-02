@@ -10,6 +10,7 @@ import {
   statTitle,
   statsContainer,
   statTotalContainer,
+  largeStatTitle,
 } from "./style";
 import { STAT_ABBRV } from "../../../utils/helpers";
 import { PokemonStatType } from "../../../services/apiRequestsTypes";
@@ -38,41 +39,21 @@ export const StatBars: React.FC<StatBarProps> = ({ statsData, large }) => {
       <StatTitleText fontSize="16px">Base Stats</StatTitleText>
       <Box sx={statsContainer}>
         {statsData.map((statInfo, index) => (
-          <>
-            {large ? (
-              <Box key={index} sx={statContainer}>
-                <Box sx={statBarContainer}>
-                  <BodyText sx={statTitle}>
-                    {STAT_ABBRV[statInfo.stat.name]}
-                  </BodyText>
-                  <Box
-                    sx={{
-                      ...statBar,
-                      width: `${(statInfo.base_stat / MAX_STAT_VALUE) * 100}%`,
-                      backgroundColor: `${STAT_COLOURS[statInfo.stat.name]}`,
-                    }}
-                  ></Box>
-                  <BodyText sx={statValue}>{statInfo.base_stat}</BodyText>
-                </Box>
-              </Box>
-            ) : (
-              <Box key={index} sx={statContainer}>
-                <Box sx={statBarContainer}>
-                  <BodyText sx={statTitle}>
-                    {STAT_ABBRV[statInfo.stat.name]}
-                  </BodyText>
-                  <Box
-                    sx={{
-                      ...statBar,
-                      width: `${(statInfo.base_stat / MAX_STAT_VALUE) * 100}%`,
-                      backgroundColor: `${STAT_COLOURS[statInfo.stat.name]}`,
-                    }}
-                  ></Box>
-                  <BodyText sx={statValue}>{statInfo.base_stat}</BodyText>
-                </Box>
-              </Box>
-            )}
-          </>
+          <Box key={index} sx={statContainer}>
+            <Box sx={statBarContainer}>
+              <BodyText sx={large ? largeStatTitle : statTitle}>
+                {STAT_ABBRV[statInfo.stat.name]}
+              </BodyText>
+              <Box
+                sx={{
+                  ...statBar,
+                  width: `${(statInfo.base_stat / MAX_STAT_VALUE) * 100}%`,
+                  backgroundColor: `${STAT_COLOURS[statInfo.stat.name]}`,
+                }}
+              ></Box>
+              <BodyText sx={statValue}>{statInfo.base_stat}</BodyText>
+            </Box>
+          </Box>
         ))}
       </Box>
       <Box sx={statTotalContainer}>

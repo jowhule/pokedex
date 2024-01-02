@@ -19,7 +19,6 @@ import {
   SecondaryText,
   StatTitleText,
 } from "../../../utils/styledComponents";
-import { TypeTag } from "../../../components/pokemon-information/type-tag";
 import {
   hideScrollableStyle,
   indicateScrollContainer,
@@ -49,8 +48,8 @@ import pokeballLoader from "../../../assets/pokeball-icon.png";
 import { EffortValueTag } from "../../../components/pokemon-information/effort-value-tag";
 import { TYPE_COLOURS, primaryTextColour } from "../../../utils/colours";
 import { useNavigate } from "react-router-dom";
-import { pokemonTypesContainer } from "../pokedex-display/pokemon-card/style";
 import { Abilities } from "../../../components/pokemon-information/abilities";
+import { Types } from "../../../components/pokemon-information/types";
 
 type MoreInfoSlideType = {
   pokedexData: Record<string, PokemonDataResponseType>;
@@ -237,20 +236,9 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
                         {capitalise(pokemonData?.species.name)}
                       </BodyText>
 
-                      <Box
-                        display="flex"
-                        gap="10px"
-                        m="10px"
-                        justifyContent="center"
-                      >
-                        {pokemonData?.types.map((type, index) => (
-                          <TypeTag type={type.type.name} key={index} />
-                        ))}
-                      </Box>
+                      <Abilities abilitiesData={pokemonData?.abilities} />
 
-                      <Abilities abilitiesData={pokemonData.abilities} />
-
-                      <StatBars statsData={pokemonData.stats} />
+                      <StatBars statsData={pokemonData?.stats} />
 
                       <EvolutionChain
                         pokedexData={pokedexData}
@@ -331,15 +319,11 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
                       {capitalise(pokemonData.species.name)}
                     </BodyText>
 
-                    <Box sx={pokemonTypesContainer}>
-                      {pokemonData.types.map((type, index) => (
-                        <TypeTag type={type.type.name} key={index} />
-                      ))}
-                    </Box>
+                    <Types typesData={pokemonData?.types} />
 
-                    <Abilities abilitiesData={pokemonData.abilities} />
+                    <Abilities abilitiesData={pokemonData?.abilities} />
 
-                    <StatBars statsData={pokemonData.stats} />
+                    <StatBars statsData={pokemonData?.stats} />
 
                     <EvolutionChain
                       pokedexData={pokedexData}

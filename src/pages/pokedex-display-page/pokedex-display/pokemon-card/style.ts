@@ -47,10 +47,3 @@ export const pokemonSpriteHover: SxProps<Theme> = {
   ...pokemonSpriteStyle,
   transform: "scale(1.1)",
 };
-
-export const pokemonTypesContainer: SxProps<Theme> = {
-  display: "flex",
-  gap: "10px",
-  m: "10px",
-  justifyContent: "center",
-};
