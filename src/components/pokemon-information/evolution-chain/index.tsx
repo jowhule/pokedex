@@ -24,12 +24,14 @@ import {
   mobilePokemonInfoSlideContainer,
   pokemonInfoSlideContainer,
 } from "../../../pages/pokedex-display-page/more-info-slide/style";
-import { capitalise } from "../../../utils/helpers";
+import { capitalise, getIdFromLink } from "../../../utils/helpers";
+import { useNavigate } from "react-router";
 
 type EvoStages = StageInfo[][];
 
 export type StageInfo = {
   name: string;
+  sprite: string;
   methods: Record<string, any>;
   trigger: NameUrlType;
 };
@@ -50,6 +52,7 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
   const [evolutionStages, setEvolutionStages] = useState<EvoStages>([]);
   const theme = useTheme();
   const isTablet = useMediaQuery(theme.breakpoints.down("lg"));
+  const navigate = useNavigate();
 
   // recursively traverse the evolution tree and add it to per level array
   const evoTreeTraverse = useCallback(
@@ -79,13 +82,20 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
 
       const currStage: StageInfo = {
         name: pokemonName,
+        sprite: "",
         methods: evolveMethods,
         trigger: details.trigger,
       };
 
       if (!evoStages[level]) evoStages.push([]);
-      if (pokedexData && pokedexData[pokemonName])
-        evoStages[level].push(currStage);
+      if (pokedexData && pokedexData[pokemonName]) {
+        currStage.sprite = pokedexData[pokemonName].sprites.front_default;
+      } else {
+        currStage.sprite = requestLinks.getStillSprite(
+          parseInt(getIdFromLink(root.species.url))
+        );
+      }
+      evoStages[level].push(currStage);
 
       // traverse tree
       root.evolves_to.forEach((evolveTo) => {
@@ -100,8 +110,11 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
    * @param name name of pokem on clicked on
    */
   const handleEvoClick = (name: string) => {
-    if (setActivePokemon && name !== pokemonData.species.name)
+    if (!pokedexData) {
+      navigate(`/pokemon/${name}`);
+    } else if (setActivePokemon && name !== pokemonData.species.name) {
       setActivePokemon(name);
+    }
   };
 
   // get evolution data
@@ -167,10 +180,7 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
                       <Hoverable onClick={() => handleEvoClick(evo.name)}>
                         <Box
                           component="img"
-                          src={
-                            pokedexData &&
-                            pokedexData[evo.name].sprites.front_default
-                          }
+                          src={evo.sprite}
                           alt={`${evo.name}'s sprite`}
                           sx={pokemonEvoSpriteStyle}
                         />

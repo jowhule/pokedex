@@ -17,6 +17,9 @@ export const requestLinks = {
       return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/${id}.gif`;
     }
   },
+  getStillSprite: (id: number): string => {
+    return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
+  },
   getItemSprite: (name: string): string =>
     `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/${name}.png`,
   getTMType: (type: string): string =>

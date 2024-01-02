@@ -10,6 +10,7 @@ export const statsContainer = {
   justifyContent: "center",
   padding: "0 12px",
   width: "100%",
+  boxSizing: "border-box",
 };
 
 export const statContainer = {
@@ -73,6 +74,7 @@ export const statTotalContainer = {
   p: "2px 15px",
   m: "5px auto",
   width: "80%",
+  boxSizing: "border-box",
 };
 
 export const largeStatTotalContainer = {
@@ -83,4 +85,5 @@ export const largeStatTotalContainer = {
   m: "5px auto",
   width: "100%",
   textAlign: "right",
+  boxSizing: "border-box",
 };

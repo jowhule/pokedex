@@ -13,7 +13,7 @@ export const detailsMainInfoContainer = {
   gap: "30px",
   width: "100%",
   maxWidth: "1000px",
-  m: "0 auto",
+  m: "20px auto",
 };
 
 export const mobileDetailsMainInfoContainer = {
@@ -45,4 +45,11 @@ export const infoPokemonNameStyle = {
   fontWeight: "bold",
   color: primaryTextColour,
   fontSize: "22px",
+};
+
+export const generaTextStyle = {
+  textAlign: "center",
+  fontSize: "17px",
+  fontWeight: "bold",
+  opacity: "0.8",
 };
