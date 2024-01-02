@@ -7,6 +7,8 @@ import { MoveToTop } from "./components/move-to-top";
 import { Navbar } from "./components/navbar";
 import { Box, ThemeProvider, createTheme } from "@mui/material";
 import { NAVBAR_HEIGHT } from "./components/navbar/style";
+import { PokemonDetailsPage } from "./pages/pokemon-details-page";
+import { ErrorrPage } from "./pages/error-page";
 
 const theme = createTheme({
   palette: {
@@ -72,6 +74,8 @@ function App() {
             path="/paldea"
             element={<PokedexDisplayPage generation="paldea" />}
           />
+          <Route path="/pokemon/:pokeName" element={<PokemonDetailsPage />} />
+          <Route path="/404" element={<ErrorrPage />} />
         </Routes>
       </ThemeProvider>
     </BrowserRouter>

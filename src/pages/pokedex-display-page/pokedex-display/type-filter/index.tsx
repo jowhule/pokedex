@@ -3,7 +3,7 @@ import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import { Box, Dialog, useTheme } from "@mui/material";
 import { BodyText, Hoverable } from "../../../../utils/styledComponents";
 import { TYPE_COLOURS } from "../../../../utils/colours";
-import { TypeTag } from "../../../../components/pokemon-information/type-tag";
+import { TypeTag } from "../../../../components/pokemon-information/types/type-tag";
 import {
   addMoreFiltersStyle,
   typeFilterContainer,

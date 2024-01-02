@@ -13,7 +13,7 @@ import {
 } from "../../services/apiRequests";
 import { PokedexDisplay } from "./pokedex-display";
 import { MoreInfoSlide } from "./more-info-slide";
-import { getIdFromLink } from "../../utils/helpers";
+import { getDataPromises, getIdFromLink } from "../../utils/helpers";
 
 export type PokedexDisplayrops = {
   generation: string;
@@ -58,32 +58,6 @@ export const PokedexDisplayPage: React.FC<PokedexDisplayrops> = ({
       }
       setPokedexEntries([...kalosDex]);
     });
-  };
-
-  /**
-   * pushes api requests to get a pokemon's data (promises) into the the array
-   * @param dataPromises async api requests to get a pokemon's data array
-   * @param dataHolder where data goes when api request is finished
-   * @param id id of pokemon
-   * @param speciesName name of the pokemon species
-   */
-  const getPokedexDataPromises = (
-    dataPromises: Promise<void | PokemonDataResponseType>[],
-    dataHolder: Record<string, PokemonDataResponseType> = {},
-    id: number,
-    speciesName: string
-  ) => {
-    dataPromises.push(
-      sendGenericAPIRequest<PokemonDataResponseType>(
-        requestLinks.getData(id)
-      ).then((data) => {
-        if (data) {
-          dataHolder[speciesName] = data;
-        } else {
-          getPokedexDataPromises(dataPromises, dataHolder, id, speciesName);
-        }
-      })
-    );
   };
 
   /**
@@ -150,7 +124,12 @@ export const PokedexDisplayPage: React.FC<PokedexDisplayrops> = ({
     for (const entry of pokedexEntries) {
       const id = parseInt(entry.pokemon_species.url.split("/")[6]);
       const speciesName = entry.pokemon_species.name;
-      getPokedexDataPromises(dataPromises, dataHolder, id, speciesName);
+      getDataPromises(
+        dataPromises,
+        dataHolder,
+        requestLinks.getData(id),
+        speciesName
+      );
       if (generation !== "national") {
         getRegionalFormPromises(
           regionalPromises,

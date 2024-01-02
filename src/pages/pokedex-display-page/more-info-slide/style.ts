@@ -41,6 +41,7 @@ export const infoSlideContainer = {
   height: "100%",
   boxSizing: "border-box",
   padding: "90px 20px 50px 20px",
+  marginTop: "0px",
   textAlign: "center",
   overflow: "scroll",
   overflowX: "hidden",
@@ -95,9 +96,9 @@ export const mobileInfoSlideContainer = {
   display: "flex",
   flexDirection: "column",
   minWidth: "calc(100vw + 10px)",
-  height: "100%vh",
   boxSizing: "border-box",
-  padding: "90px 20px 50px 20px",
+  padding: "0 20px 50px 20px",
+  marginTop: "90px",
   textAlign: "center",
   overflow: "scroll",
   overflowX: "hidden",
@@ -130,36 +131,6 @@ export const pokemonSpriteStyle = {
   overflowClipMargin: "content-box",
   transform: "scale(3)",
   zIndex: "1",
-};
-
-export const abilitiesContainer = {
-  display: "flex",
-  flexFlow: "row wrap",
-  alignItems: "center",
-  justifyContent: "center",
-  bgcolor: `${fontBgColour}`,
-  borderRadius: "15px",
-  width: "100%",
-  padding: "15px 0",
-};
-
-export const statsContainer = {
-  display: "flex",
-  flexDirection: "column",
-  gap: "7px",
-  justifyContent: "center",
-  padding: "0 12px",
-  width: "100%",
-};
-
-export const statTotalContainer = {
-  display: "flex",
-  justifyContent: "space-between",
-  bgcolor: "#f0f3f8",
-  borderRadius: "5px",
-  p: "2px 15px",
-  m: "5px auto",
-  width: "80%",
 };
 
 const spinAnimate = keyframes`
@@ -205,4 +176,34 @@ export const hideScrollableStyle = {
   ...indicateScrollContainer,
   transition: "opacity 0.5s ease",
   opacity: "0",
+};
+
+export const expandPokemonButtonStyle = {
+  width: "40px",
+  height: "40px",
+  position: "absolute",
+  right: "10px",
+  top: "7px",
+  boxShadow: "3px 3px #e8ebf1",
+  color: primaryTextColour,
+  bgcolor: fontBgColour,
+  borderRadius: "12px",
+  "&:active": {
+    transform: "translateY(2px) translateX(2px)",
+    transition: "all 0.3s ease",
+    boxShadow: "1px 1px #e8ebf1",
+  },
+  "&:hover": {
+    bgcolor: "#bec1c4",
+  },
+};
+
+export const mobileExpandPokemonButtonStyle = {
+  top: "calc(22vh + 15px)",
+  right: "15px",
+  width: "50px",
+  height: "50px",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
 };

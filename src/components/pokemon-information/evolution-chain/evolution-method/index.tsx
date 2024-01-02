@@ -2,12 +2,11 @@ import React from "react";
 import { Box, Tooltip } from "@mui/material";
 import { BodyText } from "../../../../utils/styledComponents";
 import { NameUrlType } from "../../../../services/apiRequestsTypes";
-import { primaryTextColour } from "../../../../utils/colours";
 import { pokemonEvoMethodContainer } from "./style";
 import { StageInfo } from "..";
 import { requestLinks } from "../../../../services/apiRequests";
 
-import LoopRoundedIcon from "@mui/icons-material/LoopRounded";
+import tradingIcon from "../../../../assets/trading.png";
 import femaleIcon from "../../../../assets/female_symbol.png";
 import maleIcon from "../../../../assets/male_symbol.png";
 import { capitalise, removeDash } from "../../../../utils/helpers";
@@ -94,7 +93,14 @@ export const EvolutionMethod: React.FC<EvolutionMethodType> = ({
   const triggerImage = (trigger: NameUrlType) => {
     switch (trigger.name) {
       case "trade":
-        return <LoopRoundedIcon style={{ color: `${primaryTextColour}` }} />;
+        return (
+          <Box
+            component="img"
+            src={tradingIcon}
+            alt="Trading"
+            sx={{ width: "25px" }}
+          />
+        );
       case "level-up":
         if (
           !Object.keys(stageInfo.methods).includes("min_level") &&

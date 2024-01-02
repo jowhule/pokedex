@@ -12,13 +12,13 @@ import {
   pokemonSpriteHover,
   pokemonSpriteStyle,
 } from "./style";
-import { TypeTag } from "../../../../components/pokemon-information/type-tag";
 import { CustomCard } from "../../../../components/custom-card/CustomCard";
 import {
   capitalise,
   capitaliseDash,
   removeDash,
 } from "../../../../utils/helpers";
+import { Types } from "../../../../components/pokemon-information/types";
 
 type PokemonCardProps = {
   pokedexEntryNum: number;
@@ -93,11 +93,7 @@ export const PokemonCard: React.FC<PokemonCardProps> = ({
                   <BodyText fontWeight="bold" fontSize="18px">
                     {displayName}
                   </BodyText>
-                  <Box display="flex" gap="10px" marginTop="5px">
-                    {pokemonData.types.map((type) => (
-                      <TypeTag type={type.type.name} key={type.slot} />
-                    ))}
-                  </Box>
+                  <Types typesData={pokemonData?.types} />
                 </>
               ) : (
                 <CircularProgress />
