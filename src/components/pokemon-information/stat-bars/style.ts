@@ -19,6 +19,13 @@ export const statContainer = {
   justifyContent: "space-between",
 };
 
+export const largeStatContainer = {
+  display: "flex",
+  width: "100%",
+  alignItems: "center",
+  p: "2px 0",
+};
+
 export const statBarContainer = {
   position: "relative",
   width: "100%",
@@ -52,9 +59,10 @@ export const statTitle = {
   top: "0",
 };
 
-export const largeStatTitle = {
-  fontSize: "11px",
+export const largeStatText = {
+  fontSize: "13px",
   fontWeight: "bold",
+  textAlign: "right",
 };
 
 export const statTotalContainer = {
@@ -65,4 +73,14 @@ export const statTotalContainer = {
   p: "2px 15px",
   m: "5px auto",
   width: "80%",
+};
+
+export const largeStatTotalContainer = {
+  display: "flex",
+  bgcolor: "#f0f3f8",
+  borderRadius: "5px",
+  p: "2px 15px",
+  m: "5px auto",
+  width: "100%",
+  textAlign: "right",
 };

@@ -226,7 +226,10 @@ export const PokemonDetailsPage: React.FC = () => {
                     <StatTitleText fontSize="16px">Weight</StatTitleText>
                     <Box sx={abilitiesContainerStyle}>
                       <BodyText>
-                        {insertDecimal(activePokemonData.weight)} kg
+                        {activePokemonData.weight >= 10000
+                          ? "???.?"
+                          : insertDecimal(activePokemonData.weight)}{" "}
+                        kg
                       </BodyText>
                     </Box>
                   </Stack>
@@ -236,7 +239,7 @@ export const PokemonDetailsPage: React.FC = () => {
               </Box>
             </Box>
 
-            <StatBars statsData={activePokemonData.stats} />
+            <StatBars statsData={activePokemonData.stats} detailed />
           </Box>
           <Stack>
             {activePokemonData.moves.map((move) => (

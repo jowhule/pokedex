@@ -90,6 +90,7 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
   };
 
   const handleMoreClick = () => {
+    document.body.style.overflow = "auto";
     navigate(`/pokemon/${activePokemonData.name}`);
   };
 
