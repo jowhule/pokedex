@@ -8,7 +8,6 @@ export const statsContainer = {
   flexDirection: "column",
   gap: "7px",
   justifyContent: "center",
-  padding: "0 12px",
   width: "100%",
   boxSizing: "border-box",
 };

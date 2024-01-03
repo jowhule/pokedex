@@ -8,6 +8,11 @@ export const pokemonEvoStageContainer: SxProps<Theme> = {
   maxWidth: "280px",
 };
 
+export const largePokeEvoStageContainer: SxProps<Theme> = {
+  ...pokemonEvoStageContainer,
+  maxWidth: "100%",
+};
+
 export const pokemonEvolutionContainer: SxProps<Theme> = {
   display: "flex",
   alignItems: "center",
@@ -23,4 +28,10 @@ export const pokemonEvoSpriteStyle: SxProps<Theme> = {
   "&:hover": {
     bgcolor: `${fontBgColour}`,
   },
+};
+
+export const largePokeEvoSpriteStyle: SxProps<Theme> = {
+  ...pokemonEvoSpriteStyle,
+  width: "calc(100% - 10px)",
+  height: "calc(100% - 10px)",
 };
