@@ -16,6 +16,8 @@ import { PokemonDataResponseType } from "../../../services/apiRequestsTypes";
 import { Hoverable, StatTitleText } from "../../../utils/styledComponents";
 import { EvolutionMethod } from "./evolution-method";
 import {
+  largePokeEvoSpriteStyle,
+  largePokeEvoStageContainer,
   pokemonEvoSpriteStyle,
   pokemonEvoStageContainer,
   pokemonEvolutionContainer,
@@ -41,6 +43,7 @@ type EvolutionChainProps = {
   pokemonData: PokemonDataResponseType;
   setActivePokemon?: React.Dispatch<React.SetStateAction<string>>;
   setTransition?: React.Dispatch<React.SetStateAction<Record<string, string>>>;
+  large?: boolean;
 };
 
 export const EvolutionChain: React.FC<EvolutionChainProps> = ({
@@ -48,6 +51,7 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
   pokemonData,
   setActivePokemon,
   setTransition,
+  large,
 }) => {
   const [evolutionStages, setEvolutionStages] = useState<EvoStages>([]);
   const theme = useTheme();
@@ -169,10 +173,23 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
     <>
       {evolutionStages.length > 1 && (
         <>
-          <StatTitleText fontSize="16px">Evolution</StatTitleText>
+          <StatTitleText
+            sx={
+              large
+                ? { fontSize: "20px", textAlign: "center" }
+                : { fontSize: "16px" }
+            }
+          >
+            Evolution
+          </StatTitleText>
           <Box display="flex" justifyContent="center">
             {evolutionStages.map((stage, index_i) => (
-              <Box key={index_i} sx={pokemonEvoStageContainer}>
+              <Box
+                key={index_i}
+                sx={
+                  large ? largePokeEvoStageContainer : pokemonEvoStageContainer
+                }
+              >
                 {stage.map((evo, index_j) => (
                   <Box sx={pokemonEvolutionContainer} key={index_j}>
                     <EvolutionMethod stageInfo={evo} />
@@ -182,7 +199,11 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
                           component="img"
                           src={evo.sprite}
                           alt={`${evo.name}'s sprite`}
-                          sx={pokemonEvoSpriteStyle}
+                          sx={
+                            large
+                              ? largePokeEvoSpriteStyle
+                              : pokemonEvoSpriteStyle
+                          }
                         />
                       </Hoverable>
                     </Tooltip>

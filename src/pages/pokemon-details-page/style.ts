@@ -2,8 +2,8 @@ import { primaryTextColour } from "../../utils/colours";
 
 export const pokemonDetailsBgWrapper = {
   bgcolor: "white",
-  p: "20px 40px",
-  borderRadius: "0 0 20px 20px",
+  p: "40px",
+  borderRadius: "0 20px 20px 20px",
   position: "relative",
   top: "-5px",
 };
@@ -13,7 +13,7 @@ export const detailsMainInfoContainer = {
   gap: "30px",
   width: "100%",
   maxWidth: "1000px",
-  m: "20px auto",
+  m: "auto",
 };
 
 export const mobileDetailsMainInfoContainer = {

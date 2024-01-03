@@ -124,7 +124,7 @@ export const PokemonDetailsPage: React.FC = () => {
         const dataHolder: Record<string, PokemonDataResponseType> = {};
         let i = 0;
         for (const vari of pokemonSpecies.varieties) {
-          const name: string = vari.pokemon?.name;
+          const name: string = vari?.pokemon?.name;
           // exceptions
           if (
             (pokeName === "zygarde-50" && (i === 2 || i === 4)) ||
@@ -186,16 +186,16 @@ export const PokemonDetailsPage: React.FC = () => {
 
     for (const data of formsData) {
       const img = new Image();
-      img.src = data.sprites.front_default;
+      img.src = data?.sprites.front_default;
 
       let nameFound: boolean = false;
       for (const name of data.form_names) {
-        if (name.language?.name === "en") {
+        if (name?.language?.name === "en") {
           names.push(name.name);
           nameFound = true;
         }
       }
-      if (!nameFound) names.push(capitaliseDash(data.name));
+      if (!nameFound) names.push(capitaliseDash(data?.name));
     }
 
     setFormNames(names);
@@ -223,7 +223,13 @@ export const PokemonDetailsPage: React.FC = () => {
             setActive={setActive}
           />
 
-          <CustomCard sx={pokemonDetailsBgWrapper}>
+          <CustomCard
+            sx={
+              isMobile
+                ? { ...pokemonDetailsBgWrapper, borderTopRightRadius: "0" }
+                : pokemonDetailsBgWrapper
+            }
+          >
             <Box
               sx={
                 isMobile
@@ -233,8 +239,8 @@ export const PokemonDetailsPage: React.FC = () => {
             >
               <Box
                 component="img"
-                alt={`${activePokemonData.name}'s sprite`}
-                src={activePokemonData.sprites.front_default}
+                alt={`${activePokemonData?.name}'s sprite`}
+                src={activePokemonData?.sprites.front_default}
                 sx={pokemonDetailsSpriteStyle}
               />
 
@@ -247,7 +253,7 @@ export const PokemonDetailsPage: React.FC = () => {
                   gap="10px"
                 >
                   <Typography sx={infoPokemonNameStyle}>
-                    {capitalise(activePokemonData?.species.name)}
+                    {capitalise(activePokemonData?.species?.name)}
                   </Typography>
                   <BodyText
                     fontWeight="bold"
@@ -301,8 +307,16 @@ export const PokemonDetailsPage: React.FC = () => {
               detailed={!isMobile}
             />
           </CustomCard>
-          <CustomCard sx={{ maxWidth: "700px", m: "0 auto" }}>
-            <EvolutionChain pokemonData={currPokemonData} />
+          <CustomCard
+            sx={{
+              maxWidth: "700px",
+              m: "30px auto",
+              boxSizing: "border-box",
+              paddingTop: "5px",
+              paddingBottom: "20px",
+            }}
+          >
+            <EvolutionChain pokemonData={currPokemonData} large />
           </CustomCard>
         </Box>
       ) : (
