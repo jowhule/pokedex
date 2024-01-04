@@ -87,35 +87,59 @@ export const PokemonDetailsPage: React.FC = () => {
     return "";
   };
 
+  const resendData = (pokeName: string) => {
+    // in case getting data fails, try get species first
+    sendGenericAPIRequest<PokemonSpeciesResponseType>(
+      requestLinks.getSpecies(pokeName),
+      () => navigate("/404")
+    ).then((data) => {
+      if (data) {
+        setPokemonSpecies(data);
+        sendGenericAPIRequest<PokemonDataResponseType>(
+          requestLinks.getData(data.id)
+        ).then((data) => {
+          if (data) setCurrPokemonData(data);
+        });
+      }
+    });
+  };
+
+  useEffect(() => {
+    if (pokeName) {
+      // reset data
+      setHasLoaded(false);
+      setCurrPokemonData(pokemonDataDefault);
+      setPokemonSpecies(pokemonSpeciesDefault);
+      setVarietiesData([]);
+    }
+  }, [pokeName]);
+
   // get initial pokemon data
   useEffect(() => {
-    setHasLoaded(false);
-    if (pokeName)
+    if (!hasLoaded && pokeName)
       sendGenericAPIRequest<PokemonDataResponseType>(
         requestLinks.getData(pokeName),
-        () => navigate("/404")
+        () => resendData(pokeName)
       ).then((data) => {
-        if (data) {
-          setCurrPokemonData(data);
-        }
+        if (data) setCurrPokemonData(data);
       });
-  }, [navigate, pokeName]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hasLoaded, navigate]);
 
   // get species data after initial pokemon data received
   useEffect(() => {
-    setHasLoaded(false);
-    if (currPokemonData.id) {
+    if (currPokemonData.id && !pokemonSpecies.id) {
       sendGenericAPIRequest<PokemonSpeciesResponseType>(
-        currPokemonData.species.url
+        currPokemonData?.species?.url
       ).then((data) => {
         if (data) setPokemonSpecies(data);
       });
     }
-  }, [currPokemonData]);
+  }, [currPokemonData, pokemonSpecies]);
 
   // get data of possible varieties and their pokemon forms
   useEffect(() => {
-    if (pokemonSpecies.id) {
+    if (pokemonSpecies.id && currPokemonData.id) {
       if (pokemonSpecies.varieties.length === 1) {
         setVarietiesData([currPokemonData]);
       } else {
@@ -154,7 +178,7 @@ export const PokemonDetailsPage: React.FC = () => {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pokemonSpecies]);
+  }, [pokemonSpecies, currPokemonData]);
 
   // get the names of the varieties
   useEffect(() => {
@@ -162,7 +186,7 @@ export const PokemonDetailsPage: React.FC = () => {
       const formsDataPromises: Promise<void | PokemonFormResponseType>[] = [];
       const formHolder: Record<number, PokemonFormResponseType> = {};
       varietiesData.forEach((data, i) => {
-        getDataPromises(formsDataPromises, formHolder, data.forms[0].url, i);
+        getDataPromises(formsDataPromises, formHolder, data.forms[0]?.url, i);
       });
 
       Promise.allSettled(formsDataPromises).then(() => {
@@ -281,7 +305,7 @@ export const PokemonDetailsPage: React.FC = () => {
                     <StatTitleText fontSize="16px">Height</StatTitleText>
                     <Box sx={abilitiesContainerStyle}>
                       <BodyText>
-                        {insertDecimal(activePokemonData.height)} m
+                        {insertDecimal(activePokemonData?.height)} m
                       </BodyText>
                     </Box>
                   </Stack>
@@ -289,9 +313,9 @@ export const PokemonDetailsPage: React.FC = () => {
                     <StatTitleText fontSize="16px">Weight</StatTitleText>
                     <Box sx={abilitiesContainerStyle}>
                       <BodyText>
-                        {activePokemonData.weight >= 10000
+                        {activePokemonData?.weight >= 10000
                           ? "???.?"
-                          : insertDecimal(activePokemonData.weight)}{" "}
+                          : insertDecimal(activePokemonData?.weight)}{" "}
                         kg
                       </BodyText>
                     </Box>
@@ -303,13 +327,13 @@ export const PokemonDetailsPage: React.FC = () => {
             </Box>
 
             <StatBars
-              statsData={activePokemonData.stats}
+              statsData={activePokemonData?.stats}
               detailed={!isMobile}
             />
           </CustomCard>
           <CustomCard
             sx={{
-              maxWidth: "700px",
+              maxWidth: "500px",
               m: "30px auto",
               boxSizing: "border-box",
               paddingTop: "5px",
