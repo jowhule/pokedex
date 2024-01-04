@@ -26,7 +26,11 @@ import {
   capitaliseDash,
   getDataPromises,
 } from "../../utils/helpers";
-import { BodyText, StatTitleText } from "../../utils/styledComponents";
+import {
+  BodyText,
+  PokemonInfoBox,
+  StatTitleText,
+} from "../../utils/styledComponents";
 import { StatBars } from "../../components/pokemon-information/stat-bars";
 import {
   detailsInfoContainer,
@@ -39,11 +43,11 @@ import {
 } from "./style";
 import { TabsPanel } from "./tabs-panel";
 import { Abilities } from "../../components/pokemon-information/abilities";
-import { abilitiesContainerStyle } from "../../components/pokemon-information/abilities/style";
 import { Types } from "../../components/pokemon-information/types";
 import { EffortValues } from "../../components/pokemon-information/effort-values";
 import { EvolutionChain } from "../../components/pokemon-information/evolution-chain";
 import { CustomCard } from "../../components/custom-card/CustomCard";
+import { GenderDisplay } from "./gender-display";
 
 export const PokemonDetailsPage: React.FC = () => {
   const { pokeName } = useParams();
@@ -268,7 +272,7 @@ export const PokemonDetailsPage: React.FC = () => {
                 sx={pokemonDetailsSpriteStyle}
               />
 
-              <Box sx={detailsInfoContainer}>
+              <Stack sx={detailsInfoContainer}>
                 <Box
                   display="flex"
                   width="100%"
@@ -303,33 +307,43 @@ export const PokemonDetailsPage: React.FC = () => {
                 <Box display="flex" gap="15px">
                   <Stack flex="1">
                     <StatTitleText fontSize="16px">Height</StatTitleText>
-                    <Box sx={abilitiesContainerStyle}>
+                    <PokemonInfoBox>
                       <BodyText>
                         {insertDecimal(activePokemonData?.height)} m
                       </BodyText>
-                    </Box>
+                    </PokemonInfoBox>
                   </Stack>
                   <Stack flex="1">
                     <StatTitleText fontSize="16px">Weight</StatTitleText>
-                    <Box sx={abilitiesContainerStyle}>
+                    <PokemonInfoBox>
                       <BodyText>
                         {activePokemonData?.weight >= 10000
                           ? "???.?"
                           : insertDecimal(activePokemonData?.weight)}{" "}
                         kg
                       </BodyText>
-                    </Box>
+                    </PokemonInfoBox>
                   </Stack>
                 </Box>
 
                 <EffortValues statsData={activePokemonData?.stats} />
-              </Box>
+              </Stack>
             </Box>
 
             <StatBars
               statsData={activePokemonData?.stats}
               detailed={!isMobile}
             />
+
+            <Box display="flex">
+              <Box sx={{ display: "flex", flex: "1", gap: "15px" }}>
+                <GenderDisplay genderRatio={pokemonSpecies?.gender_rate} />
+                <Stack flex="1">
+                  <StatTitleText>Catch Rate</StatTitleText>
+                </Stack>
+              </Box>
+              <Stack flex="1"></Stack>
+            </Box>
           </CustomCard>
           <CustomCard
             sx={{
