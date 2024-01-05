@@ -51,3 +51,11 @@ export const generaTextStyle = {
   fontWeight: "bold",
   opacity: "0.8",
 };
+
+export const evoDetailsContainer = {
+  maxWidth: "500px",
+  m: "30px auto",
+  boxSizing: "border-box",
+  paddingTop: "5px",
+  paddingBottom: "20px",
+};

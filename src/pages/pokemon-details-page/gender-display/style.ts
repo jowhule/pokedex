@@ -14,4 +14,8 @@ export const genderBarStyle = {
 export const genderStatContainer = {
   display: "flex",
   alignItems: "center",
+  justifyContent: "space-between",
+  width: "100%",
+  boxSizing: "border-box",
+  p: "0 25px",
 };

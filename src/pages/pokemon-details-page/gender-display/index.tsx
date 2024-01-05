@@ -24,26 +24,33 @@ const femaleColorDarker = "#f79fa0";
 
 export const GenderDisplay: React.FC<GenderDisplayType> = ({ genderRatio }) => {
   const [ratio, setRatio] = useState<number>(0);
+
+  const borderRatio = (ratio: number): number => {
+    if (ratio < 50) {
+      return ratio - 1;
+    } else if (ratio > 50) {
+      return ratio + 1;
+    } else {
+      return ratio;
+    }
+  };
+
   useEffect(() => {
     setRatio((genderRatio / 8) * 100);
   }, [genderRatio]);
 
   return (
-    <Stack flex="1">
+    <Stack width="100%" height="100%">
       <StatTitleText>Gender Ratio</StatTitleText>
-      {ratio ? (
-        <PokemonInfoBox>
+      <PokemonInfoBox>
+        {ratio ? (
           <Box sx={genderInfoContainer}>
             <Box
               sx={{
                 ...genderBarStyle,
                 position: "relative",
 
-                background: `linear-gradient(to right, ${femaleColorDarker} 0%, ${femaleColorDarker} ${
-                  ratio + 0.5
-                }%, ${maleColorDarker} ${
-                  ratio + 0.5
-                }%, ${maleColorDarker} 100%)`,
+                background: `linear-gradient(to right, ${femaleColorDarker} 0%, ${femaleColorDarker} ${ratio}%, ${maleColorDarker} ${ratio}%, ${maleColorDarker} 100%)`,
                 width: "80%",
                 p: "3px",
               }}
@@ -55,22 +62,28 @@ export const GenderDisplay: React.FC<GenderDisplayType> = ({ genderRatio }) => {
                   height: "15px",
                   borderRadius: "15px",
                   m: "0 auto",
-                  background: `linear-gradient(to right, ${femaleColor} 0%, ${femaleColor} ${ratio}%, ${maleColor} ${ratio}%, ${maleColor} 100%)`,
+                  background: `linear-gradient(to right, ${femaleColor} 0%, ${femaleColor} ${borderRatio(
+                    ratio
+                  )}%, ${maleColor} ${borderRatio(ratio)}%, ${maleColor} 100%)`,
                   width: "calc(100% - 6px)",
                 }}
               />
             </Box>
             <Box sx={genderStatContainer}>
-              <BodyText>{ratio}%</BodyText>
-              <FemaleRoundedIcon sx={{ color: `${femaleColorDarker}` }} />
-              <BodyText>{100 - ratio}%</BodyText>
-              <MaleRoundedIcon sx={{ color: `${maleColorDarker}` }} />
+              <Box display="flex" alignItems="center">
+                <BodyText fontSize="14px">{ratio}%</BodyText>
+                <FemaleRoundedIcon sx={{ color: `${femaleColorDarker}` }} />
+              </Box>
+              <Box display="flex" alignItems="center">
+                <BodyText fontSize="14px">{100 - ratio}%</BodyText>
+                <MaleRoundedIcon sx={{ color: `${maleColorDarker}` }} />
+              </Box>
             </Box>
           </Box>
-        </PokemonInfoBox>
-      ) : (
-        "Gender Unknown"
-      )}
+        ) : (
+          <BodyText>Gender Unknown</BodyText>
+        )}
+      </PokemonInfoBox>
     </Stack>
   );
 };

@@ -16,6 +16,7 @@ import {
 import {
   Box,
   CircularProgress,
+  Grid,
   Stack,
   Typography,
   useMediaQuery,
@@ -25,6 +26,7 @@ import {
   capitalise,
   capitaliseDash,
   getDataPromises,
+  removeDash,
 } from "../../utils/helpers";
 import {
   BodyText,
@@ -35,6 +37,7 @@ import { StatBars } from "../../components/pokemon-information/stat-bars";
 import {
   detailsInfoContainer,
   detailsMainInfoContainer,
+  evoDetailsContainer,
   generaTextStyle,
   infoPokemonNameStyle,
   mobileDetailsMainInfoContainer,
@@ -48,6 +51,9 @@ import { EffortValues } from "../../components/pokemon-information/effort-values
 import { EvolutionChain } from "../../components/pokemon-information/evolution-chain";
 import { CustomCard } from "../../components/custom-card/CustomCard";
 import { GenderDisplay } from "./gender-display";
+import { EggGroups } from "./egg-groups";
+import { TypeWeaknesses } from "./type-weaknesses";
+import { HatchTime } from "./hatch-time";
 
 export const PokemonDetailsPage: React.FC = () => {
   const { pokeName } = useParams();
@@ -335,25 +341,36 @@ export const PokemonDetailsPage: React.FC = () => {
               detailed={!isMobile}
             />
 
-            <Box display="flex">
-              <Box sx={{ display: "flex", flex: "1", gap: "15px" }}>
-                <GenderDisplay genderRatio={pokemonSpecies?.gender_rate} />
-                <Stack flex="1">
-                  <StatTitleText>Catch Rate</StatTitleText>
-                </Stack>
-              </Box>
-              <Stack flex="1"></Stack>
-            </Box>
+            <Grid container spacing="15px" columns={{ md: 2, xs: 1 }}>
+              <Grid item xs={1}>
+                <Grid container spacing="15px" columns={2}>
+                  <Grid display="flex" item xs={1}>
+                    <GenderDisplay genderRatio={pokemonSpecies?.gender_rate} />
+                  </Grid>
+                  <Grid item xs={1}>
+                    <HatchTime hatchCycle={pokemonSpecies?.hatch_counter} />
+                  </Grid>
+                  <Grid item xs={1}>
+                    <StatTitleText>Growth Rate</StatTitleText>
+                    <PokemonInfoBox>
+                      <BodyText>
+                        {removeDash(
+                          capitaliseDash(pokemonSpecies?.growth_rate.name)
+                        )}
+                      </BodyText>
+                    </PokemonInfoBox>
+                  </Grid>
+                  <Grid item xs={1}>
+                    <EggGroups groupData={pokemonSpecies?.egg_groups} />
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item xs={1}>
+                <TypeWeaknesses types={formsData[active]?.types} />
+              </Grid>
+            </Grid>
           </CustomCard>
-          <CustomCard
-            sx={{
-              maxWidth: "500px",
-              m: "30px auto",
-              boxSizing: "border-box",
-              paddingTop: "5px",
-              paddingBottom: "20px",
-            }}
-          >
+          <CustomCard sx={evoDetailsContainer}>
             <EvolutionChain pokemonData={currPokemonData} large />
           </CustomCard>
         </Box>
