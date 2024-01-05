@@ -5,7 +5,7 @@ import {
   PokemonInfoBox,
   StatTitleText,
 } from "../../../utils/styledComponents";
-import { capitalise } from "../../../utils/helpers";
+import { capitaliseDash, removeDash } from "../../../utils/helpers";
 import { NameUrlType } from "../../../services/apiRequestsTypes";
 
 type EggGroupsType = {
@@ -27,7 +27,7 @@ export const EggGroups: React.FC<EggGroupsType> = ({ groupData }) => {
                     : ", "}
                 </>
               )}
-              {capitalise(grp.name)}
+              {removeDash(capitaliseDash(grp.name))}
             </BodyText>
           ))}
         </Box>

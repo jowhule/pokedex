@@ -11,7 +11,7 @@ export const Abilities: React.FC<AbilitiesType> = ({ abilitiesData }) => {
   return (
     <>
       <StatTitleText fontSize="16px">Abilities</StatTitleText>
-      <PokemonInfoBox>
+      <PokemonInfoBox sx={{ flexFlow: "row wrap", gap: "30px" }}>
         {abilitiesData?.map((ability, index) => (
           <AbilityTag abilityInfo={ability} key={index} />
         ))}

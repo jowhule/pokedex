@@ -1,34 +1,133 @@
 import React, { useEffect, useState } from "react";
-import { PokemonInfoBox, StatTitleText } from "../../../utils/styledComponents";
-import { Box, Stack } from "@mui/material";
+import {
+  BodyText,
+  PokemonInfoBox,
+  StatTitleText,
+} from "../../../utils/styledComponents";
+import { Box, CircularProgress, Stack } from "@mui/material";
 import {
   PokemonTypeResponseType,
   PokemonTypeType,
 } from "../../../services/apiRequestsTypes";
 import { sendGenericAPIRequest } from "../../../services/apiRequests";
+import { typeEffectivenessDefault } from "../../../utils/defaults";
+import { TYPE_BORDER_COLOURS, TYPE_COLOURS } from "../../../utils/colours";
 
 type TypeWeaknessesType = {
   types: PokemonTypeType[];
 };
 
+const decimalToFraction: Record<number, string> = {
+  0.5: "½",
+  0.25: "¼",
+};
+
+const effectivenessColor: Record<number, string> = {
+  0: "grey",
+  0.25: "#630000",
+  0.5: "#f00000",
+  2: "#346604",
+  4: "#6bc414",
+};
+
 export const TypeWeaknesses: React.FC<TypeWeaknessesType> = ({ types }) => {
-  const [weaknesses, setWeaknesses] = useState<Record<string, number>>({});
+  const [weaknesses, setWeaknesses] = useState<Record<string, number>>({
+    ...typeEffectivenessDefault,
+    updated: 0,
+  });
+
   useEffect(() => {
-    // if (types) {
-    //   const typePromiseHolder =
-    //   for (const type of types) {
-    //     sendGenericAPIRequest<PokemonTypeResponseType>(type.type.url).then(
-    //       (data) => {
-    //         if (data)
-    //       }
-    //     );
-    //   }
-    // }
+    setWeaknesses({ ...typeEffectivenessDefault, updated: 0 });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [types]);
+
+  useEffect(() => {
+    if (!weaknesses["updated"]) {
+      const dmgRelationsPromises: Promise<void | PokemonTypeResponseType>[] =
+        [];
+      const dmgRelationsHolder: PokemonTypeResponseType[] = [];
+      for (const type of types) {
+        dmgRelationsPromises.push(
+          sendGenericAPIRequest<PokemonTypeResponseType>(type.type.url).then(
+            (data) => {
+              if (data) dmgRelationsHolder.push(data);
+            }
+          )
+        );
+      }
+      Promise.allSettled(dmgRelationsPromises).then(() => {
+        const weaknessesTemp = { ...weaknesses };
+        for (const type of dmgRelationsHolder) {
+          for (const superEff of type.damage_relations.double_damage_from) {
+            weaknessesTemp[superEff.name] *= 2;
+          }
+          for (const notEff of type.damage_relations.half_damage_from) {
+            weaknessesTemp[notEff.name] *= 0.5;
+          }
+          for (const notEff of type.damage_relations.no_damage_from) {
+            weaknessesTemp[notEff.name] *= 0;
+          }
+        }
+        setWeaknesses({ ...weaknessesTemp, updated: 1 });
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [weaknesses]);
   return (
     <Stack width="100%" height="100%">
       <StatTitleText>Weaknesses</StatTitleText>
-      <PokemonInfoBox></PokemonInfoBox>
+
+      <PokemonInfoBox sx={{ flexFlow: "row wrap", gap: "10px", p: "15px" }}>
+        {weaknesses["updated"] ? (
+          <>
+            {Object.keys(weaknesses).map((type, i) => (
+              <>
+                {type !== "updated" && (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      bgcolor: "white",
+                      p: "3px",
+                      borderRadius: "20px",
+                      width: "66px",
+                    }}
+                    key={i}
+                  >
+                    <BodyText
+                      sx={{
+                        fontSize: "12px",
+                        fontWeight: "bold",
+                        bgcolor: `${TYPE_COLOURS[type]}`,
+                        border: `2px solid ${TYPE_BORDER_COLOURS[type]}`,
+                        width: "27px",
+                        height: "27px",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        borderRadius: "15px",
+                      }}
+                    >
+                      {type.substring(0, 3)}
+                    </BodyText>
+                    <BodyText
+                      m="0 5px"
+                      color={`${
+                        effectivenessColor[weaknesses[type]]
+                      } !important`}
+                    >
+                      x{" "}
+                      {decimalToFraction[weaknesses[type]] ?? weaknesses[type]}
+                    </BodyText>
+                  </Box>
+                )}
+              </>
+            ))}
+          </>
+        ) : (
+          <CircularProgress />
+        )}
+      </PokemonInfoBox>
     </Stack>
   );
 };

@@ -26,13 +26,14 @@ export const GenderDisplay: React.FC<GenderDisplayType> = ({ genderRatio }) => {
   const [ratio, setRatio] = useState<number>(0);
 
   const borderRatio = (ratio: number): number => {
-    if (ratio < 50) {
+    if (ratio < 0 || ratio > 100) {
+      return -1;
+    } else if (ratio < 50) {
       return ratio - 1;
     } else if (ratio > 50) {
       return ratio + 1;
-    } else {
-      return ratio;
     }
+    return ratio;
   };
 
   useEffect(() => {
@@ -43,13 +44,12 @@ export const GenderDisplay: React.FC<GenderDisplayType> = ({ genderRatio }) => {
     <Stack width="100%" height="100%">
       <StatTitleText>Gender Ratio</StatTitleText>
       <PokemonInfoBox>
-        {ratio ? (
+        {ratio >= 0 ? (
           <Box sx={genderInfoContainer}>
             <Box
               sx={{
                 ...genderBarStyle,
                 position: "relative",
-
                 background: `linear-gradient(to right, ${femaleColorDarker} 0%, ${femaleColorDarker} ${ratio}%, ${maleColorDarker} ${ratio}%, ${maleColorDarker} 100%)`,
                 width: "80%",
                 p: "3px",

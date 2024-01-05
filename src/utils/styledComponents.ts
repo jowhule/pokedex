@@ -24,8 +24,6 @@ export const Hoverable = styled(Box)({
 
 export const PokemonInfoBox = styled(Box)({
   display: "flex",
-  flexFlow: "row wrap",
-  gap: "30px",
   alignItems: "center",
   justifyContent: "center",
   backgroundColor: `${fontBgColour}`,
