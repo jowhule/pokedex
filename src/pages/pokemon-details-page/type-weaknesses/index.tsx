@@ -12,6 +12,11 @@ import {
 import { sendGenericAPIRequest } from "../../../services/apiRequests";
 import { typeEffectivenessDefault } from "../../../utils/defaults";
 import { TYPE_BORDER_COLOURS, TYPE_COLOURS } from "../../../utils/colours";
+import {
+  typeTypeContainer,
+  typeWeaknessContainer,
+  weaknessesContainer,
+} from "./style ";
 
 type TypeWeaknessesType = {
   types: PokemonTypeType[];
@@ -46,6 +51,7 @@ export const TypeWeaknesses: React.FC<TypeWeaknessesType> = ({ types }) => {
       const dmgRelationsPromises: Promise<void | PokemonTypeResponseType>[] =
         [];
       const dmgRelationsHolder: PokemonTypeResponseType[] = [];
+      if (!types) return;
       for (const type of types) {
         dmgRelationsPromises.push(
           sendGenericAPIRequest<PokemonTypeResponseType>(type.type.url).then(
@@ -77,35 +83,18 @@ export const TypeWeaknesses: React.FC<TypeWeaknessesType> = ({ types }) => {
     <Stack width="100%" height="100%">
       <StatTitleText>Weaknesses</StatTitleText>
 
-      <PokemonInfoBox sx={{ flexFlow: "row wrap", gap: "10px", p: "15px" }}>
+      <PokemonInfoBox sx={weaknessesContainer}>
         {weaknesses["updated"] ? (
           <>
             {Object.keys(weaknesses).map((type, i) => (
               <>
                 {type !== "updated" && (
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      bgcolor: "white",
-                      p: "3px",
-                      borderRadius: "20px",
-                      width: "66px",
-                    }}
-                    key={i}
-                  >
+                  <Box sx={typeWeaknessContainer} key={i}>
                     <BodyText
                       sx={{
-                        fontSize: "12px",
-                        fontWeight: "bold",
+                        ...typeTypeContainer,
                         bgcolor: `${TYPE_COLOURS[type]}`,
                         border: `2px solid ${TYPE_BORDER_COLOURS[type]}`,
-                        width: "27px",
-                        height: "27px",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        borderRadius: "15px",
                       }}
                     >
                       {type.substring(0, 3)}

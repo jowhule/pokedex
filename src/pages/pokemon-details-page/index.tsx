@@ -62,8 +62,6 @@ export const PokemonDetailsPage: React.FC = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [active, setActive] = useState<number>(0);
-  const [activePokemonData, setActivePokemonData] =
-    useState<PokemonDataResponseType>(pokemonDataDefault);
   const [hasLoaded, setHasLoaded] = useState<boolean>(false);
 
   const [currPokemonData, setCurrPokemonData] =
@@ -138,7 +136,7 @@ export const PokemonDetailsPage: React.FC = () => {
 
   // get species data after initial pokemon data received
   useEffect(() => {
-    if (currPokemonData.id && !pokemonSpecies.id) {
+    if (currPokemonData?.id && !pokemonSpecies.id) {
       sendGenericAPIRequest<PokemonSpeciesResponseType>(
         currPokemonData?.species?.url
       ).then((data) => {
@@ -211,7 +209,7 @@ export const PokemonDetailsPage: React.FC = () => {
   }, [varietiesData]);
 
   useEffect(() => {
-    setActivePokemonData(varietiesData[active]);
+    setCurrPokemonData(varietiesData[active]);
   }, [active, varietiesData]);
 
   // get proper form name
@@ -273,8 +271,8 @@ export const PokemonDetailsPage: React.FC = () => {
             >
               <Box
                 component="img"
-                alt={`${activePokemonData?.name}'s sprite`}
-                src={activePokemonData?.sprites.front_default}
+                alt={`${currPokemonData?.name}'s sprite`}
+                src={currPokemonData?.sprites.front_default}
                 sx={pokemonDetailsSpriteStyle}
               />
 
@@ -287,7 +285,7 @@ export const PokemonDetailsPage: React.FC = () => {
                   gap="10px"
                 >
                   <Typography sx={infoPokemonNameStyle}>
-                    {capitalise(activePokemonData?.species?.name)}
+                    {capitalise(currPokemonData?.species?.name)}
                   </Typography>
                   <BodyText
                     fontWeight="bold"
@@ -298,7 +296,7 @@ export const PokemonDetailsPage: React.FC = () => {
                   </BodyText>
                 </Box>
 
-                <Types typesData={activePokemonData?.types} />
+                <Types typesData={currPokemonData?.types} />
 
                 <BodyText sx={generaTextStyle}>
                   {pokemonGenera(pokemonSpecies)}
@@ -308,14 +306,14 @@ export const PokemonDetailsPage: React.FC = () => {
                   {pokemonFlavorText(pokemonSpecies)}
                 </BodyText>
 
-                <Abilities abilitiesData={activePokemonData?.abilities} />
+                <Abilities abilitiesData={currPokemonData?.abilities} />
 
                 <Box display="flex" gap="15px">
                   <Stack flex="1">
                     <StatTitleText fontSize="16px">Height</StatTitleText>
                     <PokemonInfoBox>
                       <BodyText>
-                        {insertDecimal(activePokemonData?.height)} m
+                        {insertDecimal(currPokemonData?.height)} m
                       </BodyText>
                     </PokemonInfoBox>
                   </Stack>
@@ -323,23 +321,20 @@ export const PokemonDetailsPage: React.FC = () => {
                     <StatTitleText fontSize="16px">Weight</StatTitleText>
                     <PokemonInfoBox>
                       <BodyText>
-                        {activePokemonData?.weight >= 10000
+                        {currPokemonData?.weight >= 10000
                           ? "???.?"
-                          : insertDecimal(activePokemonData?.weight)}{" "}
+                          : insertDecimal(currPokemonData?.weight)}{" "}
                         kg
                       </BodyText>
                     </PokemonInfoBox>
                   </Stack>
                 </Box>
 
-                <EffortValues statsData={activePokemonData?.stats} />
+                <EffortValues statsData={currPokemonData?.stats} />
               </Stack>
             </Box>
 
-            <StatBars
-              statsData={activePokemonData?.stats}
-              detailed={!isMobile}
-            />
+            <StatBars statsData={currPokemonData?.stats} detailed={!isMobile} />
 
             <Grid container spacing="15px" columns={{ md: 2, xs: 1 }}>
               <Grid item xs={1}>
