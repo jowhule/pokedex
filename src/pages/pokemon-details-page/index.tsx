@@ -147,7 +147,11 @@ export const PokemonDetailsPage: React.FC = () => {
 
   // get data of possible varieties and their pokemon forms
   useEffect(() => {
-    if (pokemonSpecies.id && currPokemonData.id) {
+    if (
+      pokemonSpecies?.id &&
+      currPokemonData?.id &&
+      varietiesData.length === 0
+    ) {
       if (pokemonSpecies.varieties.length === 1) {
         setVarietiesData([currPokemonData]);
       } else {
@@ -292,7 +296,7 @@ export const PokemonDetailsPage: React.FC = () => {
                     textAlign="center"
                     sx={{ opacity: "0.6" }}
                   >
-                    # {currPokemonData.id}
+                    # {currPokemonData?.id}
                   </BodyText>
                 </Box>
 

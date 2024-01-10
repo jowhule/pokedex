@@ -86,32 +86,27 @@ export const TypeWeaknesses: React.FC<TypeWeaknessesType> = ({ types }) => {
       <PokemonInfoBox sx={weaknessesContainer}>
         {weaknesses["updated"] ? (
           <>
-            {Object.keys(weaknesses).map((type, i) => (
-              <>
-                {type !== "updated" && (
-                  <Box sx={typeWeaknessContainer} key={i}>
-                    <BodyText
-                      sx={{
-                        ...typeTypeContainer,
-                        bgcolor: `${TYPE_COLOURS[type]}`,
-                        border: `2px solid ${TYPE_BORDER_COLOURS[type]}`,
-                      }}
-                    >
-                      {type.substring(0, 3)}
-                    </BodyText>
-                    <BodyText
-                      m="0 5px"
-                      color={`${
-                        effectivenessColor[weaknesses[type]]
-                      } !important`}
-                    >
-                      x{" "}
-                      {decimalToFraction[weaknesses[type]] ?? weaknesses[type]}
-                    </BodyText>
-                  </Box>
-                )}
-              </>
-            ))}
+            {Object.keys(weaknesses)
+              .slice(0, 18)
+              .map((type, i) => (
+                <Box sx={typeWeaknessContainer} key={i}>
+                  <BodyText
+                    sx={{
+                      ...typeTypeContainer,
+                      bgcolor: `${TYPE_COLOURS[type]}`,
+                      border: `2px solid ${TYPE_BORDER_COLOURS[type]}`,
+                    }}
+                  >
+                    {type.substring(0, 3)}
+                  </BodyText>
+                  <BodyText
+                    m="0 5px"
+                    color={`${effectivenessColor[weaknesses[type]]} !important`}
+                  >
+                    x {decimalToFraction[weaknesses[type]] ?? weaknesses[type]}
+                  </BodyText>
+                </Box>
+              ))}
           </>
         ) : (
           <CircularProgress />
