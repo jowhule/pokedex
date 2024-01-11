@@ -63,6 +63,15 @@ type PokemonSpriteType = {
   versions: Record<any, any>;
 };
 
+type PokemonDamageRelationsType = {
+  double_damage_from: NameUrlType[];
+  double_damage_to: NameUrlType[];
+  half_damage_from: NameUrlType[];
+  half_damage_to: NameUrlType[];
+  no_damage_from: NameUrlType[];
+  no_damage_to: NameUrlType[];
+};
+
 export type PokemonStatType = {
   base_stat: number;
   effort: number;
@@ -236,4 +245,17 @@ export type PokemonFormResponseType = {
   sprites: PokemonSpriteType;
   types: PokemonTypeType[];
   version_group: NameUrlType;
+};
+
+export type PokemonTypeResponseType = {
+  damage_relations: PokemonDamageRelationsType;
+  game_indices: { game_index: 0; generation: NameUrlType }[];
+  generation: NameUrlType;
+  id: number;
+  move_damage_class: NameUrlType;
+  moves: NameUrlType[];
+  name: string;
+  names: LanguageNameArrayType;
+  past_damage_relations: [];
+  pokemon: { pokemon: NameUrlType; slot: number }[];
 };

@@ -16,6 +16,7 @@ import {
 import {
   Box,
   CircularProgress,
+  Grid,
   Stack,
   Typography,
   useMediaQuery,
@@ -25,12 +26,18 @@ import {
   capitalise,
   capitaliseDash,
   getDataPromises,
+  removeDash,
 } from "../../utils/helpers";
-import { BodyText, StatTitleText } from "../../utils/styledComponents";
+import {
+  BodyText,
+  PokemonInfoBox,
+  StatTitleText,
+} from "../../utils/styledComponents";
 import { StatBars } from "../../components/pokemon-information/stat-bars";
 import {
   detailsInfoContainer,
   detailsMainInfoContainer,
+  evoDetailsContainer,
   generaTextStyle,
   infoPokemonNameStyle,
   mobileDetailsMainInfoContainer,
@@ -39,11 +46,14 @@ import {
 } from "./style";
 import { TabsPanel } from "./tabs-panel";
 import { Abilities } from "../../components/pokemon-information/abilities";
-import { abilitiesContainerStyle } from "../../components/pokemon-information/abilities/style";
 import { Types } from "../../components/pokemon-information/types";
 import { EffortValues } from "../../components/pokemon-information/effort-values";
 import { EvolutionChain } from "../../components/pokemon-information/evolution-chain";
 import { CustomCard } from "../../components/custom-card/CustomCard";
+import { GenderDisplay } from "./gender-display";
+import { EggGroups } from "./egg-groups";
+import { TypeWeaknesses } from "./type-weaknesses";
+import { HatchTime } from "./hatch-time";
 
 export const PokemonDetailsPage: React.FC = () => {
   const { pokeName } = useParams();
@@ -52,8 +62,6 @@ export const PokemonDetailsPage: React.FC = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [active, setActive] = useState<number>(0);
-  const [activePokemonData, setActivePokemonData] =
-    useState<PokemonDataResponseType>(pokemonDataDefault);
   const [hasLoaded, setHasLoaded] = useState<boolean>(false);
 
   const [currPokemonData, setCurrPokemonData] =
@@ -87,35 +95,62 @@ export const PokemonDetailsPage: React.FC = () => {
     return "";
   };
 
+  const resendData = (pokeName: string) => {
+    // in case getting data fails, try get species first
+    sendGenericAPIRequest<PokemonSpeciesResponseType>(
+      requestLinks.getSpecies(pokeName),
+      () => navigate("/404")
+    ).then((data) => {
+      if (data) {
+        setPokemonSpecies(data);
+        sendGenericAPIRequest<PokemonDataResponseType>(
+          requestLinks.getData(data.id)
+        ).then((data) => {
+          if (data) setCurrPokemonData(data);
+        });
+      }
+    });
+  };
+
+  useEffect(() => {
+    // reset data
+    setHasLoaded(false);
+    setCurrPokemonData(pokemonDataDefault);
+    setPokemonSpecies(pokemonSpeciesDefault);
+    setVarietiesData([]);
+    setActive(0);
+  }, [pokeName]);
+
   // get initial pokemon data
   useEffect(() => {
-    setHasLoaded(false);
-    if (pokeName)
+    if (!hasLoaded && pokeName)
       sendGenericAPIRequest<PokemonDataResponseType>(
         requestLinks.getData(pokeName),
-        () => navigate("/404")
+        () => resendData(pokeName)
       ).then((data) => {
-        if (data) {
-          setCurrPokemonData(data);
-        }
+        if (data) setCurrPokemonData(data);
       });
-  }, [navigate, pokeName]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hasLoaded]);
 
   // get species data after initial pokemon data received
   useEffect(() => {
-    setHasLoaded(false);
-    if (currPokemonData.id) {
+    if (currPokemonData?.id && !pokemonSpecies.id) {
       sendGenericAPIRequest<PokemonSpeciesResponseType>(
-        currPokemonData.species.url
+        currPokemonData?.species?.url
       ).then((data) => {
         if (data) setPokemonSpecies(data);
       });
     }
-  }, [currPokemonData]);
+  }, [currPokemonData, pokemonSpecies.id]);
 
   // get data of possible varieties and their pokemon forms
   useEffect(() => {
-    if (pokemonSpecies.id) {
+    if (
+      pokemonSpecies?.id &&
+      currPokemonData?.id &&
+      varietiesData.length === 0
+    ) {
       if (pokemonSpecies.varieties.length === 1) {
         setVarietiesData([currPokemonData]);
       } else {
@@ -154,7 +189,7 @@ export const PokemonDetailsPage: React.FC = () => {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pokemonSpecies]);
+  }, [pokemonSpecies, currPokemonData]);
 
   // get the names of the varieties
   useEffect(() => {
@@ -162,7 +197,7 @@ export const PokemonDetailsPage: React.FC = () => {
       const formsDataPromises: Promise<void | PokemonFormResponseType>[] = [];
       const formHolder: Record<number, PokemonFormResponseType> = {};
       varietiesData.forEach((data, i) => {
-        getDataPromises(formsDataPromises, formHolder, data.forms[0].url, i);
+        getDataPromises(formsDataPromises, formHolder, data.forms[0]?.url, i);
       });
 
       Promise.allSettled(formsDataPromises).then(() => {
@@ -177,7 +212,7 @@ export const PokemonDetailsPage: React.FC = () => {
   }, [varietiesData]);
 
   useEffect(() => {
-    setActivePokemonData(varietiesData[active]);
+    setCurrPokemonData(varietiesData[active]);
   }, [active, varietiesData]);
 
   // get proper form name
@@ -203,9 +238,7 @@ export const PokemonDetailsPage: React.FC = () => {
 
   // after varities have been received
   useEffect(() => {
-    if (formNames.length > 0) {
-      setHasLoaded(true);
-    }
+    if (formNames.length > 0) setHasLoaded(true);
   }, [formNames]);
 
   return (
@@ -214,8 +247,8 @@ export const PokemonDetailsPage: React.FC = () => {
         <Box
           maxWidth="1200px"
           m="0 auto"
-          p={isMobile ? "0 15px" : "0 30px"}
           boxSizing="border-box"
+          p={isMobile ? "0 15px" : "0 30px"}
         >
           <TabsPanel
             formNames={formNames}
@@ -239,12 +272,12 @@ export const PokemonDetailsPage: React.FC = () => {
             >
               <Box
                 component="img"
-                alt={`${activePokemonData?.name}'s sprite`}
-                src={activePokemonData?.sprites.front_default}
+                alt={`${currPokemonData?.name}'s sprite`}
+                src={currPokemonData?.sprites.front_default}
                 sx={pokemonDetailsSpriteStyle}
               />
 
-              <Box sx={detailsInfoContainer}>
+              <Stack sx={detailsInfoContainer}>
                 <Box
                   display="flex"
                   width="100%"
@@ -253,18 +286,21 @@ export const PokemonDetailsPage: React.FC = () => {
                   gap="10px"
                 >
                   <Typography sx={infoPokemonNameStyle}>
-                    {capitalise(activePokemonData?.species?.name)}
+                    {capitalise(currPokemonData?.species?.name)}
                   </Typography>
                   <BodyText
                     fontWeight="bold"
                     textAlign="center"
                     sx={{ opacity: "0.6" }}
                   >
-                    # {currPokemonData.id}
+                    #{" "}
+                    {varietiesData.length > 0
+                      ? varietiesData[0].id
+                      : currPokemonData?.id}
                   </BodyText>
                 </Box>
 
-                <Types typesData={activePokemonData?.types} />
+                <Types typesData={currPokemonData?.types} />
 
                 <BodyText sx={generaTextStyle}>
                   {pokemonGenera(pokemonSpecies)}
@@ -274,48 +310,66 @@ export const PokemonDetailsPage: React.FC = () => {
                   {pokemonFlavorText(pokemonSpecies)}
                 </BodyText>
 
-                <Abilities abilitiesData={activePokemonData?.abilities} />
+                <Abilities abilitiesData={currPokemonData?.abilities} />
 
                 <Box display="flex" gap="15px">
                   <Stack flex="1">
                     <StatTitleText fontSize="16px">Height</StatTitleText>
-                    <Box sx={abilitiesContainerStyle}>
+                    <PokemonInfoBox>
                       <BodyText>
-                        {insertDecimal(activePokemonData.height)} m
+                        {insertDecimal(currPokemonData?.height)} m
                       </BodyText>
-                    </Box>
+                    </PokemonInfoBox>
                   </Stack>
                   <Stack flex="1">
                     <StatTitleText fontSize="16px">Weight</StatTitleText>
-                    <Box sx={abilitiesContainerStyle}>
+                    <PokemonInfoBox>
                       <BodyText>
-                        {activePokemonData.weight >= 10000
+                        {currPokemonData?.weight >= 10000
                           ? "???.?"
-                          : insertDecimal(activePokemonData.weight)}{" "}
+                          : insertDecimal(currPokemonData?.weight)}{" "}
                         kg
                       </BodyText>
-                    </Box>
+                    </PokemonInfoBox>
                   </Stack>
                 </Box>
 
-                <EffortValues statsData={activePokemonData?.stats} />
-              </Box>
+                <EffortValues statsData={currPokemonData?.stats} />
+              </Stack>
             </Box>
 
-            <StatBars
-              statsData={activePokemonData.stats}
-              detailed={!isMobile}
-            />
+            <StatBars statsData={currPokemonData?.stats} detailed={!isMobile} />
+
+            <Grid container spacing="15px" columns={{ md: 2, xs: 1 }}>
+              <Grid item xs={1}>
+                <Grid container spacing="15px" columns={2}>
+                  <Grid display="flex" item xs={1}>
+                    <GenderDisplay genderRatio={pokemonSpecies?.gender_rate} />
+                  </Grid>
+                  <Grid item xs={1}>
+                    <HatchTime hatchCycle={pokemonSpecies?.hatch_counter} />
+                  </Grid>
+                  <Grid item xs={1}>
+                    <StatTitleText>Growth Rate</StatTitleText>
+                    <PokemonInfoBox>
+                      <BodyText>
+                        {removeDash(
+                          capitaliseDash(pokemonSpecies?.growth_rate.name)
+                        )}
+                      </BodyText>
+                    </PokemonInfoBox>
+                  </Grid>
+                  <Grid item xs={1}>
+                    <EggGroups groupData={pokemonSpecies?.egg_groups} />
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item xs={1}>
+                <TypeWeaknesses types={formsData[active]?.types} />
+              </Grid>
+            </Grid>
           </CustomCard>
-          <CustomCard
-            sx={{
-              maxWidth: "700px",
-              m: "30px auto",
-              boxSizing: "border-box",
-              paddingTop: "5px",
-              paddingBottom: "20px",
-            }}
-          >
+          <CustomCard sx={evoDetailsContainer}>
             <EvolutionChain pokemonData={currPokemonData} large />
           </CustomCard>
         </Box>

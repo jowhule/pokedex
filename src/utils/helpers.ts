@@ -15,6 +15,7 @@ export const STAT_ABBRV: Record<string, string> = {
  * @returns {str}
  */
 export const capitalise = (str: string, all?: boolean): string => {
+  if (!str) return "";
   const split = str.split(" ");
   if (all) {
     const capitaliseAll = split.map(

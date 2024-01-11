@@ -31,7 +31,7 @@ const FULL_STATNAME: Record<string, string> = {
   speed: "Speed",
 };
 
-const MAX_STAT_VALUE = 211;
+const MAX_STAT_VALUE = 216;
 
 export const StatBars: React.FC<StatBarProps> = ({ statsData, detailed }) => {
   const [totalStat, setTotalStat] = useState<number>(0);
@@ -49,7 +49,7 @@ export const StatBars: React.FC<StatBarProps> = ({ statsData, detailed }) => {
   };
 
   useEffect(() => {
-    if (statsData.length > 0) {
+    if (statsData?.length > 0) {
       let totalStatCalc = 0;
       for (const stat of statsData) {
         totalStatCalc += stat.base_stat;
@@ -62,7 +62,7 @@ export const StatBars: React.FC<StatBarProps> = ({ statsData, detailed }) => {
       <StatTitleText fontSize="16px">Base Stats</StatTitleText>
       {detailed ? (
         <List sx={statsContainer}>
-          {statsData.map((statInfo, index) => (
+          {statsData?.map((statInfo, index) => (
             <ListItem key={index} sx={largeStatContainer}>
               <BodyText minWidth="45px" sx={largeStatText}>
                 {FULL_STATNAME[statInfo.stat.name]}
@@ -96,7 +96,7 @@ export const StatBars: React.FC<StatBarProps> = ({ statsData, detailed }) => {
         </List>
       ) : (
         <Box sx={statsContainer}>
-          {statsData.map((statInfo, index) => (
+          {statsData?.map((statInfo, index) => (
             <Box key={index} sx={statContainer}>
               <Box sx={statBarContainer}>
                 <BodyText sx={statTitle}>
