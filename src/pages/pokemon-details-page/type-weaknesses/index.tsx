@@ -4,19 +4,16 @@ import {
   PokemonInfoBox,
   StatTitleText,
 } from "../../../utils/styledComponents";
-import { Box, CircularProgress, Stack } from "@mui/material";
+import { Box, CircularProgress, Stack, Tooltip } from "@mui/material";
 import {
   PokemonTypeResponseType,
   PokemonTypeType,
 } from "../../../services/apiRequestsTypes";
 import { sendGenericAPIRequest } from "../../../services/apiRequests";
 import { typeEffectivenessDefault } from "../../../utils/defaults";
-import { TYPE_BORDER_COLOURS, TYPE_COLOURS } from "../../../utils/colours";
-import {
-  typeTypeContainer,
-  typeWeaknessContainer,
-  weaknessesContainer,
-} from "./style ";
+import { typeWeaknessContainer, weaknessesContainer } from "./style ";
+import typeIcons from "../../../assets/type-icons";
+import { capitalise } from "../../../utils/helpers";
 
 type TypeWeaknessesType = {
   types: PokemonTypeType[];
@@ -43,7 +40,6 @@ export const TypeWeaknesses: React.FC<TypeWeaknessesType> = ({ types }) => {
 
   useEffect(() => {
     setWeaknesses({ ...typeEffectivenessDefault, updated: 0 });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [types]);
 
   useEffect(() => {
@@ -79,10 +75,10 @@ export const TypeWeaknesses: React.FC<TypeWeaknessesType> = ({ types }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [weaknesses]);
+
   return (
     <Stack width="100%" height="100%">
       <StatTitleText>Weaknesses</StatTitleText>
-
       <PokemonInfoBox sx={weaknessesContainer}>
         {weaknesses["updated"] ? (
           <>
@@ -90,15 +86,14 @@ export const TypeWeaknesses: React.FC<TypeWeaknessesType> = ({ types }) => {
               .slice(0, 18)
               .map((type, i) => (
                 <Box sx={typeWeaknessContainer} key={i}>
-                  <BodyText
-                    sx={{
-                      ...typeTypeContainer,
-                      bgcolor: `${TYPE_COLOURS[type]}`,
-                      border: `2px solid ${TYPE_BORDER_COLOURS[type]}`,
-                    }}
-                  >
-                    {type.substring(0, 3)}
-                  </BodyText>
+                  <Tooltip title={`${capitalise(type)}`}>
+                    <Box
+                      component="img"
+                      src={typeIcons[type]}
+                      alt={`${type} icon`}
+                      sx={{ width: "28px" }}
+                    />
+                  </Tooltip>
                   <BodyText
                     m="0 5px"
                     color={`${effectivenessColor[weaknesses[type]]} !important`}

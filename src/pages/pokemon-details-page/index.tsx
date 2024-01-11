@@ -113,13 +113,12 @@ export const PokemonDetailsPage: React.FC = () => {
   };
 
   useEffect(() => {
-    if (pokeName) {
-      // reset data
-      setHasLoaded(false);
-      setCurrPokemonData(pokemonDataDefault);
-      setPokemonSpecies(pokemonSpeciesDefault);
-      setVarietiesData([]);
-    }
+    // reset data
+    setHasLoaded(false);
+    setCurrPokemonData(pokemonDataDefault);
+    setPokemonSpecies(pokemonSpeciesDefault);
+    setVarietiesData([]);
+    setActive(0);
   }, [pokeName]);
 
   // get initial pokemon data
@@ -132,7 +131,7 @@ export const PokemonDetailsPage: React.FC = () => {
         if (data) setCurrPokemonData(data);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hasLoaded, navigate]);
+  }, [hasLoaded]);
 
   // get species data after initial pokemon data received
   useEffect(() => {
@@ -143,7 +142,7 @@ export const PokemonDetailsPage: React.FC = () => {
         if (data) setPokemonSpecies(data);
       });
     }
-  }, [currPokemonData, pokemonSpecies]);
+  }, [currPokemonData, pokemonSpecies.id]);
 
   // get data of possible varieties and their pokemon forms
   useEffect(() => {
@@ -239,9 +238,7 @@ export const PokemonDetailsPage: React.FC = () => {
 
   // after varities have been received
   useEffect(() => {
-    if (formNames.length > 0) {
-      setHasLoaded(true);
-    }
+    if (formNames.length > 0) setHasLoaded(true);
   }, [formNames]);
 
   return (
@@ -250,8 +247,8 @@ export const PokemonDetailsPage: React.FC = () => {
         <Box
           maxWidth="1200px"
           m="0 auto"
-          p={isMobile ? "0 15px" : "0 30px"}
           boxSizing="border-box"
+          p={isMobile ? "0 15px" : "0 30px"}
         >
           <TabsPanel
             formNames={formNames}
@@ -296,7 +293,10 @@ export const PokemonDetailsPage: React.FC = () => {
                     textAlign="center"
                     sx={{ opacity: "0.6" }}
                   >
-                    # {currPokemonData?.id}
+                    #{" "}
+                    {varietiesData.length > 0
+                      ? varietiesData[0].id
+                      : currPokemonData?.id}
                   </BodyText>
                 </Box>
 

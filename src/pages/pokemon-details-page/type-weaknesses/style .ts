@@ -10,7 +10,7 @@ export const typeWeaknessContainer = {
   bgcolor: "white",
   p: "3px",
   borderRadius: "20px",
-  width: "66px",
+  width: "67px",
 };
 
 export const typeTypeContainer = {
