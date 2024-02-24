@@ -43,12 +43,12 @@ import { pokemonDataDefault } from "../../../utils/defaults";
 import { capitalise } from "../../../utils/helpers";
 
 import defaultImage from "../../../assets/default_pokemon_info.png";
-import pokeballLoader from "../../../assets/pokeball-icon.png";
 import { TYPE_COLOURS, primaryTextColour } from "../../../utils/colours";
 import { useNavigate } from "react-router-dom";
 import { Abilities } from "../../../components/pokemon-information/abilities";
 import { Types } from "../../../components/pokemon-information/types";
 import { EffortValues } from "../../../components/pokemon-information/effort-values";
+import { PokeballLoader } from "../../../components/pokeball-loader";
 
 type MoreInfoSlideType = {
   pokedexData: Record<string, PokemonDataResponseType>;
@@ -252,16 +252,7 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
                   </Box>
                 </Box>
               </CustomCard>
-              {hasClosedMobile ? (
-                <></>
-              ) : (
-                <Box
-                  component="img"
-                  src={pokeballLoader}
-                  alt="Loading"
-                  sx={infoSlideLoaderStyle}
-                />
-              )}
+              {hasClosedMobile && <PokeballLoader sx={infoSlideLoaderStyle} />}
             </Box>
           )}
         </>
@@ -333,12 +324,7 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
               </Box>
             </Box>
           </CustomCard>
-          <Box
-            component="img"
-            src={pokeballLoader}
-            alt="Loading"
-            sx={infoSlideLoaderStyle}
-          />
+          <PokeballLoader sx={infoSlideLoaderStyle} />
         </Box>
       )}
     </>

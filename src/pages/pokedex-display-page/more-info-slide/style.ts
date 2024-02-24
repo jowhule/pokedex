@@ -133,14 +133,8 @@ export const pokemonSpriteStyle = {
   zIndex: "1",
 };
 
-const spinAnimate = keyframes`
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-`;
-
 export const infoSlideLoaderStyle = {
   position: "fixed",
-  animation: `${spinAnimate} 2s linear infinite`,
   width: "70px",
   top: "50vh",
   zIndex: "-1",
