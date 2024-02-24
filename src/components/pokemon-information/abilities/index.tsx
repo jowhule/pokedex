@@ -14,7 +14,7 @@ export const Abilities: React.FC<AbilitiesType> = ({ abilitiesData }) => {
     <>
       <StatTitleText fontSize="16px">Abilities</StatTitleText>
       <Box sx={abilitiesContainerStyle}>
-        {abilitiesData.map((ability, index) => (
+        {abilitiesData?.map((ability, index) => (
           <AbilityTag abilityInfo={ability} key={index} />
         ))}
       </Box>

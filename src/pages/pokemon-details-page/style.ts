@@ -1,5 +1,10 @@
 import { primaryTextColour } from "../../utils/colours";
 
+export const pokemonDetailsPageCont = {
+  boxSizing: "border-box",
+  maxWidth: "1200px",
+  m: "0 auto",
+};
 export const pokemonDetailsBgWrapper = {
   bgcolor: "white",
   p: "40px",

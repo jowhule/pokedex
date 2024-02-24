@@ -11,7 +11,7 @@ export const Types: React.FC<TypesType> = ({ typesData }) => {
   return (
     <>
       <Box display="flex" gap="10px" m="10px" justifyContent="center">
-        {typesData.map((type, index) => (
+        {typesData?.map((type, index) => (
           <TypeTag type={type.type.name} key={index} />
         ))}
       </Box>

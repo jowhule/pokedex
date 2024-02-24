@@ -14,7 +14,7 @@ export const EffortValues: React.FC<EffortValuesType> = ({ statsData }) => {
     <>
       <StatTitleText fontSize="16px">EV Yield</StatTitleText>
       <Box display="flex" justifyContent="center" gap="10px">
-        {statsData.map((statInfo, index) => (
+        {statsData?.map((statInfo, index) => (
           <Box key={index} sx={effortTagContainer}>
             <BodyText
               sx={{

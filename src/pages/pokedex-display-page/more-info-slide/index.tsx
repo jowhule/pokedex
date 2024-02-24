@@ -252,7 +252,7 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
                   </Box>
                 </Box>
               </CustomCard>
-              {hasClosedMobile && <PokeballSpin sx={infoSlideLoaderStyle} />}
+              {!hasClosedMobile && <PokeballSpin sx={infoSlideLoaderStyle} />}
             </Box>
           )}
         </>

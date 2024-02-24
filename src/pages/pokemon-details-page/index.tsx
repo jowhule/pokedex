@@ -13,14 +13,7 @@ import {
   requestLinks,
   sendGenericAPIRequest,
 } from "../../services/apiRequests";
-import {
-  Box,
-  CircularProgress,
-  Stack,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from "@mui/material";
+import { Box, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
 import {
   capitalise,
   capitaliseDash,
@@ -35,6 +28,7 @@ import {
   infoPokemonNameStyle,
   mobileDetailsMainInfoContainer,
   pokemonDetailsBgWrapper,
+  pokemonDetailsPageCont,
   pokemonDetailsSpriteStyle,
 } from "./style";
 import { TabsPanel } from "./tabs-panel";
@@ -44,9 +38,11 @@ import { Types } from "../../components/pokemon-information/types";
 import { EffortValues } from "../../components/pokemon-information/effort-values";
 import { EvolutionChain } from "../../components/pokemon-information/evolution-chain";
 import { CustomCard } from "../../components/custom-card/CustomCard";
+import { useLoadPageContext } from "../../components/context-providers/load-provider";
 
 export const PokemonDetailsPage: React.FC = () => {
   const { pokeName } = useParams();
+  const { loadPage, setLoadPage } = useLoadPageContext();
   const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -54,7 +50,6 @@ export const PokemonDetailsPage: React.FC = () => {
   const [active, setActive] = useState<number>(0);
   const [activePokemonData, setActivePokemonData] =
     useState<PokemonDataResponseType>(pokemonDataDefault);
-  const [hasLoaded, setHasLoaded] = useState<boolean>(false);
 
   const [currPokemonData, setCurrPokemonData] =
     useState<PokemonDataResponseType>(pokemonDataDefault);
@@ -89,7 +84,7 @@ export const PokemonDetailsPage: React.FC = () => {
 
   // get initial pokemon data
   useEffect(() => {
-    setHasLoaded(false);
+    setLoadPage(false);
     if (pokeName)
       sendGenericAPIRequest<PokemonDataResponseType>(
         requestLinks.getData(pokeName),
@@ -99,11 +94,12 @@ export const PokemonDetailsPage: React.FC = () => {
           setCurrPokemonData(data);
         }
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigate, pokeName]);
 
   // get species data after initial pokemon data received
   useEffect(() => {
-    setHasLoaded(false);
+    setLoadPage(false);
     if (currPokemonData.id) {
       sendGenericAPIRequest<PokemonSpeciesResponseType>(
         currPokemonData.species.url
@@ -111,6 +107,7 @@ export const PokemonDetailsPage: React.FC = () => {
         if (data) setPokemonSpecies(data);
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currPokemonData]);
 
   // get data of possible varieties and their pokemon forms
@@ -204,25 +201,19 @@ export const PokemonDetailsPage: React.FC = () => {
   // after varities have been received
   useEffect(() => {
     if (formNames.length > 0) {
-      setHasLoaded(true);
+      setLoadPage(true);
     }
-  }, [formNames]);
+  }, [formNames, setLoadPage]);
 
   return (
     <>
-      {hasLoaded ? (
-        <Box
-          maxWidth="1200px"
-          m="0 auto"
-          p={isMobile ? "0 15px" : "0 30px"}
-          boxSizing="border-box"
-        >
+      {loadPage && (
+        <Box p={isMobile ? "0 15px" : "0 30px"} sx={pokemonDetailsPageCont}>
           <TabsPanel
             formNames={formNames}
             active={active}
             setActive={setActive}
           />
-
           <CustomCard
             sx={
               isMobile
@@ -281,7 +272,7 @@ export const PokemonDetailsPage: React.FC = () => {
                     <StatTitleText fontSize="16px">Height</StatTitleText>
                     <Box sx={abilitiesContainerStyle}>
                       <BodyText>
-                        {insertDecimal(activePokemonData.height)} m
+                        {insertDecimal(activePokemonData?.height)} m
                       </BodyText>
                     </Box>
                   </Stack>
@@ -289,9 +280,9 @@ export const PokemonDetailsPage: React.FC = () => {
                     <StatTitleText fontSize="16px">Weight</StatTitleText>
                     <Box sx={abilitiesContainerStyle}>
                       <BodyText>
-                        {activePokemonData.weight >= 10000
+                        {activePokemonData?.weight >= 10000
                           ? "???.?"
-                          : insertDecimal(activePokemonData.weight)}{" "}
+                          : insertDecimal(activePokemonData?.weight)}{" "}
                         kg
                       </BodyText>
                     </Box>
@@ -303,7 +294,7 @@ export const PokemonDetailsPage: React.FC = () => {
             </Box>
 
             <StatBars
-              statsData={activePokemonData.stats}
+              statsData={activePokemonData?.stats}
               detailed={!isMobile}
             />
           </CustomCard>
@@ -318,10 +309,6 @@ export const PokemonDetailsPage: React.FC = () => {
           >
             <EvolutionChain pokemonData={currPokemonData} large />
           </CustomCard>
-        </Box>
-      ) : (
-        <Box display="flex" justifyContent="center" width="100%">
-          <CircularProgress />
         </Box>
       )}
     </>
