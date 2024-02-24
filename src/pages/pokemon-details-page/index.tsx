@@ -15,6 +15,7 @@ import {
 } from "../../services/apiRequests";
 import {
   Box,
+  CircularProgress,
   Grid,
   Stack,
   Typography,
@@ -41,7 +42,6 @@ import {
   infoPokemonNameStyle,
   mobileDetailsMainInfoContainer,
   pokemonDetailsBgWrapper,
-  pokemonDetailsPageCont,
   pokemonDetailsSpriteStyle,
 } from "./style";
 import { TabsPanel } from "./tabs-panel";
@@ -58,14 +58,12 @@ import { useLoadPageContext } from "../../components/context-providers/load-prov
 
 export const PokemonDetailsPage: React.FC = () => {
   const { pokeName } = useParams();
-  const { loadPage, setLoadPage } = useLoadPageContext();
   const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const { loadPage, setLoadPage } = useLoadPageContext();
 
   const [active, setActive] = useState<number>(0);
-  const [activePokemonData, setActivePokemonData] =
-    useState<PokemonDataResponseType>(pokemonDataDefault);
 
   const [currPokemonData, setCurrPokemonData] =
     useState<PokemonDataResponseType>(pokemonDataDefault);
@@ -117,18 +115,16 @@ export const PokemonDetailsPage: React.FC = () => {
 
   useEffect(() => {
     // reset data
-    setHasLoaded(false);
+    setLoadPage(false);
     setCurrPokemonData(pokemonDataDefault);
     setPokemonSpecies(pokemonSpeciesDefault);
     setVarietiesData([]);
     setActive(0);
-  }, [pokeName]);
+  }, [pokeName, setLoadPage]);
 
   // get initial pokemon data
   useEffect(() => {
-    setLoadPage(false);
-    setActive(0);
-    if (pokeName)
+    if (!loadPage && pokeName)
       sendGenericAPIRequest<PokemonDataResponseType>(
         requestLinks.getData(pokeName),
         () => resendData(pokeName)
@@ -136,20 +132,18 @@ export const PokemonDetailsPage: React.FC = () => {
         if (data) setCurrPokemonData(data);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [navigate, pokeName]);
+  }, [loadPage]);
 
   // get species data after initial pokemon data received
   useEffect(() => {
-    setLoadPage(false);
-    if (currPokemonData.id) {
+    if (currPokemonData?.id && !pokemonSpecies.id) {
       sendGenericAPIRequest<PokemonSpeciesResponseType>(
         currPokemonData?.species?.url
       ).then((data) => {
         if (data) setPokemonSpecies(data);
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currPokemonData]);
+  }, [currPokemonData, pokemonSpecies.id]);
 
   // get data of possible varieties and their pokemon forms
   useEffect(() => {
@@ -245,20 +239,24 @@ export const PokemonDetailsPage: React.FC = () => {
 
   // after varities have been received
   useEffect(() => {
-    if (formNames.length > 0) {
-      setLoadPage(true);
-    }
+    if (formNames.length > 0) setLoadPage(true);
   }, [formNames, setLoadPage]);
 
   return (
     <>
-      {loadPage && (
-        <Box p={isMobile ? "0 15px" : "0 30px"} sx={pokemonDetailsPageCont}>
+      {loadPage ? (
+        <Box
+          maxWidth="1200px"
+          m="0 auto"
+          boxSizing="border-box"
+          p={isMobile ? "0 15px" : "0 30px"}
+        >
           <TabsPanel
             formNames={formNames}
             active={active}
             setActive={setActive}
           />
+
           <CustomCard
             sx={
               isMobile
@@ -320,7 +318,7 @@ export const PokemonDetailsPage: React.FC = () => {
                     <StatTitleText fontSize="16px">Height</StatTitleText>
                     <PokemonInfoBox>
                       <BodyText>
-                        {insertDecimal(activePokemonData?.height)} m
+                        {insertDecimal(currPokemonData?.height)} m
                       </BodyText>
                     </PokemonInfoBox>
                   </Stack>
@@ -328,9 +326,9 @@ export const PokemonDetailsPage: React.FC = () => {
                     <StatTitleText fontSize="16px">Weight</StatTitleText>
                     <PokemonInfoBox>
                       <BodyText>
-                        {activePokemonData?.weight >= 10000
+                        {currPokemonData?.weight >= 10000
                           ? "???.?"
-                          : insertDecimal(activePokemonData?.weight)}{" "}
+                          : insertDecimal(currPokemonData?.weight)}{" "}
                         kg
                       </BodyText>
                     </PokemonInfoBox>
@@ -341,14 +339,44 @@ export const PokemonDetailsPage: React.FC = () => {
               </Stack>
             </Box>
 
-            <StatBars
-              statsData={activePokemonData?.stats}
-              detailed={!isMobile}
-            />
+            <StatBars statsData={currPokemonData?.stats} detailed={!isMobile} />
+
+            <Grid container spacing="15px" columns={{ md: 2, xs: 1 }}>
+              <Grid item xs={1}>
+                <Grid container spacing="15px" columns={2}>
+                  <Grid display="flex" item xs={1}>
+                    <GenderDisplay genderRatio={pokemonSpecies?.gender_rate} />
+                  </Grid>
+                  <Grid item xs={1}>
+                    <HatchTime hatchCycle={pokemonSpecies?.hatch_counter} />
+                  </Grid>
+                  <Grid item xs={1}>
+                    <StatTitleText>Growth Rate</StatTitleText>
+                    <PokemonInfoBox>
+                      <BodyText>
+                        {removeDash(
+                          capitaliseDash(pokemonSpecies?.growth_rate.name)
+                        )}
+                      </BodyText>
+                    </PokemonInfoBox>
+                  </Grid>
+                  <Grid item xs={1}>
+                    <EggGroups groupData={pokemonSpecies?.egg_groups} />
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item xs={1}>
+                <TypeWeaknesses types={formsData[active]?.types} />
+              </Grid>
+            </Grid>
           </CustomCard>
           <CustomCard sx={evoDetailsContainer}>
             <EvolutionChain pokemonData={currPokemonData} large />
           </CustomCard>
+        </Box>
+      ) : (
+        <Box display="flex" justifyContent="center" width="100%">
+          <CircularProgress />
         </Box>
       )}
     </>
