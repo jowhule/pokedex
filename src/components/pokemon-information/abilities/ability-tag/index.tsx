@@ -40,7 +40,6 @@ export const AbilityTag: React.FC<AbilityTagProps> = ({ abilityInfo }) => {
     <Tooltip title={abilityDesc} arrow>
       <Box
         sx={{
-          width: "120px",
           height: "35px",
           display: "flex",
           flexDirection: "column",

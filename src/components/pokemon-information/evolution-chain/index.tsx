@@ -171,7 +171,7 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
 
   return (
     <>
-      {evolutionStages.length > 1 && (
+      {evolutionStages.length > 1 ? (
         <>
           <StatTitleText
             sx={
@@ -212,6 +212,16 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
               </Box>
             ))}
           </Box>
+        </>
+      ) : (
+        <>
+          {large && (
+            <StatTitleText
+              sx={{ fontSize: "20px", textAlign: "center", opacity: "0.6" }}
+            >
+              This Pokemon does not evolve.
+            </StatTitleText>
+          )}
         </>
       )}
     </>

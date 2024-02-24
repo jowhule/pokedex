@@ -1,6 +1,6 @@
 ## Pokedex
 
-A passion and learning project still in the making because I love pokemon and I think their wikipedia page is too cluttered with unnecessary information.
+A passion and learning project still in the making. Driven by my love for Pokemon and making accessing information easier and less cluttered for newer players.
 
 [Live site](https://personalpokedex-one.vercel.app/)
 
@@ -11,6 +11,6 @@ Inspired by [David](https://github.com/davidhckh)
 ## TODO
 
 - add page to save pokemon in (team)
-- a route to each pokemon to display all stats
-- do a pokemon guessing game
+- add learnable moves
+
 
