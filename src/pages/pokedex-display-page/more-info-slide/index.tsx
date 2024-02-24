@@ -48,7 +48,7 @@ import { useNavigate } from "react-router-dom";
 import { Abilities } from "../../../components/pokemon-information/abilities";
 import { Types } from "../../../components/pokemon-information/types";
 import { EffortValues } from "../../../components/pokemon-information/effort-values";
-import { PokeballLoader } from "../../../components/pokeball-loader";
+import { PokeballSpin } from "../../../components/pokeball-spin";
 
 type MoreInfoSlideType = {
   pokedexData: Record<string, PokemonDataResponseType>;
@@ -252,7 +252,7 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
                   </Box>
                 </Box>
               </CustomCard>
-              {hasClosedMobile && <PokeballLoader sx={infoSlideLoaderStyle} />}
+              {hasClosedMobile && <PokeballSpin sx={infoSlideLoaderStyle} />}
             </Box>
           )}
         </>
@@ -324,7 +324,7 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
               </Box>
             </Box>
           </CustomCard>
-          <PokeballLoader sx={infoSlideLoaderStyle} />
+          <PokeballSpin sx={infoSlideLoaderStyle} />
         </Box>
       )}
     </>

@@ -7,7 +7,7 @@ type PokeballLoaderType = {
   sx?: SxProps<Theme>;
 };
 
-export const PokeballLoader: React.FC<PokeballLoaderType> = ({ sx }) => {
+export const PokeballSpin: React.FC<PokeballLoaderType> = ({ sx }) => {
   return (
     <Box
       sx={{ ...spin, ...sx }}
