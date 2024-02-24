@@ -1,4 +1,4 @@
-import { secondaryColour } from "../../../utils/colours";
+import { secondaryColour } from "../../utils/colours";
 
 export const detailsTabsContainer = {
   width: "calc(100% - 5px)",

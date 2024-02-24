@@ -259,3 +259,54 @@ export type PokemonTypeResponseType = {
   past_damage_relations: [];
   pokemon: { pokemon: NameUrlType; slot: number }[];
 };
+
+export type PokemonMoveResponseType = {
+  accuracy: number;
+  contest_combos: {
+    normal: { use_after: NameUrlType[]; use_before: NameUrlType[] };
+    super: { use_after: NameUrlType[]; use_before: NameUrlType[] };
+  };
+  contest_effect: { url: string };
+  contest_type: NameUrlType;
+  damage_class: NameUrlType;
+  effect_chance: number | null;
+  effect_changes: [];
+  effect_entries: {
+    effect: string;
+    language: NameUrlType;
+    short_effect: string;
+  }[];
+  flavor_text_entries: {
+    flavor_text: string;
+    language: NameUrlType;
+    version_group: NameUrlType;
+  }[];
+  generation: NameUrlType;
+  id: number;
+  learned_by_pokemon: NameUrlType[];
+  machines: { machine: { url: string }; version_group: NameUrlType };
+  meta: {
+    ailment: NameUrlType;
+    ailment_change: number;
+    category: NameUrlType;
+    crit_rate: number;
+    drain: number;
+    flinch_chance: 0;
+    healing: 0;
+    max_hits: number | null;
+    max_turns: number | null;
+    min_hits: number | null;
+    min_turns: number | null;
+    stat_chance: number;
+  };
+  name: string;
+  names: LanguageNameArrayType;
+  past_values: [];
+  power: number;
+  pp: number;
+  priority: number;
+  stat_changes: [];
+  super_contest_effect: { url: string };
+  target: NameUrlType;
+  type: NameUrlType;
+};

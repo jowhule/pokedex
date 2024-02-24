@@ -64,7 +64,7 @@ export const StatBars: React.FC<StatBarProps> = ({ statsData, detailed }) => {
         <List sx={statsContainer}>
           {statsData?.map((statInfo, index) => (
             <ListItem key={index} sx={largeStatContainer}>
-              <BodyText minWidth="45px" sx={largeStatText}>
+              <BodyText minWidth="48px" sx={largeStatText}>
                 {FULL_STATNAME[statInfo.stat.name]}
               </BodyText>
               <BodyText minWidth="35px" sx={largeStatText}>

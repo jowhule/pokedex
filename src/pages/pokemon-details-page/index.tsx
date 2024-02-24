@@ -40,11 +40,12 @@ import {
   evoDetailsContainer,
   generaTextStyle,
   infoPokemonNameStyle,
+  mainDetailsBodyContainer,
   mobileDetailsMainInfoContainer,
   pokemonDetailsBgWrapper,
   pokemonDetailsSpriteStyle,
 } from "./style";
-import { TabsPanel } from "./tabs-panel";
+import { TabsPanel } from "../../components/tabs-panel";
 import { Abilities } from "../../components/pokemon-information/abilities";
 import { Types } from "../../components/pokemon-information/types";
 import { EffortValues } from "../../components/pokemon-information/effort-values";
@@ -54,6 +55,7 @@ import { GenderDisplay } from "./gender-display";
 import { EggGroups } from "./egg-groups";
 import { TypeWeaknesses } from "./type-weaknesses";
 import { HatchTime } from "./hatch-time";
+import { PokemonMoves } from "./pokemon-moves";
 
 export const PokemonDetailsPage: React.FC = () => {
   const { pokeName } = useParams();
@@ -245,16 +247,12 @@ export const PokemonDetailsPage: React.FC = () => {
     <>
       {hasLoaded ? (
         <Box
-          maxWidth="1200px"
-          m="0 auto"
-          boxSizing="border-box"
-          p={isMobile ? "0 15px" : "0 30px"}
+          sx={{
+            ...mainDetailsBodyContainer,
+            p: `${isMobile ? "0 15px" : "0 30px"}`,
+          }}
         >
-          <TabsPanel
-            formNames={formNames}
-            active={active}
-            setActive={setActive}
-          />
+          <TabsPanel names={formNames} active={active} setActive={setActive} />
 
           <CustomCard
             sx={
@@ -372,6 +370,8 @@ export const PokemonDetailsPage: React.FC = () => {
           <CustomCard sx={evoDetailsContainer}>
             <EvolutionChain pokemonData={currPokemonData} large />
           </CustomCard>
+
+          <PokemonMoves nameList={formNames} dataList={varietiesData} />
         </Box>
       ) : (
         <Box display="flex" justifyContent="center" width="100%">

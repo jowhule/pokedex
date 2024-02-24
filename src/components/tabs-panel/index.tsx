@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { BodyText, Hoverable } from "../../../utils/styledComponents";
+import { BodyText, Hoverable } from "../../utils/styledComponents";
 import {
   activeDetailsPanelStyle,
   detailsTabPanelStyle,
@@ -7,13 +7,13 @@ import {
 } from "./style";
 
 type TabsPanelType = {
-  formNames: string[];
+  names: string[];
   active: number;
   setActive: React.Dispatch<React.SetStateAction<number>>;
 };
 
 export const TabsPanel: React.FC<TabsPanelType> = ({
-  formNames,
+  names,
   active,
   setActive,
 }) => {
@@ -24,7 +24,7 @@ export const TabsPanel: React.FC<TabsPanelType> = ({
   return (
     <Box sx={detailsTabsContainer}>
       <Box sx={{ display: "flex", gap: "8px" }}>
-        {formNames.map((name, i) => (
+        {names.map((name, i) => (
           <Hoverable
             key={i}
             sx={i === active ? activeDetailsPanelStyle : detailsTabPanelStyle}
