@@ -61,9 +61,9 @@ export const PokemonDetailsPage: React.FC = () => {
   const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const { loadPage, setLoadPage } = useLoadPageContext();
 
   const [active, setActive] = useState<number>(0);
+  const { loadPage, setLoadPage } = useLoadPageContext();
 
   const [currPokemonData, setCurrPokemonData] =
     useState<PokemonDataResponseType>(pokemonDataDefault);
