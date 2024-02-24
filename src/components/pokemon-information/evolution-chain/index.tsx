@@ -130,7 +130,11 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
       ).then((data) => {
         if (data && data?.evolution_chain?.url) {
           sendGenericAPIRequest<PokemonEvolutionResponseType>(
+<<<<<<< HEAD
             `${data.evolution_chain.url}`
+=======
+            `${data?.evolution_chain?.url}`
+>>>>>>> bbbd1f83a5706036eb5e08849766de0cc08f1660
           ).then((data) => {
             if (data) {
               const evoStagesTemp: EvoStages = [];
@@ -171,7 +175,7 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
 
   return (
     <>
-      {evolutionStages.length > 1 && (
+      {evolutionStages.length > 1 ? (
         <>
           <StatTitleText
             sx={
@@ -212,6 +216,16 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
               </Box>
             ))}
           </Box>
+        </>
+      ) : (
+        <>
+          {large && (
+            <StatTitleText
+              sx={{ fontSize: "20px", textAlign: "center", opacity: "0.6" }}
+            >
+              This Pokemon does not evolve.
+            </StatTitleText>
+          )}
         </>
       )}
     </>

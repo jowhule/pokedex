@@ -20,6 +20,7 @@ export const TabsPanel: React.FC<TabsPanelType> = ({
   const handleChange = (newValue: number) => {
     setActive(newValue);
   };
+
   return (
     <Box sx={detailsTabsContainer}>
       <Box sx={{ display: "flex", gap: "8px" }}>

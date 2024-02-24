@@ -2,7 +2,7 @@ import { fontBgColour } from "../../../utils/colours";
 
 export const effortTagContainer = {
   bgcolor: fontBgColour,
-  p: "3px",
+  p: "4px",
   borderRadius: "25px",
 };
 

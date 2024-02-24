@@ -23,7 +23,7 @@ export const largeStatContainer = {
   display: "flex",
   width: "100%",
   alignItems: "center",
-  p: "2px 0",
+  p: "2px 15px",
 };
 
 export const statBarContainer = {
