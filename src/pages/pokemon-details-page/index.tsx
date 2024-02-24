@@ -54,6 +54,7 @@ import { GenderDisplay } from "./gender-display";
 import { EggGroups } from "./egg-groups";
 import { TypeWeaknesses } from "./type-weaknesses";
 import { HatchTime } from "./hatch-time";
+import { useLoadPageContext } from "../../components/context-providers/load-provider";
 
 export const PokemonDetailsPage: React.FC = () => {
   const { pokeName } = useParams();
@@ -62,7 +63,7 @@ export const PokemonDetailsPage: React.FC = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [active, setActive] = useState<number>(0);
-  const [hasLoaded, setHasLoaded] = useState<boolean>(false);
+  const { loadPage, setLoadPage } = useLoadPageContext();
 
   const [currPokemonData, setCurrPokemonData] =
     useState<PokemonDataResponseType>(pokemonDataDefault);
@@ -114,16 +115,16 @@ export const PokemonDetailsPage: React.FC = () => {
 
   useEffect(() => {
     // reset data
-    setHasLoaded(false);
+    setLoadPage(false);
     setCurrPokemonData(pokemonDataDefault);
     setPokemonSpecies(pokemonSpeciesDefault);
     setVarietiesData([]);
     setActive(0);
-  }, [pokeName]);
+  }, [pokeName, setLoadPage]);
 
   // get initial pokemon data
   useEffect(() => {
-    if (!hasLoaded && pokeName)
+    if (!loadPage && pokeName)
       sendGenericAPIRequest<PokemonDataResponseType>(
         requestLinks.getData(pokeName),
         () => resendData(pokeName)
@@ -131,7 +132,7 @@ export const PokemonDetailsPage: React.FC = () => {
         if (data) setCurrPokemonData(data);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hasLoaded]);
+  }, [loadPage]);
 
   // get species data after initial pokemon data received
   useEffect(() => {
@@ -238,12 +239,12 @@ export const PokemonDetailsPage: React.FC = () => {
 
   // after varities have been received
   useEffect(() => {
-    if (formNames.length > 0) setHasLoaded(true);
-  }, [formNames]);
+    if (formNames.length > 0) setLoadPage(true);
+  }, [formNames, setLoadPage]);
 
   return (
     <>
-      {hasLoaded ? (
+      {loadPage ? (
         <Box
           maxWidth="1200px"
           m="0 auto"

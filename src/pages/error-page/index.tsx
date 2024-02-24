@@ -17,8 +17,8 @@ export const ErrorrPage: React.FC = () => {
       <Typography textAlign="center" variant="h1" fontWeight="bold">
         404
       </Typography>
-      <Typography textAlign="center" variant="h3">
-        Not found
+      <Typography textAlign="center" variant="h4">
+        Could not fetch specified data...
       </Typography>
       <Button
         variant="contained"

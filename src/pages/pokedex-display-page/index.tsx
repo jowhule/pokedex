@@ -14,6 +14,7 @@ import {
 import { PokedexDisplay } from "./pokedex-display";
 import { MoreInfoSlide } from "./more-info-slide";
 import { getDataPromises, getIdFromLink } from "../../utils/helpers";
+import { useLoadPageContext } from "../../components/context-providers/load-provider";
 
 export type PokedexDisplayrops = {
   generation: string;
@@ -22,10 +23,10 @@ export type PokedexDisplayrops = {
 export const PokedexDisplayPage: React.FC<PokedexDisplayrops> = ({
   generation,
 }) => {
+  const { setLoadPage } = useLoadPageContext();
   const theme = useTheme();
   const isTablet = useMediaQuery(theme.breakpoints.down("lg"));
 
-  const [hasLoaded, setHasLoaded] = useState<boolean>(false);
   const [pokedexEntries, setPokedexEntries] = useState<
     PokemonPokedexEntryType[]
   >([]);
@@ -98,7 +99,7 @@ export const PokedexDisplayPage: React.FC<PokedexDisplayrops> = ({
 
   // get all pokename in region pokedex
   useEffect(() => {
-    setHasLoaded(false);
+    setLoadPage(false);
 
     if (generation === "kalos") {
       getKalosDex();
@@ -109,6 +110,7 @@ export const PokedexDisplayPage: React.FC<PokedexDisplayrops> = ({
         if (data) setPokedexEntries(data.pokemon_entries);
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [generation]);
 
   // get all pokemon's data
@@ -152,8 +154,8 @@ export const PokedexDisplayPage: React.FC<PokedexDisplayrops> = ({
 
   // pokemon list finished fetching from api
   useEffect(() => {
-    if (Object.keys(pokedexData).length > 0) setHasLoaded(true);
-  }, [pokedexData]);
+    if (Object.keys(pokedexData).length > 0) setLoadPage(true);
+  }, [pokedexData, setLoadPage]);
 
   return (
     <Box sx={isTablet ? tabletPageContainerStyle : pageContainerStyle}>
@@ -163,7 +165,6 @@ export const PokedexDisplayPage: React.FC<PokedexDisplayrops> = ({
           pokedexList={pokedexEntries}
           pokedexData={pokedexData}
           displaySearch
-          listLoaded={hasLoaded}
           setActivePokemon={setActivePokemon}
         />
       </Box>

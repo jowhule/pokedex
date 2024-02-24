@@ -10,6 +10,7 @@ import { loadMoreContainer, pokemonGridStyle } from "./style";
 import { Searchbar } from "./searchbar";
 
 import { TypeFilter } from "./type-filter";
+import { useLoadPageContext } from "../../../components/context-providers/load-provider";
 
 const POKEMON_PER_LOAD = 30;
 
@@ -17,7 +18,6 @@ type PokedexDisplayProps = {
   pokedexList: PokemonPokedexEntryType[];
   generation: string;
   displaySearch?: boolean;
-  listLoaded: boolean;
   setActivePokemon: React.Dispatch<React.SetStateAction<string>>;
   pokedexData: Record<string, PokemonDataResponseType>;
 };
@@ -26,10 +26,10 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
   pokedexList,
   generation,
   displaySearch,
-  listLoaded,
   setActivePokemon,
   pokedexData,
 }) => {
+  const { loadPage } = useLoadPageContext();
   const [displayLimit, setDisplayLimit] = useState<number>(POKEMON_PER_LOAD);
   const [displayList, setDisplayList] = useState<Record<string, string>>({});
 
@@ -47,7 +47,7 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
     const currList: Record<string, string> = { ...getCurrentList() };
     const lenCurrDisplayList = Object.keys(currList).length;
 
-    if (listLoaded && Object.keys(currList).length < pokedexList.length) {
+    if (loadPage && Object.keys(currList).length < pokedexList.length) {
       const nextSearchPage: Record<string, string> = {};
       let currPokemon = lenCurrDisplayList;
       let numAdded = 0;
@@ -115,14 +115,14 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
    * list has loaded
    */
   useEffect(() => {
-    if (listLoaded) {
+    if (loadPage) {
       setHasMoreToLoad(true);
       setDisplayLimit(POKEMON_PER_LOAD);
       setDisplayList({});
       handleNext();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [listLoaded, currFilters, currSearchInput]);
+  }, [loadPage, currFilters, currSearchInput]);
 
   // reset filters and search variables when generation changes
   useEffect(() => {
@@ -145,7 +145,7 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
       />
       <Divider />
 
-      {listLoaded ? (
+      {loadPage ? (
         <InfiniteScroll
           dataLength={displayLimit}
           next={handleNext}
@@ -161,7 +161,7 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
           }}
         >
           <Grid container columns={12} spacing="25px" sx={pokemonGridStyle}>
-            {listLoaded &&
+            {loadPage &&
               pokedexList.map((pokemonEntry, index) => (
                 <PokemonCard
                   pokedexEntryNum={
