@@ -85,6 +85,7 @@ export const PokemonDetailsPage: React.FC = () => {
   // get initial pokemon data
   useEffect(() => {
     setLoadPage(false);
+    setActive(0);
     if (pokeName)
       sendGenericAPIRequest<PokemonDataResponseType>(
         requestLinks.getData(pokeName),
