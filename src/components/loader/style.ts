@@ -10,6 +10,7 @@ export const loadPageStyle = {
   alignItems: "center",
   justifyContent: "center",
   transition: "transform 1s ease",
+  flexDirection: "column",
 };
 
 export const loaderOff = {
