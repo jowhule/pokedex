@@ -11,6 +11,7 @@ Inspired by [David](https://github.com/davidhckh)
 ## TODO
 
 - add page to save pokemon in (team)
-- add learnable moves
+- add learnable moves in pokemon details page
+- remove loader from XML after loading is done
 
 
