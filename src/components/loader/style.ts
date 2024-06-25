@@ -1,6 +1,5 @@
 export const loadPageStyle = {
   position: "fixed",
-  top: "0",
   left: "0",
   width: "100%",
   height: "100%",
@@ -14,6 +13,6 @@ export const loadPageStyle = {
 };
 
 export const loaderOff = {
-  ...loadPageStyle,
   transform: "translateY(-100vh)",
+  top: "0",
 };

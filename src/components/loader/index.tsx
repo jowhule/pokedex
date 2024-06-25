@@ -4,37 +4,12 @@ import { useLoadPageContext } from "../context-providers/load-provider";
 import { loadPageStyle, loaderOff } from "./style";
 import { BodyText } from "../../utils/styledComponents";
 import { ReactTyped } from "react-typed";
-
-const pokemonMessages = [
-  "Loading... Professor Oak is still deciding if he wants to give you a Pokédex.",
-  "Waiting for the wild Pokémon to appear... and the loading to finish.",
-  "Gathering Poké Balls and potions... Just a moment longer!",
-  "Team Rocket may be causing trouble, but we're loading your application!",
-  "Hold onto your hats! The Pokémon League awaits... after this loading screen.",
-  "Loading... because even Pokémon Centers need a moment to rest.",
-  "Waiting for the Pokémon to gather at the tall grass... and for the application to load.",
-  "Loading... just like training your Magikarp to jump higher. It'll be worth it!",
-  "Harnessing the power of Pikachu's thunderbolt, one loading screen at a time.",
-  "Loading up the Pokédex, because knowledge is power!",
-  "Hang tight, Trainer! Pikachu's charging up the loading progress.",
-  "Snorlax is taking a nap... Zzz...",
-  "Jigglypuff is singing a lullaby...",
-  "Charmander's tail is heating up...",
-  "Bulbasaur is planting seeds...",
-  "Team Rocket is blasting off...",
-  "Pidgey is flying in with the data...",
-  "Professor Oak is researching faster loading methods...",
-  "Hatching Pokémon eggs...",
-  "Harvesting apricots for Pokéballs...",
-  "Catching 'em all, one byte at a time...",
-  "Syncing up with the Pokédex...",
-  "Searching for rare candies...",
-  "Paying respects to Raticate...",
-];
+import { pokemonMessages } from "./load_messages";
 
 export const Loader: React.FC = () => {
   const { loadPage } = useLoadPageContext();
   const [random, setRandom] = useState<number>(0);
+  const [hideLoad, setHideLoad] = useState<boolean>(false);
 
   const getRandom = (previousNumber: number): number => {
     let newNumber = Math.floor(Math.random() * pokemonMessages.length);
@@ -45,27 +20,36 @@ export const Loader: React.FC = () => {
   };
 
   useEffect(() => {
-    if (!loadPage) setRandom(getRandom(random));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (!loadPage) {
+      setRandom((prev) => getRandom(prev));
+      setHideLoad(false);
+    } else {
+      setTimeout(() => {
+        setHideLoad((prev) => (prev === true ? false : true));
+      }, 500);
+    }
   }, [loadPage]);
+
   return (
-    <>
-      <Box sx={loadPage ? loaderOff : loadPageStyle}>
-        <Box
-          width="300px"
-          component="img"
-          src="https://64.media.tumblr.com/tumblr_mdta50e8IX1rlbw7io1_500.gifv"
-          alt="Loading..."
-        />
-        <BodyText>
-          <ReactTyped
-            strings={[pokemonMessages[random]]}
-            cursorChar="|"
-            typeSpeed={20}
-            startDelay={950}
+    <Box sx={[loadPageStyle, loadPage && loaderOff]}>
+      {!hideLoad && (
+        <>
+          <Box
+            width="300px"
+            component="img"
+            src="https://64.media.tumblr.com/tumblr_mdta50e8IX1rlbw7io1_500.gifv"
+            alt="Pikachu Running for Loading..."
           />
-        </BodyText>
-      </Box>
-    </>
+          <BodyText p="0 15px" textAlign="center">
+            <ReactTyped
+              strings={[pokemonMessages[random]]}
+              cursorChar="|"
+              typeSpeed={20}
+              startDelay={950}
+            />
+          </BodyText>
+        </>
+      )}
+    </Box>
   );
 };
