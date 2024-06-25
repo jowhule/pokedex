@@ -1,10 +1,17 @@
 import { Box, Button, Typography } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { NAVBAR_HEIGHT } from "../../components/navbar/style";
+import { useLoadPageContext } from "../../components/context-providers/load-provider";
 
 export const ErrorrPage: React.FC = () => {
+  const { setLoadPage } = useLoadPageContext();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setLoadPage(true);
+  }, [setLoadPage]);
+
   return (
     <Box
       display="flex"

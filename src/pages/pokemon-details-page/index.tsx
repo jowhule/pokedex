@@ -373,6 +373,9 @@ export const PokemonDetailsPage: React.FC = () => {
           <CustomCard sx={evoDetailsContainer}>
             <EvolutionChain pokemonData={currPokemonData} large />
           </CustomCard>
+          <CustomCard>
+            <StatTitleText>Moves</StatTitleText>
+          </CustomCard>
         </Box>
       ) : (
         <Box display="flex" justifyContent="center" width="100%">
