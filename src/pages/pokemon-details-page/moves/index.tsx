@@ -247,7 +247,13 @@ export const Moves: React.FC<MovesProps> = ({ data }) => {
           </Button>
         </Box>
       </Box>
-      <Grid container>
+      <Grid
+        container
+        spacing={2}
+        alignItems="center"
+        justifyContent="center"
+        direction="column"
+      >
         <Grid item>
           <StatTitleText>By Leveling Up</StatTitleText>
           <Stack>
@@ -255,6 +261,7 @@ export const Moves: React.FC<MovesProps> = ({ data }) => {
               versions.versionsList[versions.active]
             ] && (
               <MovesTable
+                method={"level-up"}
                 data={parsedMovesData["level-up"]}
                 versions={versions}
               />
@@ -268,7 +275,11 @@ export const Moves: React.FC<MovesProps> = ({ data }) => {
             {parsedMovesData.machine[
               versions.versionsList[versions.active]
             ] && (
-              <MovesTable data={parsedMovesData.machine} versions={versions} />
+              <MovesTable
+                method={"machine"}
+                data={parsedMovesData.machine}
+                versions={versions}
+              />
             )}
           </Stack>
         </Grid>
@@ -277,7 +288,11 @@ export const Moves: React.FC<MovesProps> = ({ data }) => {
           <StatTitleText>By Breeding</StatTitleText>
           <Stack>
             {parsedMovesData.egg[versions.versionsList[versions.active]] && (
-              <MovesTable data={parsedMovesData.egg} versions={versions} />
+              <MovesTable
+                method={"egg"}
+                data={parsedMovesData.egg}
+                versions={versions}
+              />
             )}
           </Stack>
         </Grid>
@@ -286,7 +301,11 @@ export const Moves: React.FC<MovesProps> = ({ data }) => {
           <StatTitleText>By Tutor</StatTitleText>
           <Stack>
             {parsedMovesData.tutor[versions.versionsList[versions.active]] && (
-              <MovesTable data={parsedMovesData.tutor} versions={versions} />
+              <MovesTable
+                method={"tutor"}
+                data={parsedMovesData.tutor}
+                versions={versions}
+              />
             )}
           </Stack>
         </Grid>
