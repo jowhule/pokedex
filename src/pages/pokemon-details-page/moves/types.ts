@@ -18,7 +18,7 @@
 
 */
 
-type LevelUpType = Record<
+export type LevelUpType = Record<
   string,
   {
     level_learned_at: number;
@@ -36,3 +36,8 @@ type LevelUpType = Record<
 export type LearnMethodNames = "level-up" | "machine" | "tutor" | "egg";
 
 export type ParsedMovesDataType = Record<LearnMethodNames, LevelUpType>;
+
+export type VersionsOptionsType = {
+  versionsList: string[];
+  active: number;
+};

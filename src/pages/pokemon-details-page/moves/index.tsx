@@ -1,6 +1,16 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { PokemonMoveType } from "../../../services/apiRequestsTypes";
-import { LearnMethodNames, ParsedMovesDataType } from "./types";
+import {
+  LearnMethodNames,
+  ParsedMovesDataType,
+  VersionsOptionsType,
+} from "./types";
 import {
   Box,
   Button,
@@ -12,7 +22,6 @@ import {
   Paper,
   Popper,
   Stack,
-  Tooltip,
 } from "@mui/material";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import { BodyText, StatTitleText } from "../../../utils/styledComponents";
@@ -22,6 +31,7 @@ import {
   removeDash,
 } from "../../../utils/helpers";
 import PokeAPI, { IMove } from "pokeapi-typescript";
+import { MovesTable } from "./moves-table";
 
 type MovesProps = {
   data: PokemonMoveType[];
@@ -45,11 +55,75 @@ export const Moves: React.FC<MovesProps> = ({ data }) => {
     tutor: {},
     egg: {},
   });
-  const [versions, setVersions] = useState<{
-    versionsList: string[];
-    active: number;
-  }>({ versionsList: [], active: -1 });
+  const [versions, setVersions] = useState<VersionsOptionsType>({
+    versionsList: [],
+    active: -1,
+  });
   const [openVersions, setOpenVersions] = useState<boolean>(false);
+
+  const pokemonMovePromise = useCallback(
+    (
+      moveData: PokemonMoveType,
+      parsedData: ParsedMovesDataType,
+      versions: Set<string>
+    ): Promise<void> => {
+      const addMove = (
+        parsedData: ParsedMovesDataType,
+        name: string,
+        learnMethod: LearnMethodNames,
+        version: string,
+        url: string,
+        moveData: IMove,
+        levelLearnedAt?: number
+      ) => {
+        if (!(version in parsedData[learnMethod]))
+          parsedData[learnMethod][version] = [];
+
+        const fullName = moveData.names.find(
+          (langName) => langName.language.name === "en"
+        )?.name;
+
+        const effect = moveData.effect_entries.find(
+          (entries) => entries.language.name === "en"
+        )?.short_effect;
+
+        parsedData[learnMethod][version].push({
+          level_learned_at: levelLearnedAt ?? -1,
+          name: fullName ?? name,
+          url,
+          accuracy: moveData.accuracy,
+          pp: moveData.pp,
+          damage: moveData.power,
+          type: moveData.type.name,
+          damage_class: moveData.damage_class.name,
+          effect: effect ?? "",
+        });
+      };
+
+      return new Promise<void>((resolve) => {
+        PokeAPI.Move.resolve(getIdFromLink(moveData.move.url)).then((data) => {
+          for (const version of moveData.version_group_details) {
+            const moveLearnMethod = version.move_learn_method
+              .name as LearnMethodNames;
+            if (learnMethodNamesSet.has(moveLearnMethod)) {
+              addMove(
+                parsedData,
+                moveData.move.name,
+                moveLearnMethod,
+                version.version_group.name,
+                moveData.move.url,
+                data,
+                version.level_learned_at
+              );
+              versions.add(version.version_group.name);
+            }
+          }
+          resolve();
+        });
+      });
+    },
+    [learnMethodNamesSet]
+  );
 
   useEffect(() => {
     if (data.length === 0) return;
@@ -61,72 +135,16 @@ export const Moves: React.FC<MovesProps> = ({ data }) => {
     };
     const setOfVersions = new Set<string>();
 
-    const addMove = (
-      parsedData: ParsedMovesDataType,
-      name: string,
-      learnMethod: LearnMethodNames,
-      version: string,
-      url: string,
-      moveData: IMove,
-      levelLearnedAt?: number
-    ) => {
-      if (!(version in parsedData[learnMethod]))
-        parsedData[learnMethod][version] = [];
-
-      const fullName = moveData.names.find(
-        (langName) => langName.language.name === "en"
-      )?.name;
-
-      const effect = moveData.effect_entries.find(
-        (entries) => entries.language.name === "en"
-      )?.short_effect;
-
-      parsedData[learnMethod][version].push({
-        level_learned_at: levelLearnedAt ?? -1,
-        name: fullName ?? name,
-        url,
-        accuracy: moveData.accuracy,
-        pp: moveData.pp,
-        damage: moveData.power,
-        type: moveData.type.name,
-        damage_class: moveData.damage_class.name,
-        effect: effect ?? "",
-      });
-    };
-
     if (
       Object.keys(parsedMovesData["level-up"]).length === 0 &&
       Object.keys(parsedMovesData.egg).length === 0 &&
       Object.keys(parsedMovesData.machine).length === 0 &&
       Object.keys(parsedMovesData.tutor).length === 0
     ) {
-      console.log("Parsing data...");
-      const movesPromiseHolder = [];
+      const movesPromiseHolder: Promise<void>[] = [];
       for (const moveData of data) {
         movesPromiseHolder.push(
-          new Promise<void>((resolve) => {
-            PokeAPI.Move.resolve(getIdFromLink(moveData.move.url)).then(
-              (data) => {
-                for (const version of moveData.version_group_details) {
-                  const moveLearnMethod = version.move_learn_method
-                    .name as LearnMethodNames;
-                  if (learnMethodNamesSet.has(moveLearnMethod)) {
-                    addMove(
-                      parsedData,
-                      moveData.move.name,
-                      moveLearnMethod,
-                      version.version_group.name,
-                      moveData.move.url,
-                      data,
-                      version.level_learned_at
-                    );
-                    setOfVersions.add(version.version_group.name);
-                  }
-                }
-                resolve();
-              }
-            );
-          })
+          pokemonMovePromise(moveData, parsedData, setOfVersions)
         );
       }
 
@@ -140,7 +158,7 @@ export const Moves: React.FC<MovesProps> = ({ data }) => {
         setParsedMovesData(parsedData);
       });
     }
-  }, [data, learnMethodNamesSet, parsedMovesData]);
+  }, [data, parsedMovesData, pokemonMovePromise]);
 
   /*-- drop down menu code taken from mui demos --*/
   const anchorRef = useRef<HTMLButtonElement>(null);
@@ -235,64 +253,41 @@ export const Moves: React.FC<MovesProps> = ({ data }) => {
           <Stack>
             {parsedMovesData["level-up"][
               versions.versionsList[versions.active]
-            ] &&
-              parsedMovesData["level-up"][
-                versions.versionsList[versions.active]
-              ].map((moves, i) => (
-                <Tooltip key={i} title={moves.effect} arrow>
-                  <BodyText>
-                    {moves.level_learned_at} {moves.name} {moves.type}{" "}
-                    {moves.damage_class} {moves.damage ?? "--"}{" "}
-                    {moves.accuracy ?? "--"} {moves.pp}
-                  </BodyText>
-                </Tooltip>
-              ))}
+            ] && (
+              <MovesTable
+                data={parsedMovesData["level-up"]}
+                versions={versions}
+              />
+            )}
           </Stack>
         </Grid>
 
         <Grid item>
           <StatTitleText>By TM</StatTitleText>
           <Stack>
-            {parsedMovesData.machine[versions.versionsList[versions.active]] &&
-              parsedMovesData.machine[
-                versions.versionsList[versions.active]
-              ].map((moves, i) => (
-                <Box key={i}>
-                  <BodyText>{removeDash(capitaliseDash(moves?.name))}</BodyText>
-                </Box>
-              ))}
-          </Stack>
-        </Grid>
-
-        <Grid item>
-          <StatTitleText>By Tutor</StatTitleText>
-          <Stack>
-            {parsedMovesData.tutor[versions.versionsList[versions.active]] &&
-              parsedMovesData.tutor[versions.versionsList[versions.active]].map(
-                (moves, i) => (
-                  <Box key={i}>
-                    <BodyText>
-                      {removeDash(capitaliseDash(moves?.name))}
-                    </BodyText>
-                  </Box>
-                )
-              )}
+            {parsedMovesData.machine[
+              versions.versionsList[versions.active]
+            ] && (
+              <MovesTable data={parsedMovesData.machine} versions={versions} />
+            )}
           </Stack>
         </Grid>
 
         <Grid item>
           <StatTitleText>By Breeding</StatTitleText>
           <Stack>
-            {parsedMovesData.egg[versions.versionsList[versions.active]] &&
-              parsedMovesData.egg[versions.versionsList[versions.active]].map(
-                (moves, i) => (
-                  <Box key={i}>
-                    <BodyText>
-                      {removeDash(capitaliseDash(moves?.name))}
-                    </BodyText>
-                  </Box>
-                )
-              )}
+            {parsedMovesData.egg[versions.versionsList[versions.active]] && (
+              <MovesTable data={parsedMovesData.egg} versions={versions} />
+            )}
+          </Stack>
+        </Grid>
+
+        <Grid item>
+          <StatTitleText>By Tutor</StatTitleText>
+          <Stack>
+            {parsedMovesData.tutor[versions.versionsList[versions.active]] && (
+              <MovesTable data={parsedMovesData.tutor} versions={versions} />
+            )}
           </Stack>
         </Grid>
       </Grid>
