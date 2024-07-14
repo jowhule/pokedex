@@ -13,4 +13,6 @@ Inspired by [David](https://github.com/davidhckh)
 - add page to save pokemon in (team)
 - add learnable moves in pokemon details page
 - fix scroll down indication (see eevee)
-- add is legendary tag
+- add is_legendary tag
+- organise response types into folders similar to [this package](https://www.npmjs.com/package/@bgoff1/pokeapi-types?activeTab=code).
+- replace all mui theme

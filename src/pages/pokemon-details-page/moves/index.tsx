@@ -5,7 +5,10 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { PokemonMoveType } from "../../../services/apiRequestsTypes";
+import {
+  PokemonMoveType,
+  PokemonMovesResponseType,
+} from "../../../services/apiRequestsTypes";
 import {
   LearnMethodNames,
   ParsedMovesDataType,
@@ -25,13 +28,9 @@ import {
 } from "@mui/material";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import { BodyText, StatTitleText } from "../../../utils/styledComponents";
-import {
-  capitaliseDash,
-  getIdFromLink,
-  removeDash,
-} from "../../../utils/helpers";
-import PokeAPI, { IMove } from "pokeapi-typescript";
+import { capitaliseDash, removeDash } from "../../../utils/helpers";
 import { MovesTable } from "./moves-table";
+import { sendGenericAPIRequest } from "../../../services/apiRequests";
 
 type MovesProps = {
   data: PokemonMoveType[];
@@ -73,7 +72,7 @@ export const Moves: React.FC<MovesProps> = ({ data }) => {
         learnMethod: LearnMethodNames,
         version: string,
         url: string,
-        moveData: IMove,
+        moveData: PokemonMovesResponseType,
         levelLearnedAt?: number
       ) => {
         if (!(version in parsedData[learnMethod]))
@@ -101,25 +100,27 @@ export const Moves: React.FC<MovesProps> = ({ data }) => {
       };
 
       return new Promise<void>((resolve) => {
-        PokeAPI.Move.resolve(getIdFromLink(moveData.move.url)).then((data) => {
-          for (const version of moveData.version_group_details) {
-            const moveLearnMethod = version.move_learn_method
-              .name as LearnMethodNames;
-            if (learnMethodNamesSet.has(moveLearnMethod)) {
-              addMove(
-                parsedData,
-                moveData.move.name,
-                moveLearnMethod,
-                version.version_group.name,
-                moveData.move.url,
-                data,
-                version.level_learned_at
-              );
-              versions.add(version.version_group.name);
+        sendGenericAPIRequest<PokemonMovesResponseType>(moveData.move.url).then(
+          (data) => {
+            for (const version of moveData.version_group_details) {
+              const moveLearnMethod = version.move_learn_method
+                .name as LearnMethodNames;
+              if (learnMethodNamesSet.has(moveLearnMethod) && data) {
+                addMove(
+                  parsedData,
+                  moveData.move.name,
+                  moveLearnMethod,
+                  version.version_group.name,
+                  moveData.move.url,
+                  data,
+                  version.level_learned_at
+                );
+                versions.add(version.version_group.name);
+              }
             }
+            resolve();
           }
-          resolve();
-        });
+        );
       });
     },
     [learnMethodNamesSet]
