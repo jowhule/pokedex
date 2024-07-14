@@ -210,7 +210,6 @@ export const PokemonDetailsPage: React.FC = () => {
         setFormsData(forms);
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [varietiesData]);
 
   useEffect(() => {
@@ -375,10 +374,7 @@ export const PokemonDetailsPage: React.FC = () => {
             <EvolutionChain pokemonData={currPokemonData} large noEvoText />
           </CustomCard>
           <CustomCard>
-            <Moves data={currPokemonData.moves} />
-          </CustomCard>
-          <CustomCard>
-            <StatTitleText>Moves</StatTitleText>
+            <Moves data={currPokemonData.moves ?? []} />
           </CustomCard>
         </Box>
       ) : (
