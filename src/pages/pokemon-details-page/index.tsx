@@ -55,6 +55,7 @@ import { EggGroups } from "./egg-groups";
 import { TypeWeaknesses } from "./type-weaknesses";
 import { HatchTime } from "./hatch-time";
 import { useLoadPageContext } from "../../components/context-providers/load-provider";
+import { Moves } from "./moves";
 
 export const PokemonDetailsPage: React.FC = () => {
   const { pokeName } = useParams();
@@ -371,7 +372,10 @@ export const PokemonDetailsPage: React.FC = () => {
             </Grid>
           </CustomCard>
           <CustomCard sx={evoDetailsContainer}>
-            <EvolutionChain pokemonData={currPokemonData} large />
+            <EvolutionChain pokemonData={currPokemonData} large noEvoText />
+          </CustomCard>
+          <CustomCard>
+            <Moves data={currPokemonData.moves} />
           </CustomCard>
           <CustomCard>
             <StatTitleText>Moves</StatTitleText>

@@ -30,7 +30,7 @@ type PokemonVersionGroupType = {
   version_group: NameUrlType;
 };
 
-type PokemonMoveType = {
+export type PokemonMoveType = {
   move: NameUrlType;
   version_group_details: PokemonVersionGroupType[];
 };

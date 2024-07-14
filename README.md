@@ -12,6 +12,5 @@ Inspired by [David](https://github.com/davidhckh)
 
 - add page to save pokemon in (team)
 - add learnable moves in pokemon details page
-- remove loader from XML after loading is done
-
-
+- fix scroll down indication (see eevee)
+- add is legendary tag
