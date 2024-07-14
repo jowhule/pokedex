@@ -12,10 +12,16 @@ import {
   Paper,
   Popper,
   Stack,
+  Tooltip,
 } from "@mui/material";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import { BodyText, StatTitleText } from "../../../utils/styledComponents";
-import { capitaliseDash, removeDash } from "../../../utils/helpers";
+import {
+  capitaliseDash,
+  getIdFromLink,
+  removeDash,
+} from "../../../utils/helpers";
+import PokeAPI, { IMove } from "pokeapi-typescript";
 
 type MovesProps = {
   data: PokemonMoveType[];
@@ -46,10 +52,7 @@ export const Moves: React.FC<MovesProps> = ({ data }) => {
   const [openVersions, setOpenVersions] = useState<boolean>(false);
 
   useEffect(() => {
-    if (data.length === 0) {
-      console.log("Data is empty, waiting for data to load...");
-      return;
-    }
+    if (data.length === 0) return;
     const parsedData: ParsedMovesDataType = {
       "level-up": {},
       machine: {},
@@ -64,15 +67,30 @@ export const Moves: React.FC<MovesProps> = ({ data }) => {
       learnMethod: LearnMethodNames,
       version: string,
       url: string,
+      moveData: IMove,
       levelLearnedAt?: number
     ) => {
       if (!(version in parsedData[learnMethod]))
         parsedData[learnMethod][version] = [];
 
+      const fullName = moveData.names.find(
+        (langName) => langName.language.name === "en"
+      )?.name;
+
+      const effect = moveData.effect_entries.find(
+        (entries) => entries.language.name === "en"
+      )?.short_effect;
+
       parsedData[learnMethod][version].push({
         level_learned_at: levelLearnedAt ?? -1,
-        name,
+        name: fullName ?? name,
         url,
+        accuracy: moveData.accuracy,
+        pp: moveData.pp,
+        damage: moveData.power,
+        type: moveData.type.name,
+        damage_class: moveData.damage_class.name,
+        effect: effect ?? "",
       });
     };
 
@@ -83,31 +101,44 @@ export const Moves: React.FC<MovesProps> = ({ data }) => {
       Object.keys(parsedMovesData.tutor).length === 0
     ) {
       console.log("Parsing data...");
+      const movesPromiseHolder = [];
       for (const moveData of data) {
-        for (const version of moveData.version_group_details) {
-          const moveLearnMethod = version.move_learn_method
-            .name as LearnMethodNames;
-          if (learnMethodNamesSet.has(moveLearnMethod)) {
-            addMove(
-              parsedData,
-              moveData.move.name,
-              moveLearnMethod,
-              version.version_group.name,
-              moveData.move.url,
-              version.level_learned_at
+        movesPromiseHolder.push(
+          new Promise<void>((resolve) => {
+            PokeAPI.Move.resolve(getIdFromLink(moveData.move.url)).then(
+              (data) => {
+                for (const version of moveData.version_group_details) {
+                  const moveLearnMethod = version.move_learn_method
+                    .name as LearnMethodNames;
+                  if (learnMethodNamesSet.has(moveLearnMethod)) {
+                    addMove(
+                      parsedData,
+                      moveData.move.name,
+                      moveLearnMethod,
+                      version.version_group.name,
+                      moveData.move.url,
+                      data,
+                      version.level_learned_at
+                    );
+                    setOfVersions.add(version.version_group.name);
+                  }
+                }
+                resolve();
+              }
             );
-            setOfVersions.add(version.version_group.name);
-          }
-        }
-      }
-      for (const key of Object.keys(parsedData["level-up"])) {
-        parsedData["level-up"][key].sort(
-          (a, b) => a.level_learned_at - b.level_learned_at
+          })
         );
       }
-      console.log(parsedData);
-      setVersions({ versionsList: Array.from(setOfVersions), active: 0 });
-      setParsedMovesData(parsedData);
+
+      Promise.all(movesPromiseHolder).then(() => {
+        for (const key of Object.keys(parsedData["level-up"])) {
+          parsedData["level-up"][key].sort(
+            (a, b) => a.level_learned_at - b.level_learned_at
+          );
+        }
+        setVersions({ versionsList: Array.from(setOfVersions), active: 0 });
+        setParsedMovesData(parsedData);
+      });
     }
   }, [data, learnMethodNamesSet, parsedMovesData]);
 
@@ -208,9 +239,13 @@ export const Moves: React.FC<MovesProps> = ({ data }) => {
               parsedMovesData["level-up"][
                 versions.versionsList[versions.active]
               ].map((moves, i) => (
-                <Box key={i}>
-                  <BodyText>{removeDash(capitaliseDash(moves.name))}</BodyText>
-                </Box>
+                <Tooltip key={i} title={moves.effect} arrow>
+                  <BodyText>
+                    {moves.level_learned_at} {moves.name} {moves.type}{" "}
+                    {moves.damage_class} {moves.damage ?? "--"}{" "}
+                    {moves.accuracy ?? "--"} {moves.pp}
+                  </BodyText>
+                </Tooltip>
               ))}
           </Stack>
         </Grid>

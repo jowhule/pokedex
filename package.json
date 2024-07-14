@@ -18,6 +18,7 @@
     "@types/react-dom": "^18.2.4",
     "axios": "^1.6.3",
     "axios-cache-interceptor": "^1.4.1",
+    "pokeapi-typescript": "^2.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-infinite-scroll-component": "^6.1.0",
