@@ -273,7 +273,7 @@ export const Moves: React.FC<MovesProps> = ({ data }) => {
             gap="20px"
             p="10px 20px"
             borderRadius="15px"
-            boxShadow={theme.shadows[2]}
+            boxShadow={theme.shadows[3]}
           >
             <Box>
               <BodyText fontSize="14px">Physical move</BodyText>

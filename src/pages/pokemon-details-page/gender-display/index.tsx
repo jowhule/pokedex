@@ -1,18 +1,16 @@
 import { Box, Stack } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import {
-  BodyText,
-  PokemonInfoBox,
-  StatTitleText,
-} from "../../../utils/styledComponents";
+import { BodyText, StatTitleText } from "../../../utils/styledComponents";
 import FemaleRoundedIcon from "@mui/icons-material/FemaleRounded";
 import MaleRoundedIcon from "@mui/icons-material/MaleRounded";
 import {
-  genderBarStyle,
+  genderBarInnerStyle,
+  genderBarOutterStyle,
   genderInfoContainer,
   genderStatContainer,
 } from "./style";
 import { GENDER_COLOURS } from "../../../utils/colours";
+import { CustomCard } from "../../../components/custom-card/CustomCard";
 
 type GenderDisplayType = {
   genderRatio: number;
@@ -39,33 +37,11 @@ export const GenderDisplay: React.FC<GenderDisplayType> = ({ genderRatio }) => {
   return (
     <Stack width="100%" height="100%">
       <StatTitleText>Gender Ratio</StatTitleText>
-      <PokemonInfoBox>
+      <CustomCard dark>
         {ratio >= 0 ? (
           <Box sx={genderInfoContainer}>
-            <Box
-              sx={{
-                ...genderBarStyle,
-                position: "relative",
-                background: `linear-gradient(to right, ${GENDER_COLOURS["female_dark"]} 0%, ${GENDER_COLOURS["female_dark"]} ${ratio}%, ${GENDER_COLOURS["male_dark"]} ${ratio}%, ${GENDER_COLOURS["male_dark"]} 100%)`,
-                width: "80%",
-                p: "3px",
-              }}
-            >
-              <Box
-                sx={{
-                  ...genderBarStyle,
-                  position: "absolute",
-                  height: "15px",
-                  borderRadius: "15px",
-                  m: "0 auto",
-                  background: `linear-gradient(to right, ${
-                    GENDER_COLOURS["female"]
-                  } 0%, ${GENDER_COLOURS["female"]} ${borderRatio(ratio)}%, ${
-                    GENDER_COLOURS["male"]
-                  } ${borderRatio(ratio)}%, ${GENDER_COLOURS["male"]} 100%)`,
-                  width: "calc(100% - 6px)",
-                }}
-              />
+            <Box sx={genderBarOutterStyle(ratio)}>
+              <Box sx={genderBarInnerStyle(borderRatio(ratio))} />
             </Box>
             <Box sx={genderStatContainer}>
               <Box display="flex" alignItems="center">
@@ -76,16 +52,14 @@ export const GenderDisplay: React.FC<GenderDisplayType> = ({ genderRatio }) => {
               </Box>
               <Box display="flex" alignItems="center">
                 <BodyText fontSize="14px">{100 - ratio}%</BodyText>
-                <MaleRoundedIcon
-                  sx={{ color: `${GENDER_COLOURS["male_dark"]}` }}
-                />
+                <MaleRoundedIcon sx={{ color: GENDER_COLOURS["male_dark"] }} />
               </Box>
             </Box>
           </Box>
         ) : (
           <BodyText>Gender Unknown</BodyText>
         )}
-      </PokemonInfoBox>
+      </CustomCard>
     </Stack>
   );
 };

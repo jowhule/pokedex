@@ -32,4 +32,5 @@ export const PokemonInfoBox = styled(Box)({
   flexGrow: "1",
   padding: "15px 0",
   boxSizing: "border-box",
+  boxShadow: "5px 5px #e0e3e9",
 });
