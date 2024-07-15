@@ -28,9 +28,9 @@ export const EnhancedTableHead: React.FC<EnhancedTableProps> = ({
   return (
     <TableHead>
       <TableRow sx={{ bgcolor: "primary.400" }}>
-        {headCells.map((headCell) => (
-          <>
-            {(method === "level-up" || headCell.id !== "level_learned_at") && (
+        {headCells.map(
+          (headCell) =>
+            (method === "level-up" || headCell.id !== "level_learned_at") && (
               <TableCell
                 key={headCell.id}
                 align={headCell.center ? "center" : "right"}
@@ -78,9 +78,8 @@ export const EnhancedTableHead: React.FC<EnhancedTableProps> = ({
                   ) : null}
                 </TableSortLabel>
               </TableCell>
-            )}
-          </>
-        ))}
+            )
+        )}
       </TableRow>
     </TableHead>
   );

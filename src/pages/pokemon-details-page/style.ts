@@ -38,7 +38,7 @@ export const pokemonDetailsSpriteStyle = {
 
 export const detailsInfoContainer = {
   flex: "1",
-  m: "30px auto,",
+  m: "30px auto",
   justifyContent: "center",
 };
 

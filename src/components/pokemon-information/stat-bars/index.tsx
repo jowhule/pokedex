@@ -22,7 +22,7 @@ type StatBarProps = {
   detailed?: boolean;
 };
 
-const FULL_STATNAME: Record<string, string> = {
+const FULL_STAT_NAME: Record<string, string> = {
   hp: "HP",
   attack: "Attack",
   defense: "Defense",
@@ -64,8 +64,8 @@ export const StatBars: React.FC<StatBarProps> = ({ statsData, detailed }) => {
         <List sx={statsContainer}>
           {statsData?.map((statInfo, index) => (
             <ListItem key={index} sx={largeStatContainer}>
-              <BodyText minWidth="45px" sx={largeStatText}>
-                {FULL_STATNAME[statInfo.stat.name]}
+              <BodyText minWidth="50px" sx={largeStatText}>
+                {FULL_STAT_NAME[statInfo.stat.name]}
               </BodyText>
               <BodyText minWidth="35px" sx={largeStatText}>
                 {statInfo.base_stat}

@@ -37,7 +37,7 @@ export const GenderDisplay: React.FC<GenderDisplayType> = ({ genderRatio }) => {
   return (
     <Stack width="100%" height="100%">
       <StatTitleText>Gender Ratio</StatTitleText>
-      <CustomCard dark>
+      <CustomCard dark sx={{ flex: 1 }}>
         {ratio >= 0 ? (
           <Box sx={genderInfoContainer}>
             <Box sx={genderBarOutterStyle(ratio)}>

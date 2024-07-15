@@ -340,7 +340,7 @@ export const PokemonDetailsPage: React.FC = () => {
             <Grid container spacing="15px" columns={{ md: 2, xs: 1 }}>
               <Grid item xs={1}>
                 <Grid container spacing="15px" columns={2}>
-                  <Grid display="flex" item xs={1}>
+                  <Grid item xs={1}>
                     <GenderDisplay genderRatio={pokemonSpecies?.gender_rate} />
                   </Grid>
                   <Grid item xs={1}>
@@ -349,11 +349,13 @@ export const PokemonDetailsPage: React.FC = () => {
                   <Grid item xs={1}>
                     <StatTitleText>Growth Rate</StatTitleText>
                     <CustomCard dark>
-                      <BodyText>
-                        {removeDash(
-                          capitaliseDash(pokemonSpecies?.growth_rate.name)
-                        )}
-                      </BodyText>
+                      <Box>
+                        <BodyText>
+                          {removeDash(
+                            capitaliseDash(pokemonSpecies?.growth_rate.name)
+                          )}
+                        </BodyText>
+                      </Box>
                     </CustomCard>
                   </Grid>
                   <Grid item xs={1}>

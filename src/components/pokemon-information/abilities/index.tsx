@@ -17,7 +17,8 @@ export const Abilities: React.FC<AbilitiesType> = ({ abilitiesData }) => {
         sx={{
           flexFlow: "row wrap",
           gap: "20px",
-          flex: 1,
+          width: "100%",
+          boxSizing: "border-box",
         }}
       >
         {abilitiesData?.length > 0

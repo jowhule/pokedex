@@ -35,6 +35,12 @@ import { sendGenericAPIRequest } from "../../../services/apiRequests";
 import physicalMoveIcon from "../../../assets/physical_move_icon.png";
 import specialMoveIcon from "../../../assets/special_move_icon.png";
 import statusMoveIcon from "../../../assets/status_move_icon.png";
+import {
+  categoryLegendContainer,
+  moveListSyle,
+  movesTablesGridContainer,
+  movesTitleStyle,
+} from "./style";
 
 type MovesProps = {
   data: PokemonMoveType[];
@@ -66,45 +72,45 @@ export const Moves: React.FC<MovesProps> = ({ data }) => {
   });
   const [openVersions, setOpenVersions] = useState<boolean>(false);
 
+  const addMove = (
+    parsedData: ParsedMovesDataType,
+    name: string,
+    learnMethod: LearnMethodNames,
+    version: string,
+    url: string,
+    moveData: PokemonMovesResponseType,
+    levelLearnedAt?: number
+  ) => {
+    if (!(version in parsedData[learnMethod]))
+      parsedData[learnMethod][version] = [];
+
+    const fullName = moveData.names.find(
+      (langName) => langName.language.name === "en"
+    )?.name;
+
+    const effect = moveData.effect_entries.find(
+      (entries) => entries.language.name === "en"
+    )?.short_effect;
+
+    parsedData[learnMethod][version].push({
+      level_learned_at: levelLearnedAt ?? -1,
+      name: fullName ?? name,
+      url,
+      accuracy: moveData.accuracy,
+      pp: moveData.pp,
+      damage: moveData.power,
+      type: moveData.type.name,
+      damage_class: moveData.damage_class.name,
+      effect: effect ?? "",
+    });
+  };
+
   const pokemonMovePromise = useCallback(
     (
       moveData: PokemonMoveType,
       parsedData: ParsedMovesDataType,
       versions: Set<string>
     ): Promise<void> => {
-      const addMove = (
-        parsedData: ParsedMovesDataType,
-        name: string,
-        learnMethod: LearnMethodNames,
-        version: string,
-        url: string,
-        moveData: PokemonMovesResponseType,
-        levelLearnedAt?: number
-      ) => {
-        if (!(version in parsedData[learnMethod]))
-          parsedData[learnMethod][version] = [];
-
-        const fullName = moveData.names.find(
-          (langName) => langName.language.name === "en"
-        )?.name;
-
-        const effect = moveData.effect_entries.find(
-          (entries) => entries.language.name === "en"
-        )?.short_effect;
-
-        parsedData[learnMethod][version].push({
-          level_learned_at: levelLearnedAt ?? -1,
-          name: fullName ?? name,
-          url,
-          accuracy: moveData.accuracy,
-          pp: moveData.pp,
-          damage: moveData.power,
-          type: moveData.type.name,
-          damage_class: moveData.damage_class.name,
-          effect: effect ?? "",
-        });
-      };
-
       return new Promise<void>((resolve, reject) => {
         if (!moveData.move.url) reject();
         sendGenericAPIRequest<PokemonMovesResponseType>(
@@ -229,11 +235,12 @@ export const Moves: React.FC<MovesProps> = ({ data }) => {
                 placement === "bottom-start" ? "left top" : "left bottom",
             }}
           >
-            <Paper>
+            <Paper sx={{ borderRadius: "10px" }}>
               <ClickAwayListener onClickAway={handleClose}>
                 <MenuList
                   autoFocusItem={openVersions}
                   onKeyDown={handleListKeyDown}
+                  sx={moveListSyle}
                 >
                   {versions.versionsList.map((version, i) => (
                     <MenuItem
@@ -253,9 +260,7 @@ export const Moves: React.FC<MovesProps> = ({ data }) => {
         )}
       </Popper>
       <Box>
-        <StatTitleText sx={{ fontSize: "20px", textAlign: "center" }}>
-          Moves
-        </StatTitleText>
+        <StatTitleText sx={movesTitleStyle}>Moves</StatTitleText>
         <BodyText textAlign="center" m="5px 0">
           Showing moves for Pokémon
           <Button variant="text" ref={anchorRef} onClick={handleToggle}>
@@ -267,15 +272,7 @@ export const Moves: React.FC<MovesProps> = ({ data }) => {
         </BodyText>
 
         <Stack alignItems="center" textAlign="center">
-          <Stack
-            bgcolor="primary.light"
-            display="flex"
-            direction="row"
-            gap="20px"
-            p="10px 20px"
-            borderRadius="15px"
-            boxShadow={theme.shadows[4]}
-          >
+          <Stack sx={categoryLegendContainer(theme)}>
             <Box>
               <BodyText fontSize="14px">Physical move</BodyText>
               <Box component="img" src={physicalMoveIcon} maxHeight="20px" />
@@ -291,14 +288,7 @@ export const Moves: React.FC<MovesProps> = ({ data }) => {
           </Stack>
         </Stack>
       </Box>
-      <Grid
-        container
-        spacing={2}
-        alignItems="center"
-        justifyContent="center"
-        direction="column"
-        marginBottom="40px"
-      >
+      <Grid container spacing={2} sx={movesTablesGridContainer}>
         <Grid item>
           <Stack>
             {parsedMovesData["level-up"][
