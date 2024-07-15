@@ -221,7 +221,6 @@ export const MoreInfoSlide: React.FC<MoreInfoSlideType> = ({
                     <Stack
                       maxWidth="450px"
                       width="100%"
-                      display="flex"
                       alignItems="center"
                       m="0 auto"
                     >

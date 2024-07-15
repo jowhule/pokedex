@@ -1,5 +1,5 @@
 import { Box, Typography, styled } from "@mui/material";
-import { fontBgColour, primaryTextColour } from "./colours";
+import { primaryTextColour } from "./colours";
 
 export const BodyText = styled(Typography)({
   color: primaryTextColour,
@@ -20,16 +20,4 @@ export const SecondaryText = styled(Typography)({
 
 export const Hoverable = styled(Box)({
   "&:hover": { cursor: "pointer" },
-});
-
-export const PokemonInfoBox = styled(Box)({
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  backgroundColor: `${fontBgColour}`,
-  borderRadius: "15px",
-  width: "100%",
-  flexGrow: "1",
-  padding: "15px 0",
-  boxSizing: "border-box",
 });

@@ -16,11 +16,11 @@ import { MoreInfoSlide } from "./more-info-slide";
 import { getDataPromises, getIdFromLink } from "../../utils/helpers";
 import { useLoadPageContext } from "../../components/context-providers/load-provider";
 
-export type PokedexDisplayrops = {
+export type PokedexDisplayProps = {
   generation: string;
 };
 
-export const PokedexDisplayPage: React.FC<PokedexDisplayrops> = ({
+export const PokedexDisplayPage: React.FC<PokedexDisplayProps> = ({
   generation,
 }) => {
   const { setLoadPage } = useLoadPageContext();

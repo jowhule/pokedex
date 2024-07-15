@@ -44,6 +44,7 @@ type EvolutionChainProps = {
   setActivePokemon?: React.Dispatch<React.SetStateAction<string>>;
   setTransition?: React.Dispatch<React.SetStateAction<Record<string, string>>>;
   large?: boolean;
+  noEvoText?: boolean;
 };
 
 export const EvolutionChain: React.FC<EvolutionChainProps> = ({
@@ -52,6 +53,7 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
   setActivePokemon,
   setTransition,
   large,
+  noEvoText,
 }) => {
   const [evolutionStages, setEvolutionStages] = useState<EvoStages>([]);
   const theme = useTheme();
@@ -171,7 +173,7 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
 
   return (
     <>
-      {evolutionStages.length > 1 && (
+      {evolutionStages.length > 1 ? (
         <>
           <StatTitleText
             sx={
@@ -213,6 +215,12 @@ export const EvolutionChain: React.FC<EvolutionChainProps> = ({
             ))}
           </Box>
         </>
+      ) : (
+        noEvoText && (
+          <StatTitleText textAlign="center">
+            This Pokemon does not evolve.
+          </StatTitleText>
+        )
       )}
     </>
   );

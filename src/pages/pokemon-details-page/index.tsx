@@ -28,11 +28,7 @@ import {
   getDataPromises,
   removeDash,
 } from "../../utils/helpers";
-import {
-  BodyText,
-  PokemonInfoBox,
-  StatTitleText,
-} from "../../utils/styledComponents";
+import { BodyText, StatTitleText } from "../../utils/styledComponents";
 import { StatBars } from "../../components/pokemon-information/stat-bars";
 import {
   detailsInfoContainer,
@@ -55,6 +51,7 @@ import { EggGroups } from "./egg-groups";
 import { TypeWeaknesses } from "./type-weaknesses";
 import { HatchTime } from "./hatch-time";
 import { useLoadPageContext } from "../../components/context-providers/load-provider";
+import { Moves } from "./moves";
 
 export const PokemonDetailsPage: React.FC = () => {
   const { pokeName } = useParams();
@@ -209,7 +206,6 @@ export const PokemonDetailsPage: React.FC = () => {
         setFormsData(forms);
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [varietiesData]);
 
   useEffect(() => {
@@ -313,25 +309,25 @@ export const PokemonDetailsPage: React.FC = () => {
 
                 <Abilities abilitiesData={currPokemonData?.abilities} />
 
-                <Box display="flex" gap="15px">
+                <Box display="flex" gap="15px" width="100%">
                   <Stack flex="1">
                     <StatTitleText fontSize="16px">Height</StatTitleText>
-                    <PokemonInfoBox>
+                    <CustomCard dark>
                       <BodyText>
-                        {insertDecimal(currPokemonData?.height)} m
+                        {insertDecimal(currPokemonData?.height ?? -1)} m
                       </BodyText>
-                    </PokemonInfoBox>
+                    </CustomCard>
                   </Stack>
                   <Stack flex="1">
                     <StatTitleText fontSize="16px">Weight</StatTitleText>
-                    <PokemonInfoBox>
+                    <CustomCard dark>
                       <BodyText>
                         {currPokemonData?.weight >= 10000
                           ? "???.?"
-                          : insertDecimal(currPokemonData?.weight)}{" "}
+                          : insertDecimal(currPokemonData?.weight ?? -1)}{" "}
                         kg
                       </BodyText>
-                    </PokemonInfoBox>
+                    </CustomCard>
                   </Stack>
                 </Box>
 
@@ -344,7 +340,7 @@ export const PokemonDetailsPage: React.FC = () => {
             <Grid container spacing="15px" columns={{ md: 2, xs: 1 }}>
               <Grid item xs={1}>
                 <Grid container spacing="15px" columns={2}>
-                  <Grid display="flex" item xs={1}>
+                  <Grid item xs={1}>
                     <GenderDisplay genderRatio={pokemonSpecies?.gender_rate} />
                   </Grid>
                   <Grid item xs={1}>
@@ -352,13 +348,15 @@ export const PokemonDetailsPage: React.FC = () => {
                   </Grid>
                   <Grid item xs={1}>
                     <StatTitleText>Growth Rate</StatTitleText>
-                    <PokemonInfoBox>
-                      <BodyText>
-                        {removeDash(
-                          capitaliseDash(pokemonSpecies?.growth_rate.name)
-                        )}
-                      </BodyText>
-                    </PokemonInfoBox>
+                    <CustomCard dark>
+                      <Box>
+                        <BodyText>
+                          {removeDash(
+                            capitaliseDash(pokemonSpecies?.growth_rate.name)
+                          )}
+                        </BodyText>
+                      </Box>
+                    </CustomCard>
                   </Grid>
                   <Grid item xs={1}>
                     <EggGroups groupData={pokemonSpecies?.egg_groups} />
@@ -371,7 +369,10 @@ export const PokemonDetailsPage: React.FC = () => {
             </Grid>
           </CustomCard>
           <CustomCard sx={evoDetailsContainer}>
-            <EvolutionChain pokemonData={currPokemonData} large />
+            <EvolutionChain pokemonData={currPokemonData} large noEvoText />
+          </CustomCard>
+          <CustomCard sx={{ marginBottom: "40px" }}>
+            <Moves data={currPokemonData?.moves ?? []} active={active} />
           </CustomCard>
         </Box>
       ) : (

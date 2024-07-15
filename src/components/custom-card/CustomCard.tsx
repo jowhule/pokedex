@@ -1,21 +1,30 @@
 import { Box, SxProps } from "@mui/material";
 import React from "react";
-import { secondaryColour } from "../../utils/colours";
-import { Theme } from "@emotion/react";
+import { Theme, useTheme } from "@mui/material";
 
-type CustomCardProp = {
+interface CustomCardProps {
+  dark?: boolean;
   sx?: SxProps<Theme> | React.CSSProperties;
   children?: JSX.Element | JSX.Element[] | string | string[];
-};
+}
 
-export const CustomCard: React.FC<CustomCardProp> = ({ children, sx }) => {
+export const CustomCard: React.FC<CustomCardProps> = ({
+  dark,
+  children,
+  sx,
+}) => {
+  const theme = useTheme();
   return (
     <Box
       sx={{
-        bgcolor: "white",
+        bgcolor: dark ? "primary.light" : "primary.100",
         borderRadius: "15px",
-        boxSizing: "border-box",
-        boxShadow: `8px 8px  ${secondaryColour}`,
+        padding: "15px",
+        boxShadow: dark ? theme.shadows[4] : theme.shadows[2],
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
         ...sx,
       }}
     >

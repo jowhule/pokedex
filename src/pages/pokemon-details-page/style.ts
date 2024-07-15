@@ -17,7 +17,6 @@ export const detailsMainInfoContainer = {
   display: "flex",
   gap: "30px",
   width: "100%",
-  maxWidth: "1000px",
   m: "auto",
 };
 
@@ -39,7 +38,7 @@ export const pokemonDetailsSpriteStyle = {
 
 export const detailsInfoContainer = {
   flex: "1",
-  m: "30px auto,",
+  m: "30px auto",
   justifyContent: "center",
 };
 

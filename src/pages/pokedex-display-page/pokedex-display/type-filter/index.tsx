@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
-import { Box, Dialog, useTheme } from "@mui/material";
+import { Box, Dialog } from "@mui/material";
 import { BodyText, Hoverable } from "../../../../utils/styledComponents";
 import { TYPE_COLOURS } from "../../../../utils/colours";
 import { TypeTag } from "../../../../components/pokemon-information/types/type-tag";
@@ -22,7 +22,6 @@ export const TypeFilter: React.FC<TypeFilterProps> = ({
   setTypes,
   generation,
 }) => {
-  const theme = useTheme();
   const [availableTypes, setAvailableTypes] = useState<string[]>([]);
 
   const [openTypeOptions, setOpenTypeOptions] = useState<boolean>(false);
@@ -83,8 +82,8 @@ export const TypeFilter: React.FC<TypeFilterProps> = ({
           <Hoverable onClick={handleAddClick} sx={addMoreFiltersStyle}>
             <AddCircleRoundedIcon
               sx={{
-                color: theme.palette.primary.dark,
-                "&:hover": { color: theme.palette.text.primary },
+                color: "primary.dark",
+                "&:hover": { color: "text.primary" },
               }}
             />
           </Hoverable>

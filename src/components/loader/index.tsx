@@ -1,10 +1,10 @@
 import { Box } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useLoadPageContext } from "../context-providers/load-provider";
-import { loadPageStyle, loaderOff } from "./style";
+import { loadPageStyle, loaderContainer, loaderOff } from "./style";
 import { BodyText } from "../../utils/styledComponents";
 import { ReactTyped } from "react-typed";
-import { pokemonMessages } from "./load_messages";
+import { pokemonMessages } from "./load-messages";
 
 export const Loader: React.FC = () => {
   const { loadPage } = useLoadPageContext();
@@ -26,14 +26,14 @@ export const Loader: React.FC = () => {
     } else {
       setTimeout(() => {
         setHideLoad((prev) => (prev === true ? false : true));
-      }, 500);
+      }, 800);
     }
   }, [loadPage]);
 
   return (
-    <Box sx={[loadPageStyle, loadPage && loaderOff]}>
+    <Box sx={[loadPageStyle, loadPage && { ...loaderOff }]}>
       {!hideLoad && (
-        <>
+        <Box sx={loaderContainer}>
           <Box
             width="300px"
             component="img"
@@ -48,7 +48,7 @@ export const Loader: React.FC = () => {
               startDelay={950}
             />
           </BodyText>
-        </>
+        </Box>
       )}
     </Box>
   );

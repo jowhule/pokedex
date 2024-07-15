@@ -1,7 +1,8 @@
 import React from "react";
-import { PokemonInfoBox, StatTitleText } from "../../../utils/styledComponents";
+import { StatTitleText } from "../../../utils/styledComponents";
 import { AbilityTag } from "./ability-tag";
 import { PokemonAbilityType } from "../../../services/apiRequestsTypes";
+import { CustomCard } from "../../custom-card/CustomCard";
 
 type AbilitiesType = {
   abilitiesData: PokemonAbilityType[];
@@ -11,13 +12,22 @@ export const Abilities: React.FC<AbilitiesType> = ({ abilitiesData }) => {
   return (
     <>
       <StatTitleText fontSize="16px">Abilities</StatTitleText>
-      <PokemonInfoBox
-        sx={{ flexFlow: "row wrap", gap: "20px", p: "15px 25px" }}
+      <CustomCard
+        dark
+        sx={{
+          flexFlow: "row wrap",
+          gap: "20px",
+          width: "100%",
+          boxSizing: "border-box",
+          p: "20px 30px",
+        }}
       >
-        {abilitiesData?.map((ability, index) => (
-          <AbilityTag abilityInfo={ability} key={index} />
-        ))}
-      </PokemonInfoBox>
+        {abilitiesData?.length > 0
+          ? abilitiesData?.map((ability, index) => (
+              <AbilityTag abilityInfo={ability} key={index} />
+            ))
+          : "This Pokémon has no abilities."}
+      </CustomCard>
     </>
   );
 };

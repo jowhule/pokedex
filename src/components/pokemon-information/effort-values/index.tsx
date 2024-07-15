@@ -22,7 +22,7 @@ export const EffortValues: React.FC<EffortValuesType> = ({ statsData }) => {
                 bgcolor: `${STAT_COLOURS[statInfo.stat.name]}`,
               }}
             >
-              {STAT_ABBRV[statInfo.stat.name]}
+              {STAT_ABBRV[statInfo.stat.name] ?? 0}
             </BodyText>
             <BodyText fontSize="12px" textAlign="center">
               {statInfo.effort}

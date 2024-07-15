@@ -1,39 +1,39 @@
-export type NameUrlType = {
+export interface NameUrlType {
   name: string;
   url: string;
-};
+}
 
-export type PokemonAbilityType = {
+export interface PokemonAbilityType {
   ability: NameUrlType;
   is_hidden: boolean;
   slot: number;
-};
+}
 
 type PokemonFormType = NameUrlType;
 
-type PokemonGameIndexType = {
+interface PokemonGameIndexType {
   game_index: number;
   version: NameUrlType;
-};
+}
 
-type PokemonHeldItemType = {
+interface PokemonHeldItemType {
   item: NameUrlType;
   version_details: {
     rarity: number;
     version: NameUrlType;
   };
-};
+}
 
-type PokemonVersionGroupType = {
+interface PokemonVersionGroupType {
   level_learned_at: number;
   move_learn_method: NameUrlType;
   version_group: NameUrlType;
-};
+}
 
-type PokemonMoveType = {
+export interface PokemonMoveType {
   move: NameUrlType;
   version_group_details: PokemonVersionGroupType[];
-};
+}
 
 type PokemonSpriteType = {
   back_default: string;
@@ -63,34 +63,37 @@ type PokemonSpriteType = {
   versions: Record<any, any>;
 };
 
-type PokemonDamageRelationsType = {
+interface PokemonDamageRelationsType {
   double_damage_from: NameUrlType[];
   double_damage_to: NameUrlType[];
   half_damage_from: NameUrlType[];
   half_damage_to: NameUrlType[];
   no_damage_from: NameUrlType[];
   no_damage_to: NameUrlType[];
-};
+}
 
-export type PokemonStatType = {
+export interface PokemonStatType {
   base_stat: number;
   effort: number;
   stat: NameUrlType;
-};
+}
 
-export type LanguageNameArrayType = { language: NameUrlType; name: string }[];
+export interface LanguageNameType {
+  language: NameUrlType;
+  name: string;
+}
 
-export type PokemonTypeType = {
+export interface PokemonTypeType {
   slot: number;
   type: NameUrlType;
-};
+}
 
-export type PokemonPokedexEntryType = {
+export interface PokemonPokedexEntryType {
   entry_number: number;
   pokemon_species: NameUrlType;
-};
+}
 
-export type PokemonEvoDetailsType = {
+export interface PokemonEvoDetailsType {
   gender: NameUrlType | null;
   held_item: NameUrlType | null;
   item: NameUrlType | null;
@@ -109,43 +112,76 @@ export type PokemonEvoDetailsType = {
   trade_species: NameUrlType | null;
   trigger: NameUrlType;
   turn_upside_down: boolean;
-};
+}
 
-export type PokemonEvoChainType = {
+export interface PokemonEvoChainType {
   evolution_details: PokemonEvoDetailsType[];
   evolves_to: PokemonEvoChainType[];
   is_baby: boolean;
   species: NameUrlType;
-};
+}
 
-export type PokemonVarietiesType = {
+export interface PokemonVarietiesType {
   is_default: boolean;
   pokemon: NameUrlType;
-};
+}
+
+interface ContestComboDetail {
+  use_before: NameUrlType[];
+  use_after: NameUrlType[];
+}
+
+interface VerboseEntriesType {
+  effect: string;
+  short_effect: string;
+  language: NameUrlType;
+}
+
+interface MoveMetaData {
+  ailment: NameUrlType;
+  category: NameUrlType;
+  min_hits: number;
+  max_hits: number;
+  min_turns: number;
+  max_turns: number;
+  drain: number;
+  healing: number;
+  crit_rate: number;
+  ailment_chance: number;
+  flinch_chance: number;
+  stat_chance: number;
+}
+
+interface PastMoveStatValues {
+  accuracy: number;
+  effect_chance: number;
+  power: number;
+  pp: number;
+  effect_entries: VerboseEntriesType[];
+  type: NameUrlType;
+  version_group: NameUrlType;
+}
 
 /* -------------------------------- response -------------------------------- */
-
-export type PokemonNameResponseType = NameUrlType;
-
-export type PokemonApiResponseType = {
+export interface PokemonApiResponseType {
   count: number;
   next: string | null;
   prev: string | null;
-  results: PokemonNameResponseType[];
-};
+  results: NameUrlType[];
+}
 
-export type PokemonDexResponseType = {
+export interface PokemonDexResponseType {
   descriptions: { description: string; language: NameUrlType }[];
   id: number;
   is_main_series: boolean;
   name: string;
-  names: LanguageNameArrayType;
+  names: LanguageNameType[];
   pokemon_entries: PokemonPokedexEntryType[];
   region: null | NameUrlType;
   version_groups: NameUrlType[];
-};
+}
 
-export type PokemonDataResponseType = {
+export interface PokemonDataResponseType {
   abilities: PokemonAbilityType[];
   base_experience: number;
   forms: PokemonFormType[];
@@ -164,9 +200,9 @@ export type PokemonDataResponseType = {
   stats: PokemonStatType[];
   types: PokemonTypeType[];
   weight: number;
-};
+}
 
-export type PokemonSpeciesResponseType = {
+export interface PokemonSpeciesResponseType {
   base_happiness: number;
   capture_rate: number;
   color: NameUrlType;
@@ -192,7 +228,7 @@ export type PokemonSpeciesResponseType = {
   is_legendary: boolean;
   is_mythical: boolean;
   name: string;
-  names: LanguageNameArrayType;
+  names: LanguageNameType[];
   order: number;
   pal_park_encounters: {
     area: NameUrlType;
@@ -202,21 +238,17 @@ export type PokemonSpeciesResponseType = {
   pokedex_numbers: { entry_number: number; pokedex: NameUrlType }[];
   shape: NameUrlType;
   varieties: PokemonVarietiesType[];
-};
+}
 
-export type PokemonEvolutionResponseType = {
+export interface PokemonEvolutionResponseType {
   baby_trigger_item: null | any;
   chain: PokemonEvoChainType;
   id: number;
-};
+}
 
-export type PokemonAbilityResponseType = {
+export interface PokemonAbilityResponseType {
   effect_changes: [];
-  effect_entries: {
-    effect: string;
-    language: NameUrlType;
-    short_effect: string;
-  }[];
+  effect_entries: VerboseEntriesType[];
   flavor_text_entries: {
     flavor_text: string;
     language: NameUrlType;
@@ -226,28 +258,28 @@ export type PokemonAbilityResponseType = {
   id: number;
   is_main_series: boolean;
   name: string;
-  names: LanguageNameArrayType;
+  names: LanguageNameType[];
   pokemon: { is_hidden: boolean; pokemon: NameUrlType; slot: number }[];
-};
+}
 
-export type PokemonFormResponseType = {
+export interface PokemonFormResponseType {
   form_name: string;
-  form_names: LanguageNameArrayType;
+  form_names: LanguageNameType[];
   form_order: number;
   id: number;
   is_battle_only: boolean;
   is_default: boolean;
   is_mega: boolean;
   name: string;
-  names: LanguageNameArrayType;
+  names: LanguageNameType[];
   order: number;
   pokemon: NameUrlType;
   sprites: PokemonSpriteType;
   types: PokemonTypeType[];
   version_group: NameUrlType;
-};
+}
 
-export type PokemonTypeResponseType = {
+export interface PokemonTypeResponseType {
   damage_relations: PokemonDamageRelationsType;
   game_indices: { game_index: 0; generation: NameUrlType }[];
   generation: NameUrlType;
@@ -255,7 +287,53 @@ export type PokemonTypeResponseType = {
   move_damage_class: NameUrlType;
   moves: NameUrlType[];
   name: string;
-  names: LanguageNameArrayType;
+  names: LanguageNameType;
   past_damage_relations: [];
   pokemon: { pokemon: NameUrlType; slot: number }[];
-};
+}
+
+export interface PokemonMovesResponseType {
+  id: number;
+  name: string;
+  accuracy: number;
+  effect_chance: number;
+  pp: number;
+  priority: number;
+  power: number;
+  contest_combos: {
+    normal: ContestComboDetail;
+    super: ContestComboDetail;
+  };
+  contest_type: NameUrlType;
+  contest_effect: { url: string };
+  damage_class: NameUrlType;
+  effect_entries: VerboseEntriesType[];
+  effect_changes: {
+    effect_entries: {
+      effect: string;
+      language: NameUrlType;
+    }[];
+    version_group: NameUrlType;
+  }[];
+  learned_by_pokemon: NameUrlType[];
+  flavor_text_entries: {
+    flavor_text: string;
+    language: NameUrlType;
+    version_group: NameUrlType;
+  }[];
+  generation: NameUrlType;
+  machines: {
+    machine: { url: string };
+    version_group: NameUrlType;
+  }[];
+  meta: MoveMetaData;
+  names: LanguageNameType[];
+  past_values: PastMoveStatValues[];
+  stat_changes: {
+    change: number;
+    stat: NameUrlType;
+  }[];
+  super_contest_effect: { url: string };
+  target: NameUrlType;
+  type: NameUrlType;
+}

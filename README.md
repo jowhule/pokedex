@@ -11,7 +11,7 @@ Inspired by [David](https://github.com/davidhckh)
 ## TODO
 
 - add page to save pokemon in (team)
-- add learnable moves in pokemon details page
-- remove loader from XML after loading is done
-
-
+- fix scroll down indication (see eevee)
+- add is_legendary tag
+- organise response types into folders similar to [this package](https://www.npmjs.com/package/@bgoff1/pokeapi-types?activeTab=code).
+- extract popper code into a component

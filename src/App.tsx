@@ -5,24 +5,13 @@ import { PokedexDisplayPage } from "./pages/pokedex-display-page";
 
 import { MoveToTop } from "./components/move-to-top";
 import { Navbar } from "./components/navbar";
-import { Box, ThemeProvider, createTheme } from "@mui/material";
+import { Box, ThemeProvider } from "@mui/material";
 import { NAVBAR_HEIGHT } from "./components/navbar/style";
 import { PokemonDetailsPage } from "./pages/pokemon-details-page";
 import { ErrorrPage } from "./pages/error-page";
 import { LoadProvider } from "./components/context-providers/load-provider";
 import { Loader } from "./components/loader";
-
-const theme = createTheme({
-  palette: {
-    primary: {
-      light: "#f0f3f8",
-      main: "#c3c9cf",
-    },
-    text: {
-      primary: "#0c214a",
-    },
-  },
-});
+import { theme } from "./utils/theme";
 
 function App() {
   return (
