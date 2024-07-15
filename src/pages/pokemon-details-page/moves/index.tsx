@@ -155,7 +155,11 @@ export const Moves: React.FC<MovesProps> = ({ data }) => {
             (a, b) => a.level_learned_at - b.level_learned_at
           );
         }
-        setVersions({ versionsList: Array.from(setOfVersions), active: 0 });
+        const arrayOfVersions = Array.from(setOfVersions);
+        setVersions({
+          versionsList: arrayOfVersions,
+          active: arrayOfVersions.length - 1,
+        });
         setParsedMovesData(parsedData);
       });
     }
@@ -178,14 +182,14 @@ export const Moves: React.FC<MovesProps> = ({ data }) => {
     setOpenVersions(false);
   };
 
-  function handleListKeyDown(event: React.KeyboardEvent) {
+  const handleListKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === "Tab") {
       event.preventDefault();
       setOpenVersions(false);
     } else if (event.key === "Escape") {
       setOpenVersions(false);
     }
-  }
+  };
 
   // return focus to the button when we transitioned from !open -> open
   const prevOpen = React.useRef(openVersions);
@@ -208,6 +212,7 @@ export const Moves: React.FC<MovesProps> = ({ data }) => {
         placement="bottom-start"
         transition
         disablePortal
+        sx={{ zIndex: 1 }}
       >
         {({ TransitionProps, placement }) => (
           <Grow
@@ -226,9 +231,12 @@ export const Moves: React.FC<MovesProps> = ({ data }) => {
                   {versions.versionsList.map((version, i) => (
                     <MenuItem
                       key={i}
-                      onClick={() => setVersions({ ...versions, active: i })}
+                      onClick={() => {
+                        setVersions({ ...versions, active: i });
+                        setOpenVersions(false);
+                      }}
                     >
-                      {removeDash(capitaliseDash(version))}
+                      {removeDash(capitaliseDash(version ?? ""))}
                     </MenuItem>
                   ))}
                 </MenuList>
@@ -237,16 +245,19 @@ export const Moves: React.FC<MovesProps> = ({ data }) => {
           </Grow>
         )}
       </Popper>
-      <Box position="relative">
+      <Box>
         <StatTitleText sx={{ fontSize: "20px", textAlign: "center" }}>
           Moves
         </StatTitleText>
-        <Box position="absolute" right="20px" bottom="0">
+        <BodyText textAlign="center">
+          Showing moves for Pokémon
           <Button variant="text" ref={anchorRef} onClick={handleToggle}>
-            <BodyText fontWeight="bold">Versions</BodyText>
+            <BodyText fontWeight="bold">
+              {removeDash(versions.versionsList[versions.active] ?? "")}
+            </BodyText>
             <KeyboardArrowDownRoundedIcon sx={{ color: "text.primary" }} />
           </Button>
-        </Box>
+        </BodyText>
       </Box>
       <Grid
         container
@@ -263,8 +274,11 @@ export const Moves: React.FC<MovesProps> = ({ data }) => {
             ] && (
               <MovesTable
                 method={"level-up"}
-                data={parsedMovesData["level-up"]}
-                versions={versions}
+                data={
+                  parsedMovesData["level-up"][
+                    versions.versionsList[versions.active]
+                  ]
+                }
               />
             )}
           </Stack>
@@ -278,8 +292,11 @@ export const Moves: React.FC<MovesProps> = ({ data }) => {
             ] && (
               <MovesTable
                 method={"machine"}
-                data={parsedMovesData.machine}
-                versions={versions}
+                data={
+                  parsedMovesData.machine[
+                    versions.versionsList[versions.active]
+                  ]
+                }
               />
             )}
           </Stack>
@@ -291,8 +308,9 @@ export const Moves: React.FC<MovesProps> = ({ data }) => {
             {parsedMovesData.egg[versions.versionsList[versions.active]] && (
               <MovesTable
                 method={"egg"}
-                data={parsedMovesData.egg}
-                versions={versions}
+                data={
+                  parsedMovesData.egg[versions.versionsList[versions.active]]
+                }
               />
             )}
           </Stack>
@@ -304,8 +322,9 @@ export const Moves: React.FC<MovesProps> = ({ data }) => {
             {parsedMovesData.tutor[versions.versionsList[versions.active]] && (
               <MovesTable
                 method={"tutor"}
-                data={parsedMovesData.tutor}
-                versions={versions}
+                data={
+                  parsedMovesData.tutor[versions.versionsList[versions.active]]
+                }
               />
             )}
           </Stack>

@@ -18,20 +18,19 @@
 
 */
 
-export type LevelUpType = Record<
-  string,
-  {
-    level_learned_at: number;
-    name: string;
-    url: string;
-    accuracy: number | null;
-    pp: number;
-    damage: number | null;
-    type: string;
-    damage_class: string;
-    effect: string;
-  }[]
->;
+export type LevelUpType = Record<string, LevelUpRowInfoType[]>;
+
+export type LevelUpRowInfoType = {
+  level_learned_at: number;
+  name: string;
+  url: string;
+  accuracy: number | null;
+  pp: number;
+  damage: number | null;
+  type: string;
+  damage_class: string;
+  effect: string;
+};
 
 export type LearnMethodNames = "level-up" | "machine" | "tutor" | "egg";
 
