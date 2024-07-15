@@ -18,6 +18,8 @@
 
 */
 
+import { PokemonMoveType } from "../../../services/apiRequestsTypes";
+
 export type LevelUpType = Record<string, LevelUpRowInfoType[]>;
 
 export type LevelUpRowInfoType = {
@@ -34,9 +36,19 @@ export type LevelUpRowInfoType = {
 
 export type LearnMethodNames = "level-up" | "machine" | "tutor" | "egg";
 
+export type MoveCategories = "physical" | "special" | "status";
+
 export type ParsedMovesDataType = Record<LearnMethodNames, LevelUpType>;
 
 export type VersionsOptionsType = {
   versionsList: string[];
   active: number;
 };
+
+export interface MovesProps {
+  data: PokemonMoveType[];
+}
+
+export interface CategoryIconProps {
+  category: MoveCategories;
+}

@@ -10,7 +10,9 @@ import {
   PokemonMovesResponseType,
 } from "../../../services/apiRequestsTypes";
 import {
+  CategoryIconProps,
   LearnMethodNames,
+  MovesProps,
   ParsedMovesDataType,
   VersionsOptionsType,
 } from "./types";
@@ -29,7 +31,7 @@ import {
 } from "@mui/material";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import { BodyText, StatTitleText } from "../../../utils/styledComponents";
-import { capitaliseDash, removeDash } from "../../../utils/helpers";
+import { capitalise, capitaliseDash, removeDash } from "../../../utils/helpers";
 import { MovesTable } from "./moves-table";
 import { sendGenericAPIRequest } from "../../../services/apiRequests";
 import physicalMoveIcon from "../../../assets/physical_move_icon.png";
@@ -42,8 +44,23 @@ import {
   movesTitleStyle,
 } from "./style";
 
-type MovesProps = {
-  data: PokemonMoveType[];
+const CategoryIcon: React.FC<CategoryIconProps> = ({ category }) => {
+  return (
+    <Box>
+      <BodyText fontSize="14px">{capitalise(category)} move</BodyText>
+      <Box
+        component="img"
+        src={
+          category === "physical"
+            ? physicalMoveIcon
+            : category === "special"
+            ? specialMoveIcon
+            : statusMoveIcon
+        }
+        maxHeight="20px"
+      />
+    </Box>
+  );
 };
 
 export const Moves: React.FC<MovesProps> = ({ data }) => {
@@ -191,7 +208,6 @@ export const Moves: React.FC<MovesProps> = ({ data }) => {
       anchorRef.current.contains(event.target as HTMLElement)
     )
       return;
-
     setOpenVersions(false);
   };
 
@@ -272,82 +288,80 @@ export const Moves: React.FC<MovesProps> = ({ data }) => {
         </BodyText>
 
         <Stack alignItems="center" textAlign="center">
-          <Stack sx={categoryLegendContainer(theme)}>
-            <Box>
-              <BodyText fontSize="14px">Physical move</BodyText>
-              <Box component="img" src={physicalMoveIcon} maxHeight="20px" />
-            </Box>
-            <Box>
-              <BodyText fontSize="14px">Special move</BodyText>
-              <Box component="img" src={specialMoveIcon} maxHeight="20px" />
-            </Box>
-            <Box>
-              <BodyText fontSize="14px">Status move</BodyText>
-              <Box component="img" src={statusMoveIcon} maxHeight="20px" />
-            </Box>
+          <Stack direction="row" sx={categoryLegendContainer(theme)}>
+            <CategoryIcon category="physical" />
+            <CategoryIcon category="special" />
+            <CategoryIcon category="status" />
           </Stack>
         </Stack>
       </Box>
+
       <Grid container spacing={2} sx={movesTablesGridContainer}>
-        <Grid item>
-          <Stack>
-            {parsedMovesData["level-up"][
-              versions.versionsList[versions.active]
-            ] && (
-              <MovesTable
-                method={"level-up"}
-                data={
-                  parsedMovesData["level-up"][
-                    versions.versionsList[versions.active]
-                  ]
-                }
-              />
-            )}
-          </Stack>
-        </Grid>
+        {parsedMovesData["level-up"][versions.versionsList[versions.active]] &&
+          parsedMovesData["level-up"][versions.versionsList[versions.active]]
+            .length > 0 && (
+            <Grid item>
+              <Stack>
+                <MovesTable
+                  method={"level-up"}
+                  data={
+                    parsedMovesData["level-up"][
+                      versions.versionsList[versions.active]
+                    ]
+                  }
+                />
+              </Stack>
+            </Grid>
+          )}
 
-        <Grid item>
-          <Stack>
-            {parsedMovesData.machine[
-              versions.versionsList[versions.active]
-            ] && (
-              <MovesTable
-                method={"machine"}
-                data={
-                  parsedMovesData.machine[
-                    versions.versionsList[versions.active]
-                  ]
-                }
-              />
-            )}
-          </Stack>
-        </Grid>
+        {parsedMovesData.machine[versions.versionsList[versions.active]] &&
+          parsedMovesData.machine[versions.versionsList[versions.active]]
+            .length > 0 && (
+            <Grid item>
+              <Stack>
+                <MovesTable
+                  method={"machine"}
+                  data={
+                    parsedMovesData.machine[
+                      versions.versionsList[versions.active]
+                    ]
+                  }
+                />
+              </Stack>
+            </Grid>
+          )}
 
-        <Grid item>
-          <Stack>
-            {parsedMovesData.egg[versions.versionsList[versions.active]] && (
-              <MovesTable
-                method={"egg"}
-                data={
-                  parsedMovesData.egg[versions.versionsList[versions.active]]
-                }
-              />
-            )}
-          </Stack>
-        </Grid>
+        {parsedMovesData.egg[versions.versionsList[versions.active]] &&
+          parsedMovesData.egg[versions.versionsList[versions.active]].length >
+            0 && (
+            <Grid item>
+              <Stack>
+                <MovesTable
+                  method={"egg"}
+                  data={
+                    parsedMovesData.egg[versions.versionsList[versions.active]]
+                  }
+                />
+              </Stack>
+            </Grid>
+          )}
 
-        <Grid item>
-          <Stack>
-            {parsedMovesData.tutor[versions.versionsList[versions.active]] && (
-              <MovesTable
-                method={"tutor"}
-                data={
-                  parsedMovesData.tutor[versions.versionsList[versions.active]]
-                }
-              />
-            )}
-          </Stack>
-        </Grid>
+        {parsedMovesData.tutor[versions.versionsList[versions.active]] &&
+          parsedMovesData.tutor[versions.versionsList[versions.active]].length >
+            0 && (
+            <Grid item>
+              <Stack>
+                <MovesTable
+                  method={"tutor"}
+                  data={
+                    parsedMovesData.tutor[
+                      versions.versionsList[versions.active]
+                    ]
+                  }
+                />
+              </Stack>
+            </Grid>
+          )}
       </Grid>
     </Box>
   );

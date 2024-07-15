@@ -7,6 +7,8 @@ import {
   TableContainer,
   TableRow,
   Tooltip,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import React, { useEffect } from "react";
 import { LevelUpRowInfoType } from "../types";
@@ -23,8 +25,14 @@ import {
 import { EnhancedTableHead } from "./enhanced-table-head";
 import { MovesTableType, Order } from "./types";
 import { methodToName } from "./constants";
+import typeIcons from "../../../../assets/type-icons";
+import { TYPE_BORDER_COLOURS } from "../../../../utils/colours";
 
 export const MovesTable: React.FC<MovesTableType> = ({ data, method }) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const isSmaller = useMediaQuery(theme.breakpoints.down("sm"));
+
   const [order, setOrder] = React.useState<Order>("asc");
   const [orderBy, setOrderBy] =
     React.useState<keyof LevelUpRowInfoType>("level_learned_at");
@@ -49,12 +57,13 @@ export const MovesTable: React.FC<MovesTableType> = ({ data, method }) => {
 
   return (
     <Stack>
-      {data.length > 0 && <StatTitleText>{methodToName[method]}</StatTitleText>}
+      <StatTitleText>{methodToName[method]}</StatTitleText>
       <TableContainer
         sx={{
           bgcolor: "primary.light",
           borderRadius: "15px",
           overflow: "hidden",
+          m: "0 auto",
         }}
       >
         <Table size="small">
@@ -73,20 +82,65 @@ export const MovesTable: React.FC<MovesTableType> = ({ data, method }) => {
                 }}
               >
                 {method === "level-up" && (
-                  <TableCell align="right">
-                    <BodyText>{moves?.level_learned_at}</BodyText>
+                  <TableCell
+                    align="right"
+                    padding={isSmaller ? "none" : "normal"}
+                  >
+                    <BodyText
+                      sx={[
+                        isMobile && { fontSize: "14px" },
+                        isSmaller && { padding: "0 10px" },
+                      ]}
+                    >
+                      {moves?.level_learned_at}
+                    </BodyText>
                   </TableCell>
                 )}
                 <Tooltip title={moves?.effect} followCursor>
-                  <TableCell align="right">
-                    <BodyText>{moves?.name}</BodyText>
+                  <TableCell
+                    align="right"
+                    padding={isSmaller ? "none" : "normal"}
+                  >
+                    <BodyText
+                      sx={[
+                        isMobile && { fontSize: "14px" },
+                        isSmaller && { padding: "0 10px" },
+                      ]}
+                    >
+                      {moves?.name}
+                    </BodyText>
                   </TableCell>
                 </Tooltip>
-                <TableCell align="center">
-                  <TypeTag type={moves?.type} />
+                <TableCell
+                  align="center"
+                  padding={isSmaller ? "none" : "normal"}
+                >
+                  {isSmaller ? (
+                    <Tooltip title={capitalise(moves?.type ?? "")}>
+                      <Box display="flex" p="5px">
+                        <Box
+                          component="img"
+                          src={typeIcons[moves?.type]}
+                          alt={`${moves?.type} icon`}
+                          sx={{
+                            width: "28px",
+                            borderRadius: "20px",
+                            border: `2px solid ${
+                              TYPE_BORDER_COLOURS[moves?.type]
+                            }`,
+                          }}
+                        />
+                      </Box>
+                    </Tooltip>
+                  ) : (
+                    <TypeTag type={moves?.type} />
+                  )}
                 </TableCell>
                 <Tooltip title={capitalise(moves?.damage_class)} followCursor>
-                  <TableCell align="center">
+                  <TableCell
+                    align="center"
+                    padding={isSmaller ? "none" : "normal"}
+                  >
                     {moves?.damage_class === "physical" ? (
                       <Box
                         display="flex"
@@ -98,6 +152,11 @@ export const MovesTable: React.FC<MovesTableType> = ({ data, method }) => {
                           src={physicalMoveIcon}
                           alt="physical"
                           maxHeight="20px"
+                          sx={[
+                            isSmaller && {
+                              padding: "0 10px",
+                            },
+                          ]}
                         />
                       </Box>
                     ) : moves?.damage_class === "special" ? (
@@ -111,6 +170,11 @@ export const MovesTable: React.FC<MovesTableType> = ({ data, method }) => {
                           src={specialMoveIcon}
                           alt="special"
                           maxHeight="20px"
+                          sx={[
+                            isSmaller && {
+                              padding: "0 10px",
+                            },
+                          ]}
                         />
                       </Box>
                     ) : (
@@ -124,22 +188,57 @@ export const MovesTable: React.FC<MovesTableType> = ({ data, method }) => {
                           src={statusMoveIcon}
                           alt="status"
                           maxHeight="20px"
+                          sx={[
+                            isSmaller && {
+                              padding: "0 10px",
+                            },
+                          ]}
                         />
                       </Box>
                     )}
                   </TableCell>
                 </Tooltip>
-                <TableCell align="center">
-                  <BodyText>{moves?.damage ?? "--"}</BodyText>
+                <TableCell
+                  align="center"
+                  padding={isSmaller ? "none" : "normal"}
+                >
+                  <BodyText
+                    sx={[
+                      isMobile && { fontSize: "14px" },
+                      isSmaller && { padding: "0 10px" },
+                    ]}
+                  >
+                    {moves?.damage ?? "--"}
+                  </BodyText>
                 </TableCell>
-                <TableCell align="right">
-                  <BodyText>
+                <TableCell
+                  align="right"
+                  padding={isSmaller ? "none" : "normal"}
+                >
+                  <BodyText
+                    sx={[
+                      isMobile && { fontSize: "14px" },
+                      isSmaller && { paddingRight: "30px" },
+                    ]}
+                  >
                     {moves?.accuracy ? moves?.accuracy + "%" : "--"}
                   </BodyText>
                 </TableCell>
-                <TableCell align="center">
-                  <BodyText paddingRight="10px">{moves?.pp}</BodyText>
-                </TableCell>
+                {!isSmaller && (
+                  <TableCell
+                    align="center"
+                    padding={isSmaller ? "none" : "normal"}
+                  >
+                    <BodyText
+                      sx={[
+                        { paddingRight: "10px" },
+                        isMobile && { fontSize: "14px" },
+                      ]}
+                    >
+                      {moves?.pp}
+                    </BodyText>
+                  </TableCell>
+                )}
               </TableRow>
             ))}
           </TableBody>

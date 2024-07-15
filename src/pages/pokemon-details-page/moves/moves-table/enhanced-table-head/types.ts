@@ -1,11 +1,5 @@
-import { LevelUpRowInfoType } from "../../types";
+import { LearnMethodNames, LevelUpRowInfoType } from "../../types";
 import { Order } from "../types";
-
-export interface HeadCell {
-  id: keyof LevelUpRowInfoType;
-  label: string;
-  center: boolean;
-}
 
 export interface EnhancedTableProps {
   onRequestSort: (
@@ -14,5 +8,5 @@ export interface EnhancedTableProps {
   ) => void;
   order: Order;
   orderBy: string;
-  method: string;
+  method: LearnMethodNames;
 }

@@ -14,8 +14,6 @@ export const moveListSyle = {
 export const categoryLegendContainer = (theme: Theme) => {
   return {
     bgcolor: "primary.light",
-    display: "flex",
-    direction: "row",
     gap: "20px",
     p: "10px 20px",
     borderRadius: "15px",
@@ -27,5 +25,4 @@ export const movesTablesGridContainer = {
   alignItems: "center",
   justifyContent: "center",
   direction: "column",
-  marginBottom: "40px",
 };
