@@ -64,7 +64,7 @@ const CategoryIcon: React.FC<CategoryIconProps> = ({ category }) => {
   );
 };
 
-export const Moves: React.FC<MovesProps> = ({ data }) => {
+export const Moves: React.FC<MovesProps> = ({ data, active }) => {
   const theme = useTheme();
 
   const learnMethodNamesSet: Set<LearnMethodNames> = useMemo(
@@ -199,6 +199,16 @@ export const Moves: React.FC<MovesProps> = ({ data }) => {
       });
     }
   }, [data, parsedMovesData, pokemonMovePromise]);
+
+  useEffect(() => {
+    setParsedMovesData({
+      "level-up": {},
+      machine: {},
+      tutor: {},
+      egg: {},
+    });
+    setVersions({ versionsList: [], active: -1 });
+  }, [active]);
 
   /*-- drop down menu code taken from mui demos --*/
   const anchorRef = useRef<HTMLButtonElement>(null);

@@ -47,6 +47,7 @@ export type VersionsOptionsType = {
 
 export interface MovesProps {
   data: PokemonMoveType[];
+  active: number;
 }
 
 export interface CategoryIconProps {

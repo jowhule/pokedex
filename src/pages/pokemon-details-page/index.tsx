@@ -372,7 +372,7 @@ export const PokemonDetailsPage: React.FC = () => {
             <EvolutionChain pokemonData={currPokemonData} large noEvoText />
           </CustomCard>
           <CustomCard sx={{ marginBottom: "40px" }}>
-            <Moves data={currPokemonData?.moves ?? []} />
+            <Moves data={currPokemonData?.moves ?? []} active={active} />
           </CustomCard>
         </Box>
       ) : (

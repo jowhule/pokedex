@@ -19,6 +19,7 @@ export const Abilities: React.FC<AbilitiesType> = ({ abilitiesData }) => {
           gap: "20px",
           width: "100%",
           boxSizing: "border-box",
+          p: "20px 30px",
         }}
       >
         {abilitiesData?.length > 0
