@@ -59,7 +59,13 @@ export const EnhancedTableHead: React.FC<EnhancedTableProps> = ({
                     {headCell.label}
                     {orderBy === headCell.id && (
                       <KeyboardArrowDownRoundedIcon
-                        sx={{ position: "absolute" }}
+                        sx={[
+                          {
+                            position: "absolute",
+                            transition: "transform 0.2s ease",
+                          },
+                          order === "asc" && { transform: "rotate(180deg)" },
+                        ]}
                       />
                     )}
                   </BodyText>

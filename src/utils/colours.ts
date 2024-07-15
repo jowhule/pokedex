@@ -2,6 +2,13 @@ export const primaryTextColour = "#0c214a";
 export const secondaryColour = "#E8EBF1";
 export const fontBgColour = "#F0F3F8";
 
+export const GENDER_COLOURS = {
+  male: "#afeeee",
+  male_dark: "#93d2db",
+  female: "#ffc0cb",
+  female_dark: "#f79fa0",
+};
+
 export const TYPE_COLOURS: Record<string, string> = {
   normal: "#919aa2",
   fire: "#ff9741",

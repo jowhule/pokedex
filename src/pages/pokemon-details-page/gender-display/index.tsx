@@ -12,15 +12,11 @@ import {
   genderInfoContainer,
   genderStatContainer,
 } from "./style";
+import { GENDER_COLOURS } from "../../../utils/colours";
 
 type GenderDisplayType = {
   genderRatio: number;
 };
-
-const maleColor = "#afeeee";
-const maleColorDarker = "#93d2db";
-const femaleColor = "#ffc0cb";
-const femaleColorDarker = "#f79fa0";
 
 export const GenderDisplay: React.FC<GenderDisplayType> = ({ genderRatio }) => {
   const [ratio, setRatio] = useState<number>(0);
@@ -50,7 +46,7 @@ export const GenderDisplay: React.FC<GenderDisplayType> = ({ genderRatio }) => {
               sx={{
                 ...genderBarStyle,
                 position: "relative",
-                background: `linear-gradient(to right, ${femaleColorDarker} 0%, ${femaleColorDarker} ${ratio}%, ${maleColorDarker} ${ratio}%, ${maleColorDarker} 100%)`,
+                background: `linear-gradient(to right, ${GENDER_COLOURS["female_dark"]} 0%, ${GENDER_COLOURS["female_dark"]} ${ratio}%, ${GENDER_COLOURS["male_dark"]} ${ratio}%, ${GENDER_COLOURS["male_dark"]} 100%)`,
                 width: "80%",
                 p: "3px",
               }}
@@ -62,9 +58,11 @@ export const GenderDisplay: React.FC<GenderDisplayType> = ({ genderRatio }) => {
                   height: "15px",
                   borderRadius: "15px",
                   m: "0 auto",
-                  background: `linear-gradient(to right, ${femaleColor} 0%, ${femaleColor} ${borderRatio(
-                    ratio
-                  )}%, ${maleColor} ${borderRatio(ratio)}%, ${maleColor} 100%)`,
+                  background: `linear-gradient(to right, ${
+                    GENDER_COLOURS["female"]
+                  } 0%, ${GENDER_COLOURS["female"]} ${borderRatio(ratio)}%, ${
+                    GENDER_COLOURS["male"]
+                  } ${borderRatio(ratio)}%, ${GENDER_COLOURS["male"]} 100%)`,
                   width: "calc(100% - 6px)",
                 }}
               />
@@ -72,11 +70,15 @@ export const GenderDisplay: React.FC<GenderDisplayType> = ({ genderRatio }) => {
             <Box sx={genderStatContainer}>
               <Box display="flex" alignItems="center">
                 <BodyText fontSize="14px">{ratio}%</BodyText>
-                <FemaleRoundedIcon sx={{ color: `${femaleColorDarker}` }} />
+                <FemaleRoundedIcon
+                  sx={{ color: `${GENDER_COLOURS["female_dark"]}` }}
+                />
               </Box>
               <Box display="flex" alignItems="center">
                 <BodyText fontSize="14px">{100 - ratio}%</BodyText>
-                <MaleRoundedIcon sx={{ color: `${maleColorDarker}` }} />
+                <MaleRoundedIcon
+                  sx={{ color: `${GENDER_COLOURS["male_dark"]}` }}
+                />
               </Box>
             </Box>
           </Box>

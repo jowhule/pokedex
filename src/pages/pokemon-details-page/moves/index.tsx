@@ -255,7 +255,7 @@ export const Moves: React.FC<MovesProps> = ({ data }) => {
         <StatTitleText sx={{ fontSize: "20px", textAlign: "center" }}>
           Moves
         </StatTitleText>
-        <BodyText textAlign="center">
+        <BodyText textAlign="center" m="5px 0">
           Showing moves for Pokémon
           <Button variant="text" ref={anchorRef} onClick={handleToggle}>
             <BodyText fontWeight="bold">
@@ -296,9 +296,9 @@ export const Moves: React.FC<MovesProps> = ({ data }) => {
         alignItems="center"
         justifyContent="center"
         direction="column"
+        marginBottom="40px"
       >
         <Grid item>
-          <StatTitleText>By Leveling Up</StatTitleText>
           <Stack>
             {parsedMovesData["level-up"][
               versions.versionsList[versions.active]
@@ -316,7 +316,6 @@ export const Moves: React.FC<MovesProps> = ({ data }) => {
         </Grid>
 
         <Grid item>
-          <StatTitleText>By TM</StatTitleText>
           <Stack>
             {parsedMovesData.machine[
               versions.versionsList[versions.active]
@@ -334,7 +333,6 @@ export const Moves: React.FC<MovesProps> = ({ data }) => {
         </Grid>
 
         <Grid item>
-          <StatTitleText>By Breeding</StatTitleText>
           <Stack>
             {parsedMovesData.egg[versions.versionsList[versions.active]] && (
               <MovesTable
@@ -348,7 +346,6 @@ export const Moves: React.FC<MovesProps> = ({ data }) => {
         </Grid>
 
         <Grid item>
-          <StatTitleText>By Tutor</StatTitleText>
           <Stack>
             {parsedMovesData.tutor[versions.versionsList[versions.active]] && (
               <MovesTable

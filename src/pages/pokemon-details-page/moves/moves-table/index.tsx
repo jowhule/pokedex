@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import React, { useEffect } from "react";
 import { LevelUpRowInfoType } from "../types";
-import { BodyText } from "../../../../utils/styledComponents";
+import { BodyText, StatTitleText } from "../../../../utils/styledComponents";
 import { TypeTag } from "../../../../components/pokemon-information/types/type-tag";
 import physicalMoveIcon from "../../../../assets/physical_move_icon.png";
 import specialMoveIcon from "../../../../assets/special_move_icon.png";
@@ -22,6 +22,7 @@ import {
 } from "../../../../utils/helpers";
 import { EnhancedTableHead } from "./enhanced-table-head";
 import { MovesTableType, Order } from "./types";
+import { methodToName } from "./constants";
 
 export const MovesTable: React.FC<MovesTableType> = ({ data, method }) => {
   const [order, setOrder] = React.useState<Order>("asc");
@@ -48,10 +49,12 @@ export const MovesTable: React.FC<MovesTableType> = ({ data, method }) => {
 
   return (
     <Stack>
+      {data.length > 0 && <StatTitleText>{methodToName[method]}</StatTitleText>}
       <TableContainer
         sx={{
           bgcolor: "primary.light",
           borderRadius: "15px",
+          overflow: "hidden",
         }}
       >
         <Table size="small">
@@ -71,20 +74,20 @@ export const MovesTable: React.FC<MovesTableType> = ({ data, method }) => {
               >
                 {method === "level-up" && (
                   <TableCell align="right">
-                    <BodyText>{moves.level_learned_at}</BodyText>
+                    <BodyText>{moves?.level_learned_at}</BodyText>
                   </TableCell>
                 )}
-                <Tooltip title={moves.effect} followCursor>
+                <Tooltip title={moves?.effect} followCursor>
                   <TableCell align="right">
-                    <BodyText>{moves.name}</BodyText>
+                    <BodyText>{moves?.name}</BodyText>
                   </TableCell>
                 </Tooltip>
                 <TableCell align="center">
-                  <TypeTag type={moves.type} />
+                  <TypeTag type={moves?.type} />
                 </TableCell>
-                <Tooltip title={capitalise(moves.damage_class)} followCursor>
+                <Tooltip title={capitalise(moves?.damage_class)} followCursor>
                   <TableCell align="center">
-                    {moves.damage_class === "physical" ? (
+                    {moves?.damage_class === "physical" ? (
                       <Box
                         display="flex"
                         alignItems="center"
@@ -97,7 +100,7 @@ export const MovesTable: React.FC<MovesTableType> = ({ data, method }) => {
                           maxHeight="20px"
                         />
                       </Box>
-                    ) : moves.damage_class === "special" ? (
+                    ) : moves?.damage_class === "special" ? (
                       <Box
                         display="flex"
                         alignItems="center"
@@ -127,15 +130,15 @@ export const MovesTable: React.FC<MovesTableType> = ({ data, method }) => {
                   </TableCell>
                 </Tooltip>
                 <TableCell align="center">
-                  <BodyText>{moves.damage ?? "--"}</BodyText>
+                  <BodyText>{moves?.damage ?? "--"}</BodyText>
                 </TableCell>
                 <TableCell align="right">
                   <BodyText>
-                    {moves.accuracy ? moves.accuracy + "%" : "--"}
+                    {moves?.accuracy ? moves?.accuracy + "%" : "--"}
                   </BodyText>
                 </TableCell>
                 <TableCell align="center">
-                  <BodyText paddingRight="10px">{moves.pp}</BodyText>
+                  <BodyText paddingRight="10px">{moves?.pp}</BodyText>
                 </TableCell>
               </TableRow>
             ))}
