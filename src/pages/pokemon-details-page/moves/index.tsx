@@ -248,139 +248,156 @@ export const Moves: React.FC<MovesProps> = ({ data, active }) => {
     <Box p="5px" marginBottom="30px">
       {doneLoading ? (
         <>
-          <Popper
-            open={openVersions}
-            anchorEl={anchorRef.current}
-            placement="bottom-start"
-            transition
-            disablePortal
-            sx={{ zIndex: 1 }}
-          >
-            {({ TransitionProps, placement }) => (
-              <Grow
-                {...TransitionProps}
-                style={{
-                  transformOrigin:
-                    placement === "bottom-start" ? "left top" : "left bottom",
-                }}
+          {versions.versionsList.length > 0 ? (
+            <>
+              <Popper
+                open={openVersions}
+                anchorEl={anchorRef.current}
+                placement="bottom-start"
+                transition
+                disablePortal
+                sx={{ zIndex: 1 }}
               >
-                <Paper sx={{ borderRadius: "10px" }}>
-                  <ClickAwayListener onClickAway={handleClose}>
-                    <MenuList
-                      autoFocusItem={openVersions}
-                      onKeyDown={handleListKeyDown}
-                      sx={moveListSyle}
-                    >
-                      {versions.versionsList.map((version, i) => (
-                        <MenuItem
-                          key={i}
-                          onClick={() => {
-                            setVersions({ ...versions, active: i });
-                            setOpenVersions(false);
-                          }}
+                {({ TransitionProps, placement }) => (
+                  <Grow
+                    {...TransitionProps}
+                    style={{
+                      transformOrigin:
+                        placement === "bottom-start"
+                          ? "left top"
+                          : "left bottom",
+                    }}
+                  >
+                    <Paper sx={{ borderRadius: "10px" }}>
+                      <ClickAwayListener onClickAway={handleClose}>
+                        <MenuList
+                          autoFocusItem={openVersions}
+                          onKeyDown={handleListKeyDown}
+                          sx={moveListSyle}
                         >
-                          {removeDash(capitaliseDash(version ?? ""))}
-                        </MenuItem>
-                      ))}
-                    </MenuList>
-                  </ClickAwayListener>
-                </Paper>
-              </Grow>
-            )}
-          </Popper>
-          <Box>
-            <StatTitleText sx={movesTitleStyle}>Moves</StatTitleText>
-            <BodyText textAlign="center" m="5px 0">
-              Showing moves for Pokémon
-              <Button variant="text" ref={anchorRef} onClick={handleToggle}>
-                <BodyText fontWeight="bold">
-                  {removeDash(versions.versionsList[versions.active] ?? "")}
+                          {versions.versionsList.map((version, i) => (
+                            <MenuItem
+                              key={i}
+                              onClick={() => {
+                                setVersions({ ...versions, active: i });
+                                setOpenVersions(false);
+                              }}
+                            >
+                              {removeDash(capitaliseDash(version ?? ""))}
+                            </MenuItem>
+                          ))}
+                        </MenuList>
+                      </ClickAwayListener>
+                    </Paper>
+                  </Grow>
+                )}
+              </Popper>
+              <Box>
+                <StatTitleText sx={movesTitleStyle}>Moves</StatTitleText>
+                <BodyText textAlign="center" m="5px 0">
+                  Showing moves for Pokémon
+                  <Button variant="text" ref={anchorRef} onClick={handleToggle}>
+                    <BodyText fontWeight="bold">
+                      {removeDash(versions.versionsList[versions.active] ?? "")}
+                    </BodyText>
+                    <KeyboardArrowDownRoundedIcon
+                      sx={{ color: "text.primary" }}
+                    />
+                  </Button>
                 </BodyText>
-                <KeyboardArrowDownRoundedIcon sx={{ color: "text.primary" }} />
-              </Button>
+
+                <Stack alignItems="center" textAlign="center">
+                  <Stack direction="row" sx={categoryLegendContainer(theme)}>
+                    <CategoryIcon category="physical" />
+                    <CategoryIcon category="special" />
+                    <CategoryIcon category="status" />
+                  </Stack>
+                </Stack>
+              </Box>
+
+              <Grid container spacing={2} sx={movesTablesGridContainer}>
+                {parsedMovesData["level-up"][
+                  versions.versionsList[versions.active]
+                ] &&
+                  parsedMovesData["level-up"][
+                    versions.versionsList[versions.active]
+                  ].length > 0 && (
+                    <Grid item>
+                      <Stack>
+                        <MovesTable
+                          method={"level-up"}
+                          data={
+                            parsedMovesData["level-up"][
+                              versions.versionsList[versions.active]
+                            ]
+                          }
+                        />
+                      </Stack>
+                    </Grid>
+                  )}
+
+                {parsedMovesData.machine[
+                  versions.versionsList[versions.active]
+                ] &&
+                  parsedMovesData.machine[
+                    versions.versionsList[versions.active]
+                  ].length > 0 && (
+                    <Grid item>
+                      <Stack>
+                        <MovesTable
+                          method={"machine"}
+                          data={
+                            parsedMovesData.machine[
+                              versions.versionsList[versions.active]
+                            ]
+                          }
+                        />
+                      </Stack>
+                    </Grid>
+                  )}
+
+                {parsedMovesData.egg[versions.versionsList[versions.active]] &&
+                  parsedMovesData.egg[versions.versionsList[versions.active]]
+                    .length > 0 && (
+                    <Grid item>
+                      <Stack>
+                        <MovesTable
+                          method={"egg"}
+                          data={
+                            parsedMovesData.egg[
+                              versions.versionsList[versions.active]
+                            ]
+                          }
+                        />
+                      </Stack>
+                    </Grid>
+                  )}
+
+                {parsedMovesData.tutor[
+                  versions.versionsList[versions.active]
+                ] &&
+                  parsedMovesData.tutor[versions.versionsList[versions.active]]
+                    .length > 0 && (
+                    <Grid item>
+                      <Stack>
+                        <MovesTable
+                          method={"tutor"}
+                          data={
+                            parsedMovesData.tutor[
+                              versions.versionsList[versions.active]
+                            ]
+                          }
+                        />
+                      </Stack>
+                    </Grid>
+                  )}
+              </Grid>
+            </>
+          ) : (
+            <BodyText fontWeight="bold" marginTop="30px">
+              This Pokémon cannot learn moves.
             </BodyText>
-
-            <Stack alignItems="center" textAlign="center">
-              <Stack direction="row" sx={categoryLegendContainer(theme)}>
-                <CategoryIcon category="physical" />
-                <CategoryIcon category="special" />
-                <CategoryIcon category="status" />
-              </Stack>
-            </Stack>
-          </Box>
-
-          <Grid container spacing={2} sx={movesTablesGridContainer}>
-            {parsedMovesData["level-up"][
-              versions.versionsList[versions.active]
-            ] &&
-              parsedMovesData["level-up"][
-                versions.versionsList[versions.active]
-              ].length > 0 && (
-                <Grid item>
-                  <Stack>
-                    <MovesTable
-                      method={"level-up"}
-                      data={
-                        parsedMovesData["level-up"][
-                          versions.versionsList[versions.active]
-                        ]
-                      }
-                    />
-                  </Stack>
-                </Grid>
-              )}
-
-            {parsedMovesData.machine[versions.versionsList[versions.active]] &&
-              parsedMovesData.machine[versions.versionsList[versions.active]]
-                .length > 0 && (
-                <Grid item>
-                  <Stack>
-                    <MovesTable
-                      method={"machine"}
-                      data={
-                        parsedMovesData.machine[
-                          versions.versionsList[versions.active]
-                        ]
-                      }
-                    />
-                  </Stack>
-                </Grid>
-              )}
-
-            {parsedMovesData.egg[versions.versionsList[versions.active]] &&
-              parsedMovesData.egg[versions.versionsList[versions.active]]
-                .length > 0 && (
-                <Grid item>
-                  <Stack>
-                    <MovesTable
-                      method={"egg"}
-                      data={
-                        parsedMovesData.egg[
-                          versions.versionsList[versions.active]
-                        ]
-                      }
-                    />
-                  </Stack>
-                </Grid>
-              )}
-
-            {parsedMovesData.tutor[versions.versionsList[versions.active]] &&
-              parsedMovesData.tutor[versions.versionsList[versions.active]]
-                .length > 0 && (
-                <Grid item>
-                  <Stack>
-                    <MovesTable
-                      method={"tutor"}
-                      data={
-                        parsedMovesData.tutor[
-                          versions.versionsList[versions.active]
-                        ]
-                      }
-                    />
-                  </Stack>
-                </Grid>
-              )}
-          </Grid>
+          )}
         </>
       ) : (
         <CircularProgress />
