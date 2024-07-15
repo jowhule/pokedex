@@ -14,5 +14,4 @@ Inspired by [David](https://github.com/davidhckh)
 - fix scroll down indication (see eevee)
 - add is_legendary tag
 - organise response types into folders similar to [this package](https://www.npmjs.com/package/@bgoff1/pokeapi-types?activeTab=code).
-- add a loader to pokemon moves
 - extract popper code into a component
