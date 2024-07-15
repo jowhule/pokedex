@@ -25,18 +25,24 @@ import {
   Paper,
   Popper,
   Stack,
+  useTheme,
 } from "@mui/material";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import { BodyText, StatTitleText } from "../../../utils/styledComponents";
 import { capitaliseDash, removeDash } from "../../../utils/helpers";
 import { MovesTable } from "./moves-table";
 import { sendGenericAPIRequest } from "../../../services/apiRequests";
+import physicalMoveIcon from "../../../assets/physical_move_icon.png";
+import specialMoveIcon from "../../../assets/special_move_icon.png";
+import statusMoveIcon from "../../../assets/status_move_icon.png";
 
 type MovesProps = {
   data: PokemonMoveType[];
 };
 
 export const Moves: React.FC<MovesProps> = ({ data }) => {
+  const theme = useTheme();
+
   const learnMethodNamesSet: Set<LearnMethodNames> = useMemo(
     () =>
       new Set([
@@ -258,6 +264,31 @@ export const Moves: React.FC<MovesProps> = ({ data }) => {
             <KeyboardArrowDownRoundedIcon sx={{ color: "text.primary" }} />
           </Button>
         </BodyText>
+
+        <Stack alignItems="center" textAlign="center">
+          <Stack
+            bgcolor="primary.light"
+            display="flex"
+            direction="row"
+            gap="20px"
+            p="10px 20px"
+            borderRadius="15px"
+            boxShadow={theme.shadows[2]}
+          >
+            <Box>
+              <BodyText fontSize="14px">Physical move</BodyText>
+              <Box component="img" src={physicalMoveIcon} maxHeight="20px" />
+            </Box>
+            <Box>
+              <BodyText fontSize="14px">Special move</BodyText>
+              <Box component="img" src={specialMoveIcon} maxHeight="20px" />
+            </Box>
+            <Box>
+              <BodyText fontSize="14px">Status move</BodyText>
+              <Box component="img" src={statusMoveIcon} maxHeight="20px" />
+            </Box>
+          </Stack>
+        </Stack>
       </Box>
       <Grid
         container
