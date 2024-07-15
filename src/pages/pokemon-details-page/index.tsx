@@ -28,11 +28,7 @@ import {
   getDataPromises,
   removeDash,
 } from "../../utils/helpers";
-import {
-  BodyText,
-  PokemonInfoBox,
-  StatTitleText,
-} from "../../utils/styledComponents";
+import { BodyText, StatTitleText } from "../../utils/styledComponents";
 import { StatBars } from "../../components/pokemon-information/stat-bars";
 import {
   detailsInfoContainer,
@@ -313,25 +309,25 @@ export const PokemonDetailsPage: React.FC = () => {
 
                 <Abilities abilitiesData={currPokemonData?.abilities} />
 
-                <Box display="flex" gap="15px">
+                <Box display="flex" gap="15px" width="100%">
                   <Stack flex="1">
                     <StatTitleText fontSize="16px">Height</StatTitleText>
-                    <PokemonInfoBox>
+                    <CustomCard dark>
                       <BodyText>
-                        {insertDecimal(currPokemonData?.height)} m
+                        {insertDecimal(currPokemonData?.height ?? -1)} m
                       </BodyText>
-                    </PokemonInfoBox>
+                    </CustomCard>
                   </Stack>
                   <Stack flex="1">
                     <StatTitleText fontSize="16px">Weight</StatTitleText>
-                    <PokemonInfoBox>
+                    <CustomCard dark>
                       <BodyText>
                         {currPokemonData?.weight >= 10000
                           ? "???.?"
-                          : insertDecimal(currPokemonData?.weight)}{" "}
+                          : insertDecimal(currPokemonData?.weight ?? -1)}{" "}
                         kg
                       </BodyText>
-                    </PokemonInfoBox>
+                    </CustomCard>
                   </Stack>
                 </Box>
 
@@ -352,13 +348,13 @@ export const PokemonDetailsPage: React.FC = () => {
                   </Grid>
                   <Grid item xs={1}>
                     <StatTitleText>Growth Rate</StatTitleText>
-                    <PokemonInfoBox>
+                    <CustomCard dark>
                       <BodyText>
                         {removeDash(
                           capitaliseDash(pokemonSpecies?.growth_rate.name)
                         )}
                       </BodyText>
-                    </PokemonInfoBox>
+                    </CustomCard>
                   </Grid>
                   <Grid item xs={1}>
                     <EggGroups groupData={pokemonSpecies?.egg_groups} />
@@ -374,7 +370,7 @@ export const PokemonDetailsPage: React.FC = () => {
             <EvolutionChain pokemonData={currPokemonData} large noEvoText />
           </CustomCard>
           <CustomCard>
-            <Moves data={currPokemonData.moves ?? []} />
+            <Moves data={currPokemonData?.moves ?? []} />
           </CustomCard>
         </Box>
       ) : (

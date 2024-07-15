@@ -1,11 +1,13 @@
-import { fontBgColour } from "../../../utils/colours";
+import { Theme } from "@mui/material";
 
-export const effortTagContainer = {
-  bgcolor: fontBgColour,
-  p: "4px",
-  borderRadius: "25px",
+export const effortTagContainer = (theme: Theme) => {
+  return {
+    bgcolor: "primary.light",
+    p: "4px",
+    borderRadius: "25px",
+    boxShadow: theme.shadows[3],
+  };
 };
-
 export const effortTagTitle = {
   fontSize: "12px",
   fontWeight: "bold",

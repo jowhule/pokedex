@@ -17,7 +17,6 @@ export const detailsMainInfoContainer = {
   display: "flex",
   gap: "30px",
   width: "100%",
-  maxWidth: "1000px",
   m: "auto",
 };
 

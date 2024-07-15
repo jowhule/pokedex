@@ -2,6 +2,7 @@ export const weaknessesContainer = {
   flexFlow: "row wrap",
   gap: "10px",
   p: "15px",
+  flex: 1,
 };
 
 export const typeWeaknessContainer = {
@@ -11,6 +12,7 @@ export const typeWeaknessContainer = {
   p: "3px",
   borderRadius: "20px",
   width: "67px",
+  boxShadow: "-4px -4px #e0e3e9",
 };
 
 export const typeTypeContainer = {

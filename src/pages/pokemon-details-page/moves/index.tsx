@@ -105,28 +105,29 @@ export const Moves: React.FC<MovesProps> = ({ data }) => {
         });
       };
 
-      return new Promise<void>((resolve) => {
-        sendGenericAPIRequest<PokemonMovesResponseType>(moveData.move.url).then(
-          (data) => {
-            for (const version of moveData.version_group_details) {
-              const moveLearnMethod = version.move_learn_method
-                .name as LearnMethodNames;
-              if (learnMethodNamesSet.has(moveLearnMethod) && data) {
-                addMove(
-                  parsedData,
-                  moveData.move.name,
-                  moveLearnMethod,
-                  version.version_group.name,
-                  moveData.move.url,
-                  data,
-                  version.level_learned_at
-                );
-                versions.add(version.version_group.name);
-              }
+      return new Promise<void>((resolve, reject) => {
+        if (!moveData.move.url) reject();
+        sendGenericAPIRequest<PokemonMovesResponseType>(
+          moveData.move?.url
+        ).then((data) => {
+          for (const version of moveData.version_group_details) {
+            const moveLearnMethod = version.move_learn_method
+              .name as LearnMethodNames;
+            if (learnMethodNamesSet.has(moveLearnMethod) && data) {
+              addMove(
+                parsedData,
+                moveData.move?.name ?? "",
+                moveLearnMethod,
+                version.version_group.name,
+                moveData.move?.url ?? "",
+                data,
+                version.level_learned_at
+              );
+              versions.add(version.version_group.name);
             }
-            resolve();
           }
-        );
+          resolve();
+        });
       });
     },
     [learnMethodNamesSet]
@@ -273,7 +274,7 @@ export const Moves: React.FC<MovesProps> = ({ data }) => {
             gap="20px"
             p="10px 20px"
             borderRadius="15px"
-            boxShadow={theme.shadows[3]}
+            boxShadow={theme.shadows[4]}
           >
             <Box>
               <BodyText fontSize="14px">Physical move</BodyText>

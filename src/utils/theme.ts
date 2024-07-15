@@ -5,8 +5,8 @@ export const theme = createTheme({
     "none",
     "5px 5px #e8ebf1",
     "8px 8px #e8ebf1",
+    "3px 3px #e0e3e9",
     "5px 5px #e0e3e9",
-    "",
     "",
     "",
     "",
@@ -40,3 +40,5 @@ export const theme = createTheme({
     },
   },
 });
+
+export default theme;

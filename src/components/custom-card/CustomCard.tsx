@@ -19,9 +19,12 @@ export const CustomCard: React.FC<CustomCardProps> = ({
       sx={{
         bgcolor: dark ? "primary.light" : "primary.100",
         borderRadius: "15px",
-        boxSizing: "border-box",
         padding: "15px",
-        boxShadow: dark ? theme.shadows[3] : theme.shadows[2],
+        boxShadow: dark ? theme.shadows[4] : theme.shadows[2],
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
         ...sx,
       }}
     >

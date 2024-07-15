@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  BodyText,
-  PokemonInfoBox,
-  StatTitleText,
-} from "../../../utils/styledComponents";
+import { BodyText, StatTitleText } from "../../../utils/styledComponents";
 import { Box, CircularProgress, Stack, Tooltip } from "@mui/material";
 import {
   PokemonTypeResponseType,
@@ -14,6 +10,7 @@ import { typeEffectivenessDefault } from "../../../utils/defaults";
 import { typeWeaknessContainer, weaknessesContainer } from "./style ";
 import typeIcons from "../../../assets/type-icons";
 import { capitalise } from "../../../utils/helpers";
+import { CustomCard } from "../../../components/custom-card/CustomCard";
 
 type TypeWeaknessesType = {
   types: PokemonTypeType[];
@@ -79,7 +76,7 @@ export const TypeWeaknesses: React.FC<TypeWeaknessesType> = ({ types }) => {
   return (
     <Stack width="100%" height="100%">
       <StatTitleText>Weaknesses</StatTitleText>
-      <PokemonInfoBox sx={weaknessesContainer}>
+      <CustomCard dark sx={weaknessesContainer}>
         {weaknesses["updated"] ? (
           <>
             {Object.keys(weaknesses)
@@ -106,7 +103,7 @@ export const TypeWeaknesses: React.FC<TypeWeaknessesType> = ({ types }) => {
         ) : (
           <CircularProgress />
         )}
-      </PokemonInfoBox>
+      </CustomCard>
     </Stack>
   );
 };
