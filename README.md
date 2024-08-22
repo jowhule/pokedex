@@ -1,8 +1,6 @@
-## Pokedex
+## Pokedex ([LIVE SITE HERE](https://personalpokedex-one.vercel.app/))
 
 A passion and learning project still in the making. Driven by my love for Pokemon and making accessing information easier and less cluttered for newer players.
-
-[Live site](https://personalpokedex-one.vercel.app/)
 
 Inspired by [David](https://github.com/davidhckh)
 
