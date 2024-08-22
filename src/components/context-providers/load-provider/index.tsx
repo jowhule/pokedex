@@ -20,7 +20,7 @@ export const useLoadPageContext = () => {
 };
 
 export const LoadProvider: React.FC<LoadProviderType> = ({ children }) => {
-  const [loadPage, setLoadPage] = useState<boolean>(true);
+  const [loadPage, setLoadPage] = useState<boolean>(false);
   return (
     <LoadContext.Provider value={{ loadPage, setLoadPage }}>
       {children}

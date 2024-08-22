@@ -25,7 +25,7 @@ export const Loader: React.FC = () => {
       setHideLoad(false);
     } else {
       setTimeout(() => {
-        setHideLoad((prev) => (prev === true ? false : true));
+        setHideLoad((prev) => (prev ? false : true));
       }, 800);
     }
   }, [loadPage]);
