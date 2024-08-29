@@ -95,14 +95,6 @@ export const PokedexDisplay: React.FC<PokedexDisplayProps> = ({
   }, [currFilters, currSearchInput, displayList, prevFilters, prevSearchInput]);
 
   /**
-   * trigger loading into new list based when search input changes
-   */
-  useEffect(() => {
-    setDisplayLimit(POKEMON_PER_LOAD);
-    setHasMoreToLoad(true);
-  }, [currSearchInput, currFilters]);
-
-  /**
    * update display limit when display list is updated
    */
   useEffect(() => {
