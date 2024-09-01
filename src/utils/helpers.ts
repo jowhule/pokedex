@@ -86,8 +86,8 @@ const descendingComparator = <T extends any>(
   b: T,
   orderBy: keyof T
 ): number => {
-  if (b[orderBy] === null) return -1;
-  if (a[orderBy] === null) return 1;
+  if (b[orderBy] === null || b[orderBy] === undefined) return -1;
+  if (a[orderBy] === null || a[orderBy] === undefined) return 1;
   if (b[orderBy] < a[orderBy]) {
     return -1;
   }

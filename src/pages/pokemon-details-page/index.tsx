@@ -383,3 +383,5 @@ export const PokemonDetailsPage: React.FC = () => {
     </>
   );
 };
+
+export default PokemonDetailsPage;
