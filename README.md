@@ -8,8 +8,7 @@ Inspired by [David](https://github.com/davidhckh)
 
 ## TODO
 
-- add page to save pokemon in (team)
-- fix scroll down indication (see eevee)
-- add is_legendary tag
+- add is_legendary tag to search filters
 - organise response types into folders similar to [this package](https://www.npmjs.com/package/@bgoff1/pokeapi-types?activeTab=code).
 - extract popper code into a component
+- refactor mobile and desktop ver of pokemon slider
