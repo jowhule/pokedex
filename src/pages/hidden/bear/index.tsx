@@ -26,11 +26,7 @@ import { EffortValues } from "../../../components/pokemon-information/effort-val
 import { Types } from "../../../components/pokemon-information/types";
 import { TabsPanel } from "../../pokemon-details-page/tabs-panel";
 import React, { useEffect, useState } from "react";
-import {
-  PokemonDataResponseType,
-  PokemonSpeciesResponseType,
-} from "../../../services/apiRequestsTypes";
-import { pokemonSpeciesDefault } from "../../../utils/defaults";
+import { PokemonDataResponseType } from "../../../services/apiRequestsTypes";
 import { useLoadPageContext } from "../../../components/context-providers/load-provider";
 import {
   abilities,

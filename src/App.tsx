@@ -70,7 +70,7 @@ function App() {
                 path="/paldea"
                 element={<PokedexDisplayPage generation="paldea" />}
               />
-              <Route path="/bear" element={<Bear />} />
+              <Route path="/6431" element={<Bear />} />
               <Route
                 path="/pokemon/:pokeName"
                 element={<PokemonDetailsPage />}
