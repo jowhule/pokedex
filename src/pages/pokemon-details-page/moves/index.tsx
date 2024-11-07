@@ -10,7 +10,6 @@ import {
   PokemonMovesResponseType,
 } from "../../../services/apiRequestsTypes";
 import {
-  CategoryIconProps,
   LearnMethodNames,
   MovesProps,
   ParsedMovesDataType,
@@ -32,37 +31,16 @@ import {
 } from "@mui/material";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import { BodyText, StatTitleText } from "../../../utils/styledComponents";
-import { capitalise, capitaliseDash, removeDash } from "../../../utils/helpers";
+import { capitaliseDash, removeDash } from "../../../utils/helpers";
 import { MovesTable } from "./moves-table";
 import { sendGenericAPIRequest } from "../../../services/apiRequests";
-import physicalMoveIcon from "../../../assets/physical_move_icon.png";
-import specialMoveIcon from "../../../assets/special_move_icon.png";
-import statusMoveIcon from "../../../assets/status_move_icon.png";
 import {
   categoryLegendContainer,
   moveListSyle,
   movesTablesGridContainer,
   movesTitleStyle,
 } from "./style";
-
-const CategoryIcon: React.FC<CategoryIconProps> = ({ category }) => {
-  return (
-    <Box>
-      <BodyText fontSize="14px">{capitalise(category)} move</BodyText>
-      <Box
-        component="img"
-        src={
-          category === "physical"
-            ? physicalMoveIcon
-            : category === "special"
-            ? specialMoveIcon
-            : statusMoveIcon
-        }
-        maxHeight="20px"
-      />
-    </Box>
-  );
-};
+import { CategoryIcon } from "./category-icon";
 
 export const Moves: React.FC<MovesProps> = ({ data, active }) => {
   const theme = useTheme();
@@ -322,7 +300,7 @@ export const Moves: React.FC<MovesProps> = ({ data, active }) => {
                   parsedMovesData["level-up"][
                     versions.versionsList[versions.active]
                   ].length > 0 && (
-                    <Grid item>
+                    <Grid item width="100%" maxWidth="660px">
                       <Stack>
                         <MovesTable
                           method={"level-up"}
@@ -342,7 +320,7 @@ export const Moves: React.FC<MovesProps> = ({ data, active }) => {
                   parsedMovesData.machine[
                     versions.versionsList[versions.active]
                   ].length > 0 && (
-                    <Grid item>
+                    <Grid item width="100%" maxWidth="660px">
                       <Stack>
                         <MovesTable
                           method={"machine"}
@@ -359,7 +337,7 @@ export const Moves: React.FC<MovesProps> = ({ data, active }) => {
                 {parsedMovesData.egg[versions.versionsList[versions.active]] &&
                   parsedMovesData.egg[versions.versionsList[versions.active]]
                     .length > 0 && (
-                    <Grid item>
+                    <Grid item width="100%" maxWidth="660px">
                       <Stack>
                         <MovesTable
                           method={"egg"}
@@ -378,7 +356,7 @@ export const Moves: React.FC<MovesProps> = ({ data, active }) => {
                 ] &&
                   parsedMovesData.tutor[versions.versionsList[versions.active]]
                     .length > 0 && (
-                    <Grid item>
+                    <Grid item width="100%" maxWidth="660px">
                       <Stack>
                         <MovesTable
                           method={"tutor"}

@@ -11,6 +11,7 @@ import { ErrorrPage } from "./pages/error-page";
 import { LoadProvider } from "./components/context-providers/load-provider";
 import { Loader } from "./components/loader";
 import { theme } from "./utils/theme";
+import { Bear } from "./pages/hidden/bear";
 
 const PokemonDetailsPage = lazy(() => import("./pages/pokemon-details-page"));
 
@@ -69,6 +70,7 @@ function App() {
                 path="/paldea"
                 element={<PokedexDisplayPage generation="paldea" />}
               />
+              <Route path="/bear" element={<Bear />} />
               <Route
                 path="/pokemon/:pokeName"
                 element={<PokemonDetailsPage />}

@@ -120,3 +120,7 @@ export const stableSort = <T extends any>(
   });
   return stabilizedThis.map((el) => el[0]);
 };
+
+export const insertDecimal = (num: number) => {
+  return (num / 10).toFixed(1);
+};

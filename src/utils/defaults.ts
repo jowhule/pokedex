@@ -6,7 +6,7 @@ import {
   PokemonSpeciesResponseType,
 } from "../services/apiRequestsTypes";
 
-const pokemonSpritesDefault = {
+export const pokemonSpritesDefault = {
   back_default: "",
   back_female: null,
   back_shiny: "",
@@ -154,4 +154,16 @@ export const typeEffectivenessDefault = {
   dark: 1,
   steel: 1,
   fairy: 1,
+};
+
+export const levelUpRowInfoDefault = {
+  level_learned_at: 0,
+  name: "",
+  url: "",
+  accuracy: 0,
+  pp: 0,
+  damage: null,
+  type: "",
+  damage_class: "",
+  effect: "",
 };

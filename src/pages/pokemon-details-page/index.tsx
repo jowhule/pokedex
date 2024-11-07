@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   pokemonDataDefault,
@@ -26,6 +26,7 @@ import {
   capitalise,
   capitaliseDash,
   getDataPromises,
+  insertDecimal,
   removeDash,
 } from "../../utils/helpers";
 import { BodyText, StatTitleText } from "../../utils/styledComponents";
@@ -73,10 +74,6 @@ export const PokemonDetailsPage: React.FC = () => {
   const [formsData, setFormsData] = useState<PokemonFormResponseType[]>([]);
   const [formNames, setFormNames] = useState<string[]>([]);
 
-  const insertDecimal = (num: number) => {
-    return (num / 10).toFixed(1);
-  };
-
   const pokemonGenera = (species: PokemonSpeciesResponseType): string => {
     for (const gen of species.genera) {
       if (gen?.language?.name === "en") return gen.genus;
@@ -93,22 +90,25 @@ export const PokemonDetailsPage: React.FC = () => {
     return "";
   };
 
-  const resendData = (pokeName: string) => {
-    // in case getting data fails, try get species first
-    sendGenericAPIRequest<PokemonSpeciesResponseType>(
-      requestLinks.getSpecies(pokeName),
-      () => navigate("/404")
-    ).then((data) => {
-      if (data) {
-        setPokemonSpecies(data);
-        sendGenericAPIRequest<PokemonDataResponseType>(
-          requestLinks.getData(data.id)
-        ).then((data) => {
-          if (data) setCurrPokemonData(data);
-        });
-      }
-    });
-  };
+  const resendData = useCallback(
+    (pokeName: string) => {
+      // in case getting data fails, try get species first
+      sendGenericAPIRequest<PokemonSpeciesResponseType>(
+        requestLinks.getSpecies(pokeName),
+        () => navigate("/404")
+      ).then((data) => {
+        if (data) {
+          setPokemonSpecies(data);
+          sendGenericAPIRequest<PokemonDataResponseType>(
+            requestLinks.getData(data.id)
+          ).then((data) => {
+            if (data) setCurrPokemonData(data);
+          });
+        }
+      });
+    },
+    [navigate]
+  );
 
   useEffect(() => {
     // reset data
@@ -128,8 +128,7 @@ export const PokemonDetailsPage: React.FC = () => {
       ).then((data) => {
         if (data) setCurrPokemonData(data);
       });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loadPage]);
+  }, [loadPage, pokeName, resendData]);
 
   // get species data after initial pokemon data received
   useEffect(() => {
