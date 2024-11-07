@@ -112,6 +112,7 @@ export const Bear: React.FC = () => {
                 alt={`${currPokemonData?.name}'s sprite`}
                 src={currPokemonData?.sprites.front_default}
                 sx={pokemonDetailsSpriteStyle}
+                width="100%"
               />
 
               <Stack sx={detailsInfoContainer}>
@@ -265,7 +266,7 @@ export const Bear: React.FC = () => {
 
             <Grid container spacing={2} sx={movesTablesGridContainer}>
               <Grid item>
-                <Stack>
+                <Stack p="0 20px">
                   <MovesTable
                     method={"level-up"}
                     data={parsedMovesData["level-up"]["2025"]}

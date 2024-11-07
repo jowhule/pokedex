@@ -52,10 +52,6 @@ export const MovesTable: React.FC<MovesTableType> = ({ data, method }) => {
   );
 
   useEffect(() => {
-    console.log(data);
-  }, [data]);
-
-  useEffect(() => {
     setOrderBy("level_learned_at");
   }, [data]);
 

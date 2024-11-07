@@ -30,7 +30,7 @@ export const currPokemonData: PokemonDataResponseType = {
   stats: [
     {
       base_stat: 50,
-      effort: 1,
+      effort: 0,
       stat: {
         name: "hp",
         url: "https://pokeapi.co/api/v2/stat/1/",
@@ -54,7 +54,7 @@ export const currPokemonData: PokemonDataResponseType = {
     },
     {
       base_stat: 90,
-      effort: 0,
+      effort: 1,
       stat: {
         name: "special-attack",
         url: "https://pokeapi.co/api/v2/stat/4/",
