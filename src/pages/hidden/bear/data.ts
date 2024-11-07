@@ -102,7 +102,7 @@ export const abilities = [
 
 export const pokemonSpecies: PokemonSpeciesResponseType = {
   ...pokemonSpeciesDefault,
-  gender_rate: 8,
+  gender_rate: 0,
   hatch_counter: 0,
   growth_rate: { name: "slow", url: "a" },
   egg_groups: [{ name: "field", url: "" }],
