@@ -36,8 +36,6 @@ export type LevelUpRowInfoType = {
 
 export type LearnMethodNames = "level-up" | "machine" | "tutor" | "egg";
 
-export type MoveCategories = "physical" | "special" | "status";
-
 export type ParsedMovesDataType = Record<LearnMethodNames, LevelUpType>;
 
 export type VersionsOptionsType = {
@@ -48,8 +46,4 @@ export type VersionsOptionsType = {
 export interface MovesProps {
   data: PokemonMoveType[];
   active: number;
-}
-
-export interface CategoryIconProps {
-  category: MoveCategories;
 }

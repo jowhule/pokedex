@@ -16,7 +16,9 @@ const genderBarStyle = {
 export const genderBarOutterStyle = (ratio: number) => {
   return {
     ...genderBarStyle,
-    position: "relative",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
     background: `linear-gradient(to right, ${GENDER_COLOURS["female_dark"]} 0%, ${GENDER_COLOURS["female_dark"]} ${ratio}%, ${GENDER_COLOURS["male_dark"]} ${ratio}%, ${GENDER_COLOURS["male_dark"]} 100%)`,
     width: "80%",
     p: "3px",
@@ -26,9 +28,10 @@ export const genderBarOutterStyle = (ratio: number) => {
 export const genderBarInnerStyle = (ratio: number) => {
   return {
     ...genderBarStyle,
-    position: "absolute",
     background: `linear-gradient(to right, ${GENDER_COLOURS["female"]} 0%, ${GENDER_COLOURS["female"]} ${ratio}%, ${GENDER_COLOURS["male"]} ${ratio}%, ${GENDER_COLOURS["male"]} 100%)`,
-    width: "calc(100% - 6px)",
+    width: "calc(100% + 1px)",
+    marginRight: "1px",
+    marginBottom: "1px",
   };
 };
 
