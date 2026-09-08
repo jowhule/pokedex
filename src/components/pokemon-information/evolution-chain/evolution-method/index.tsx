@@ -20,74 +20,95 @@ export const EvolutionMethod: React.FC<EvolutionMethodType> = ({
 }) => {
   const methodImage = (method: string, value: any) => {
     const valueTyped =
-      typeof method === "object" ? (value as NameUrlType) : value;
-    if (method === "min_level") {
-      return (
-        <BodyText fontWeight="bold" fontSize="12px">
-          Lv.{value}
-        </BodyText>
-      );
-    } else if (method === "held_item" || method === "item") {
-      return (
-        <Tooltip title={`${capitalise(removeDash(valueTyped.name), true)}`}>
-          <Box
-            component="img"
-            src={requestLinks.getItemSprite(valueTyped.name)}
-            alt={capitalise(removeDash(valueTyped.name), true)}
-          />
-        </Tooltip>
-      );
-    } else if (method === "min_affection" || method === "min_happiness") {
-      return (
-        <Tooltip title={`${capitalise(removeDash(method))}: ${value}`}>
-          <Box
-            component="img"
-            src={requestLinks.getItemSprite("soothe-bell")}
-            alt={`${capitalise(removeDash(method))}}`}
-            m="-8px 0"
-          />
-        </Tooltip>
-      );
-    } else if (method === "time_of_day") {
-      return (
-        <BodyText fontWeight="bold" fontSize="10px">
-          ({value})
-        </BodyText>
-      );
-    } else if (method === "known_move_type") {
-      return (
-        <Tooltip title={`Know ${capitalise(valueTyped.name)}-move`}>
-          <Box
-            component="img"
-            src={requestLinks.getTMType(valueTyped.name)}
-            alt={`${capitalise(valueTyped.name)} TM`}
-          />
-        </Tooltip>
-      );
-    } else if (method === "trade_species") {
-      return (
-        <BodyText fontWeight="bold" fontSize="12px">
-          {capitalise(valueTyped.name)}
-        </BodyText>
-      );
-    } else if (method === "gender") {
-      if (value === 1) {
-        return <Box component="img" src={femaleIcon} alt="Female icon" />;
-      } else if (value === 2)
-        return <Box component="img" src={maleIcon} alt="male icon" />;
-    } else if (method === "known_move") {
-      return (
-        <BodyText fontWeight="bold" fontSize="10px">
-          {capitalise(removeDash(valueTyped.name), true)}
-        </BodyText>
-      );
-    }
+      typeof value === "object" ? (value as NameUrlType) : value;
 
-    return (
-      <BodyText fontWeight="bold" fontSize="10px">
-        {capitalise(removeDash(method), true)}
-      </BodyText>
-    );
+    const capName = (name: string) => capitalise(removeDash(name), true);
+    // do not add words for method classification
+    if (["is_default", "version_group", "base_form"].includes(method))
+      return null;
+    // match evolution method to respective display method
+    switch (method) {
+      case "min_level":
+        return (
+          <BodyText fontWeight="bold" fontSize="12px">
+            Lv.{value}
+          </BodyText>
+        );
+
+      case "held_item":
+      case "item":
+        return (
+          <Tooltip title={capName(valueTyped.name)}>
+            <Box
+              component="img"
+              src={requestLinks.getItemSprite(valueTyped.name)}
+              alt={capName(valueTyped.name)}
+            />
+          </Tooltip>
+        );
+
+      case "min_affection":
+      case "min_happiness":
+        return (
+          <Tooltip title={`${capitalise(removeDash(method))}: ${value}`}>
+            <Box
+              component="img"
+              src={requestLinks.getItemSprite("soothe-bell")}
+              alt={capitalise(removeDash(method))}
+              m="-8px 0"
+            />
+          </Tooltip>
+        );
+
+      case "time_of_day":
+        return (
+          <BodyText fontWeight="bold" fontSize="10px">
+            ({value})
+          </BodyText>
+        );
+
+      case "known_move_type":
+        return (
+          <Tooltip title={`Know ${capitalise(valueTyped.name)}-move`}>
+            <Box
+              component="img"
+              src={requestLinks.getTMType(valueTyped.name)}
+              alt={`${capitalise(valueTyped.name)} TM`}
+            />
+          </Tooltip>
+        );
+
+      case "trade_species":
+        return (
+          <BodyText fontWeight="bold" fontSize="12px">
+            {capitalise(valueTyped.name)}
+          </BodyText>
+        );
+
+      case "gender":
+        if (value === 1) {
+          return <Box component="img" src={femaleIcon} alt="Female icon" />;
+        } else if (value === 2) {
+          return <Box component="img" src={maleIcon} alt="Male icon" />;
+        }
+        return null;
+
+      case "known_move":
+        return (
+          <BodyText fontWeight="bold" fontSize="10px">
+            {capName(valueTyped.name)}
+          </BodyText>
+        );
+
+      default:
+        return (
+          <Tooltip title={`${capName(method)}: ${value}`}>
+            <BodyText fontWeight="bold" fontSize="10px">
+              {capName(method)}
+            </BodyText>
+          </Tooltip>
+        );
+    }
   };
 
   const triggerImage = (trigger: NameUrlType) => {
